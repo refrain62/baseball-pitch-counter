@@ -7,7 +7,9 @@ let state = {
   A: 0,
   B: 0,
   nameA: "1塁側",
-  nameB: "3塁側"
+  nameB: "3塁側",
+  lapsA: [],
+  lapsB: []
 };
 
 try {
@@ -18,6 +20,14 @@ try {
   }
 } catch (error) {
   console.warn("Saved state could not be loaded", error);
+}
+
+if (!Array.isArray(state.lapsA)) {
+  state.lapsA = [];
+}
+
+if (!Array.isArray(state.lapsB)) {
+  state.lapsB = [];
 }
 
 /* ==================================================
@@ -130,10 +140,89 @@ function renderNames() {
   $("nameB").value = state.nameB;
 }
 
+function getLaps(side) {
+  const key =
+    "laps" + side;
+
+  return Array.isArray(state[key])
+    ? state[key]
+    : [];
+}
+
+function renderLapHistory(side) {
+  const mount =
+    $("lap" + side);
+
+  const meta =
+    $("changeMeta" + side);
+
+  if (!mount || !meta) {
+    return;
+  }
+
+  const laps =
+    getLaps(side);
+
+  mount.replaceChildren();
+
+  if (laps.length > 0) {
+    const title =
+      document.createElement("div");
+
+    title.className =
+      "lap-title";
+
+    title.textContent =
+      "交代履歴";
+
+    mount.appendChild(title);
+  }
+
+  laps.forEach(
+    (count, index) => {
+      const row =
+        document.createElement("div");
+
+      row.className =
+        "lap-chip";
+
+      const player =
+        document.createElement("span");
+
+      player.className =
+        "lap-player";
+
+      player.textContent =
+        `${index + 1}人目`;
+
+      const pitches =
+        document.createElement("strong");
+
+      pitches.className =
+        "lap-count";
+
+      pitches.textContent =
+        `${count}球`;
+
+      row.append(
+        player,
+        pitches
+      );
+
+      mount.appendChild(row);
+    }
+  );
+
+  meta.textContent =
+    `現在 ${laps.length + 1}人目`;
+}
+
 function renderAll() {
   updateDigits("A");
   updateDigits("B");
   renderNames();
+  renderLapHistory("A");
+  renderLapHistory("B");
 }
 
 /* ==================================================
@@ -495,6 +584,95 @@ document
   });
 
 /* ==================================================
+   選手交代 / Lap
+   現在の球数を履歴へ保存し、0球から次の投手を開始。
+================================================== */
+
+const playerChangeDialog =
+  $("playerChangeDialog");
+
+let playerChangeTarget =
+  null;
+
+document
+  .querySelectorAll("[data-change-player]")
+  .forEach((button) => {
+    button.addEventListener(
+      "click",
+      () => {
+        const side =
+          button.dataset.changePlayer;
+
+        if (state[side] <= 0) {
+          return;
+        }
+
+        playerChangeTarget =
+          side;
+
+        const name =
+          side === "A"
+            ? state.nameA
+            : state.nameB;
+
+        $("playerChangeName").textContent =
+          `「${name}」`;
+
+        $("playerChangeCount").textContent =
+          String(state[side]);
+
+        playerChangeDialog.showModal();
+      }
+    );
+  });
+
+$("cancelPlayerChange").addEventListener(
+  "click",
+  () => {
+    playerChangeTarget = null;
+    playerChangeDialog.close();
+  }
+);
+
+$("confirmPlayerChange").addEventListener(
+  "click",
+  () => {
+    if (!playerChangeTarget) {
+      playerChangeDialog.close();
+      return;
+    }
+
+    const side =
+      playerChangeTarget;
+
+    const key =
+      "laps" + side;
+
+    if (!Array.isArray(state[key])) {
+      state[key] = [];
+    }
+
+    state[key].push(
+      state[side]
+    );
+
+    state[side] = 0;
+
+    updateDigits(side);
+    renderLapHistory(side);
+
+    saveDirty = true;
+    flushSave();
+
+    vibrate([24, 20, 24]);
+    animateCounter(side);
+
+    playerChangeTarget = null;
+    playerChangeDialog.close();
+  }
+);
+
+/* ==================================================
    チーム名
 ================================================== */
 
@@ -618,6 +796,8 @@ $("confirmAllReset").addEventListener(
     state.B = 0;
     state.nameA = "1塁側";
     state.nameB = "3塁側";
+    state.lapsA = [];
+    state.lapsB = [];
 
     $("nameA").value =
       state.nameA;
@@ -627,6 +807,8 @@ $("confirmAllReset").addEventListener(
 
     updateDigits("A");
     updateDigits("B");
+    renderLapHistory("A");
+    renderLapHistory("B");
 
     saveDirty = true;
     flushSave();
@@ -694,13 +876,41 @@ function showInstallButton() {
 
   installButtonText.textContent =
     isIOS
-      ? "このカウンターをホーム画面に追加"
+      ? "ホーム画面に追加（3ステップ）"
       : "このカウンターをインストール";
 
   installButton.hidden = false;
 }
 
 showInstallButton();
+
+/*
+  LPで「インストールして使う」を選んだiPhoneは、
+  追加でもう一度ボタンを押させず、手順を自動表示する。
+*/
+if (
+  isIOS &&
+  wantsInstall &&
+  !isStandalone
+) {
+  window.setTimeout(
+    () => {
+      installTitle.textContent =
+        "ホーム画面に追加";
+
+      installHelp.textContent =
+        "次の3ステップで完了します。";
+
+      $("iosInstallSteps").hidden =
+        false;
+
+      if (!installDialog.open) {
+        installDialog.showModal();
+      }
+    },
+    180
+  );
+}
 
 window.addEventListener(
   "beforeinstallprompt",
@@ -733,10 +943,20 @@ installButton.addEventListener(
     installTitle.textContent =
       "このカウンターをアプリとして使う";
 
-    installHelp.textContent =
-      isIOS
-        ? "Safariの共有ボタン →「ホーム画面に追加」→ 確認画面右上の「追加」（iPhone標準ボタン）の順に操作してください。"
-        : "ブラウザのメニューから「このカウンターをインストール」または「ホーム画面に追加」を選んでください。";
+    const iosSteps =
+      $("iosInstallSteps");
+
+    if (isIOS) {
+      installHelp.textContent =
+        "iPhoneではWebサイトから自動インストールできないため、次の3ステップだけ操作してください。";
+
+      iosSteps.hidden = false;
+    } else {
+      installHelp.textContent =
+        "ブラウザのメニューから「このカウンターをインストール」または「ホーム画面に追加」を選んでください。";
+
+      iosSteps.hidden = true;
+    }
 
     installDialog.showModal();
   }

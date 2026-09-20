@@ -13,6 +13,14 @@
 }
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{touch-action:manipulation}
+button,a,.pitch-button,.action-button,.tool-button,.all-reset-button{
+  touch-action:manipulation;
+}
+button,.pitch-button,.action-button,.tool-button,.all-reset-button{
+  -webkit-user-select:none;
+  user-select:none;
+}
 html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text)}
 body{
   min-height:100dvh;
@@ -163,7 +171,67 @@ button{cursor:pointer}
 /* secondary buttons
    1球カウントから明確に離し、修正操作として別グループに見せる。 */
 .action-button{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;border-radius:19px;font-weight:950}
-.action-button span{font-size:1.35em;line-height:1}
+.action-button>span:first-child{font-size:1.35em;line-height:1}
+.action-copy{display:block;text-align:center}
+.action-copy strong{display:block}
+.action-copy small{
+  display:block;
+  margin-top:3px;
+  color:#a9b8c9;
+  font-size:.48em;
+  font-weight:750;
+  line-height:1.1;
+}
+.change-player-button{
+  min-height:62px;
+  margin-top:14px;
+  border:1px solid rgba(111,195,255,.55);
+  background:linear-gradient(180deg,rgba(20,66,96,.72),rgba(9,34,55,.82));
+  color:#e8f7ff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 0 16px rgba(25,163,245,.08);
+  font-size:clamp(17px,2.7vw,24px);
+}
+.change-player-button .change-player-icon{color:#67caff}
+.player-change-confirm{background:#1979ad}
+.lap-history{
+  min-height:0;
+  margin:11px 0 0;
+  display:grid;
+  gap:6px;
+}
+.lap-history:empty{display:none}
+.lap-title{
+  margin:0 2px 1px;
+  color:#8fa9c2;
+  font-size:11px;
+  font-weight:850;
+  letter-spacing:.06em;
+}
+.lap-chip{
+  width:100%;
+  min-height:34px;
+  padding:7px 10px;
+  border:1px solid rgba(124,161,198,.30);
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  background:rgba(7,19,32,.76);
+  color:#d4e5f5;
+  font-size:13px;
+  font-weight:850;
+  line-height:1.2;
+}
+.lap-player{
+  color:#a9c2d9;
+  font-size:12px;
+}
+.lap-count{
+  color:#fff;
+  font-size:14px;
+  font-weight:950;
+}
 .undo-button{
   min-height:68px;
   margin-top:28px;
@@ -185,7 +253,7 @@ button{cursor:pointer}
 .reset-icon{font-size:1.55em!important}
 
 /* footer */
-.saved{margin:38px 0 22px;text-align:center;color:rgba(231,241,255,.94);font-size:16px;text-shadow:0 3px 10px rgba(0,0,0,.4)}
+.saved{margin:18px 0 0;text-align:center;color:rgba(231,241,255,.94);font-size:14px;text-shadow:0 3px 10px rgba(0,0,0,.4)}
 .save-icon{display:inline-block;width:20px;height:24px;margin-right:10px;vertical-align:-6px;border:2px solid #c8e7ff;border-radius:50%/18%;position:relative}
 .save-icon::before,.save-icon::after{content:"";position:absolute;left:-2px;right:-2px;height:7px;border:2px solid #c8e7ff;border-top:0;border-radius:0 0 50% 50%}
 .save-icon::before{top:6px}.save-icon::after{top:13px}
@@ -299,7 +367,7 @@ button{cursor:pointer}
 .knowledge-list p{
   margin:0;
   color:#b8c7d7;
-  font-size:12px;
+  font-size:13px;
   line-height:1.65;
 }
 .share-lead{margin-top:-4px!important}
@@ -417,6 +485,42 @@ button{cursor:pointer}
 }
 .all-reset-confirm{
   background:#bf2941;
+}
+
+
+.install-guide-dialog{width:min(92vw,500px)}
+.ios-install-steps{
+  display:grid;
+  gap:9px;
+  margin:4px 0 20px;
+}
+.ios-install-step{
+  display:grid;
+  grid-template-columns:36px 1fr;
+  gap:11px;
+  align-items:center;
+  padding:12px;
+  border:1px solid rgba(118,157,196,.28);
+  border-radius:14px;
+  background:rgba(5,15,27,.68);
+}
+.step-no{
+  width:32px;
+  height:32px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:#eef6ff;
+  color:#0b60a6;
+  font-weight:950;
+}
+.ios-install-step strong{display:block;font-size:14px}
+.ios-install-step small{
+  display:block;
+  margin-top:4px;
+  color:#aebfd1;
+  font-size:11px;
+  line-height:1.45;
 }
 
 /* dialogs */
@@ -590,15 +694,16 @@ button{cursor:pointer}
   .hero{
     grid-template-columns:54px 1fr 72px;
     gap:6px;
-    min-height:106px;
-    margin-bottom:2px
+    min-height:0;
+    margin-bottom:0;
+    align-items:start
   }
   .back-link{width:48px;height:48px;border-radius:14px;font-size:41px}
   .hero-title{padding-top:2px}
   .hero-title h1{font-size:clamp(29px,8.1vw,42px)}
   .hero-ja{margin-top:5px;font-size:16px}
   .hero-copy{
-    margin-top:9px;
+    margin-top:6px;
     margin-bottom:0;
     font-size:7px;
     letter-spacing:.36em
@@ -634,6 +739,25 @@ button{cursor:pointer}
     gap:7px;
     font-size:14px
   }
+  .change-player-button{
+    min-height:50px;
+    margin-top:10px;
+    border-radius:14px;
+    gap:6px;
+    font-size:13px
+  }
+  .action-copy small{font-size:7px}
+  .lap-history{margin-top:8px;gap:5px}
+  .lap-title{font-size:9px}
+  .lap-chip{
+    min-height:31px;
+    padding:6px 7px;
+    border-radius:9px;
+    font-size:11px
+  }
+  .lap-player{font-size:10px}
+  .lap-count{font-size:12px}
+
   .reset-button{
     min-height:50px;
     margin-top:12px;
@@ -641,7 +765,7 @@ button{cursor:pointer}
     gap:7px;
     font-size:13px
   }
-  .saved{margin:24px 0 14px;font-size:12px}.save-icon{width:16px;height:20px;margin-right:7px;vertical-align:-5px}
+  .saved{margin:15px 0 0;font-size:11px}.save-icon{width:16px;height:20px;margin-right:7px;vertical-align:-5px}
   .counter-footer{padding:5px 18px 0;gap:10px}.counter-footer p{font-size:6px;letter-spacing:.36em}
 }
 

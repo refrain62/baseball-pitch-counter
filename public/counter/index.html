@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#061526">
 <meta name="description" content="野球の投球数を1塁側・3塁側で同時に数えられるピッチカウンター">
 <link rel="canonical" href="https://baseball-pitch-counter.refrain62.workers.dev/counter/">
@@ -69,6 +72,16 @@
         <strong>1球戻す</strong>
       </button>
 
+      <button class="action-button change-player-button" type="button" data-change-player="A">
+        <span class="change-player-icon" aria-hidden="true">⇄</span>
+        <span class="action-copy">
+          <strong>選手交代</strong>
+          <small id="changeMetaA">現在 1人目</small>
+        </span>
+      </button>
+
+      <div class="lap-history" id="lapA" aria-live="polite"></div>
+
       <button class="action-button reset-button" type="button" data-reset="A">
         <span class="reset-icon" aria-hidden="true">↻</span>
         <strong>リセット</strong>
@@ -102,14 +115,22 @@
         <strong>1球戻す</strong>
       </button>
 
+      <button class="action-button change-player-button" type="button" data-change-player="B">
+        <span class="change-player-icon" aria-hidden="true">⇄</span>
+        <span class="action-copy">
+          <strong>選手交代</strong>
+          <small id="changeMetaB">現在 1人目</small>
+        </span>
+      </button>
+
+      <div class="lap-history" id="lapB" aria-live="polite"></div>
+
       <button class="action-button reset-button" type="button" data-reset="B">
         <span class="reset-icon" aria-hidden="true">↻</span>
         <strong>リセット</strong>
       </button>
     </article>
   </section>
-
-  <p class="saved"><span class="save-icon" aria-hidden="true"></span>端末内に自動保存</p>
 
   <nav class="counter-bottom-tools" aria-label="補助機能">
     <button class="tool-button knowledge-tool" id="knowledgeButton" type="button">
@@ -140,10 +161,12 @@
       <span aria-hidden="true">↻</span>
       <span>
         <strong>すべてリセット</strong>
-        <small>球数とチーム名を初期状態に戻す</small>
+        <small>球数・チーム名・交代履歴を初期化</small>
       </span>
     </button>
   </section>
+
+  <p class="saved"><span class="save-icon" aria-hidden="true"></span>端末内に自動保存</p>
 </main>
 
 <dialog id="knowledgeDialog" class="dialog utility-dialog">
@@ -158,23 +181,52 @@
   <div class="knowledge-list">
     <section>
       <strong>1球カウント</strong>
-      <p>投球ごとに白い「1球カウント」を1回タップします。</p>
+      <p>投球ごとに白い「1球カウント」を1回タップします。1塁側・3塁側は別々に数えられます。</p>
     </section>
+
+    <section>
+      <strong>チーム名を変更</strong>
+      <p>「1塁側」「3塁側」の文字部分をタップすると、チーム名・学校名など好きな名前へ変更できます。</p>
+    </section>
+
     <section>
       <strong>1球戻す</strong>
-      <p>押し間違えた時だけ使います。追加とは違う音で分かります。</p>
+      <p>押し間違えた時に1球だけ戻します。カウント追加とは別の音で操作を判別できます。</p>
     </section>
+
     <section>
-      <strong>リセット</strong>
-      <p>確認画面を出してから0球へ戻すため、誤操作しにくくしています。</p>
+      <strong>選手交代（Lap）</strong>
+      <p>現在の投球数を選手ごとの履歴へ保存し、新しい投手を0球から数え始めます。履歴は画面内に残ります。</p>
     </section>
+
     <section>
-      <strong>自動保存</strong>
-      <p>球数とチーム名はこの端末内に保存され、続きから使えます。</p>
+      <strong>左右の個別リセット</strong>
+      <p>各チームの「リセット」は、その側の現在球数だけを0球へ戻します。確認画面が出ます。</p>
     </section>
+
     <section>
-      <strong>1塁側 / 3塁側</strong>
-      <p>左右を独立してカウントできます。チーム名も変更できます。</p>
+      <strong>すべてリセット</strong>
+      <p>最下部から、両側の球数・チーム名・選手交代履歴をまとめて初期状態へ戻せます。</p>
+    </section>
+
+    <section>
+      <strong>端末内に自動保存</strong>
+      <p>現在球数・チーム名・選手交代履歴はこの端末内に保存され、ページを閉じても続きから使えます。</p>
+    </section>
+
+    <section>
+      <strong>音・振動でフィードバック</strong>
+      <p>1球追加は機械式カウンター音、1球戻すは別の電子音です。対応端末では振動でも操作を確認できます。</p>
+    </section>
+
+    <section>
+      <strong>知り合いに共有</strong>
+      <p>QRコード、リンクコピー、端末の共有メニューからLINE・メール・メッセージなどへ送れます。</p>
+    </section>
+
+    <section>
+      <strong>ホーム画面から起動</strong>
+      <p>PWAとして追加するとアプリのように起動できます。iPhoneでは「共有 → ホーム画面に追加 → 追加」の3ステップです。</p>
     </section>
   </div>
 
@@ -225,6 +277,19 @@
   </div>
 </dialog>
 
+<dialog id="playerChangeDialog" class="dialog player-change-dialog">
+  <h2>選手交代しますか？</h2>
+  <p>
+    <strong id="playerChangeName"></strong> の現在の
+    <strong id="playerChangeCount"></strong>球を交代履歴へ保存し、
+    新しい投手を <strong>0球</strong> から開始します。
+  </p>
+  <div class="dialog-actions">
+    <button id="cancelPlayerChange" class="dialog-cancel" type="button">キャンセル</button>
+    <button id="confirmPlayerChange" class="dialog-confirm player-change-confirm" type="button">選手交代する</button>
+  </div>
+</dialog>
+
 <dialog id="resetDialog" class="dialog">
   <h2>リセットしますか？</h2>
   <p><strong id="resetName"></strong> の投球数を <strong>0</strong> にします。<br>この操作は元に戻せません。</p>
@@ -238,7 +303,8 @@
   <h2>すべてリセットしますか？</h2>
   <p>
     1塁側・3塁側の<strong>球数を0</strong>にし、<br>
-    チーム名も<strong>「1塁側」「3塁側」</strong>へ戻します。<br>
+    チーム名も<strong>「1塁側」「3塁側」</strong>へ戻し、<br>
+    <strong>選手交代の履歴もすべて削除</strong>します。<br>
     この操作は元に戻せません。
   </p>
   <div class="dialog-actions">
@@ -247,9 +313,34 @@
   </div>
 </dialog>
 
-<dialog id="installDialog" class="dialog">
+<dialog id="installDialog" class="dialog install-guide-dialog">
   <h2 id="installTitle">このカウンターをアプリとして使う</h2>
-  <p id="installHelp">このカウンターを端末のホーム画面に追加すると、アプリのように起動できます。</p>
+  <p id="installHelp">ホーム画面に追加すると、次回からアプリのように1タップで起動できます。</p>
+
+  <div class="ios-install-steps" id="iosInstallSteps" hidden>
+    <div class="ios-install-step">
+      <span class="step-no">1</span>
+      <div>
+        <strong>共有ボタンをタップ</strong>
+        <small>Safariの下部または上部にある「□↑」です。</small>
+      </div>
+    </div>
+    <div class="ios-install-step">
+      <span class="step-no">2</span>
+      <div>
+        <strong>「ホーム画面に追加」</strong>
+        <small>共有メニューを少し下へスクロールすると表示されます。</small>
+      </div>
+    </div>
+    <div class="ios-install-step">
+      <span class="step-no">3</span>
+      <div>
+        <strong>右上の「追加」</strong>
+        <small>これでホーム画面にPitch Counterが追加されます。</small>
+      </div>
+    </div>
+  </div>
+
   <div class="dialog-actions one">
     <button id="closeInstall" class="dialog-cancel" type="button">閉じる</button>
   </div>
