@@ -2,7 +2,6 @@
 <html lang="ja">
 
 <head>
-
 <meta charset="utf-8">
 
 <meta
@@ -10,19 +9,15 @@
   content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
 >
 
-<meta
-  name="theme-color"
-  content="#080a0d"
->
+<meta name="theme-color" content="#080a0d">
 
 <title>Pitch Counter</title>
 
-
 <style>
 
-/* ==================================================
+/* ================================
    基本
-================================================== */
+================================ */
 
 :root {
   font-family:
@@ -39,14 +34,19 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+html,
 body {
   margin: 0;
+  padding: 0;
 
   background: #080a0d;
   color: #ffffff;
 
-  min-height: 100dvh;
+  min-height: 100%;
+}
 
+body {
+  min-height: 100dvh;
   overscroll-behavior: none;
 }
 
@@ -56,12 +56,11 @@ input {
 }
 
 
-/* ==================================================
+/* ================================
    全体
-================================================== */
+================================ */
 
 .app {
-
   max-width: 720px;
 
   margin: auto;
@@ -70,64 +69,49 @@ input {
     max(10px, env(safe-area-inset-top))
     10px
     max(16px, env(safe-area-inset-bottom));
-
 }
 
 
-/* ==================================================
+/* ================================
    ヘッダー
-================================================== */
+================================ */
 
 header {
-
   text-align: center;
-
-  margin:
-    3px
-    0
-    10px;
-
+  margin: 3px 0 10px;
 }
 
 h1 {
-
   margin: 0;
 
   font-size: 18px;
 
   letter-spacing: .08em;
-
 }
 
 .hint {
-
   margin-top: 4px;
 
   font-size: 13px;
 
   color: #aab2be;
-
 }
 
 
-/* ==================================================
-   左右カウンター
-================================================== */
+/* ================================
+   左右レイアウト
+================================ */
 
 .grid {
-
   display: grid;
 
   grid-template-columns:
-    1fr
-    1fr;
+    1fr 1fr;
 
   gap: 10px;
-
 }
 
 .side {
-
   min-width: 0;
 
   padding: 10px;
@@ -135,31 +119,24 @@ h1 {
   background: #141820;
 
   border:
-    1px solid
-    #303743;
+    1px solid #303743;
 
   border-radius: 20px;
-
 }
 
 
-/* ==================================================
+/* ================================
    チーム名
-================================================== */
+================================ */
 
 .name {
-
   width: 100%;
-
   height: 48px;
 
-  padding:
-    0
-    5px;
+  padding: 0 5px;
 
   border:
-    1px solid
-    #39424f;
+    1px solid #39424f;
 
   border-radius: 12px;
 
@@ -170,18 +147,15 @@ h1 {
   text-align: center;
 
   font-size: 18px;
-
   font-weight: 700;
-
 }
 
 
-/* ==================================================
+/* ================================
    投球数
-================================================== */
+================================ */
 
 .count {
-
   text-align: center;
 
   font-variant-numeric:
@@ -204,32 +178,22 @@ h1 {
     20px;
 
   transition:
-    transform
-    .12s
-    ease;
-
+    transform .12s ease;
 }
 
 
-/* ＋1されたとき */
+/* ＋1 / 戻す時の反応 */
 
 .count.pulse {
-
-  transform:
-    scale(1.10);
-
+  transform: scale(1.10);
 }
 
 
-/* ==================================================
+/* ================================
    ＋1
-
-   一番よく使うので
-   圧倒的に大きくする
-================================================== */
+================================ */
 
 .plus {
-
   width: 100%;
 
   height: 190px;
@@ -247,43 +211,30 @@ h1 {
   font-weight: 900;
 
   box-shadow:
-    0
-    7px
-    0
-    #858c96;
+    0 7px 0 #858c96;
 
-  touch-action:
-    manipulation;
+  touch-action: manipulation;
 
   user-select: none;
 
   cursor: pointer;
-
 }
 
 .plus:active {
-
-  transform:
-    translateY(6px);
+  transform: translateY(6px);
 
   box-shadow:
-    0
-    1px
-    0
-    #858c96;
+    0 1px 0 #858c96;
 
+  background: #dfe2e5;
 }
 
 
-/* ==================================================
+/* ================================
    1球戻す
-
-   ＋1から離して
-   誤タップを防止
-================================================== */
+================================ */
 
 .undo {
-
   width: 100%;
 
   height: 58px;
@@ -291,8 +242,7 @@ h1 {
   margin-top: 26px;
 
   border:
-    1px solid
-    #46505e;
+    1px solid #46505e;
 
   border-radius: 15px;
 
@@ -304,23 +254,21 @@ h1 {
 
   font-weight: 700;
 
-  touch-action:
-    manipulation;
+  touch-action: manipulation;
 
   cursor: pointer;
+}
 
+.undo:active {
+  background: #343c48;
 }
 
 
-/* ==================================================
+/* ================================
    リセット
-
-   普段は触らないので
-   小さく・離して配置
-================================================== */
+================================ */
 
 .sideReset {
-
   display: block;
 
   width: 75%;
@@ -333,13 +281,11 @@ h1 {
     4px;
 
   border:
-    1px solid
-    #57343a;
+    1px solid #57343a;
 
   border-radius: 12px;
 
-  background:
-    transparent;
+  background: transparent;
 
   color: #b8878d;
 
@@ -347,20 +293,17 @@ h1 {
 
   font-weight: 600;
 
-  touch-action:
-    manipulation;
+  touch-action: manipulation;
 
   cursor: pointer;
-
 }
 
 
-/* ==================================================
+/* ================================
    保存表示
-================================================== */
+================================ */
 
 .saved {
-
   margin-top: 10px;
 
   text-align: center;
@@ -368,16 +311,14 @@ h1 {
   color: #8993a1;
 
   font-size: 12px;
-
 }
 
 
-/* ==================================================
-   リセット確認ダイアログ
-================================================== */
+/* ================================
+   リセット確認
+================================ */
 
 dialog {
-
   width:
     min(
       90vw,
@@ -387,19 +328,16 @@ dialog {
   padding: 22px;
 
   border:
-    1px solid
-    #414957;
+    1px solid #414957;
 
   border-radius: 20px;
 
   background: #151920;
 
   color: #ffffff;
-
 }
 
 dialog::backdrop {
-
   background:
     rgba(
       0,
@@ -407,22 +345,18 @@ dialog::backdrop {
       0,
       .75
     );
-
 }
 
 dialog h2 {
-
   margin:
     0
     0
     8px;
 
   font-size: 22px;
-
 }
 
 dialog p {
-
   margin:
     0
     0
@@ -431,23 +365,18 @@ dialog p {
   color: #bdc5cf;
 
   line-height: 1.5;
-
 }
 
 .dlgBtns {
-
   display: grid;
 
   grid-template-columns:
-    1fr
-    1fr;
+    1fr 1fr;
 
   gap: 10px;
-
 }
 
 .dlgBtns button {
-
   height: 58px;
 
   border-radius: 14px;
@@ -455,103 +384,79 @@ dialog p {
   font-size: 17px;
 
   font-weight: 800;
-
 }
 
 .cancel {
-
   border:
-    1px solid
-    #4a5564;
+    1px solid #4a5564;
 
   background: #2a313b;
 
   color: #ffffff;
-
 }
 
 .confirm {
-
   border: 0;
 
   background: #8f2933;
 
   color: #ffffff;
-
 }
 
 
-/* ==================================================
+/* ================================
    小さいスマホ
-================================================== */
+================================ */
 
-@media
-(max-width: 390px) {
+@media (max-width: 390px) {
 
   .app {
-
     padding-left: 6px;
     padding-right: 6px;
-
   }
 
   .grid {
-
     gap: 6px;
-
   }
 
   .side {
-
     padding: 7px;
-
   }
 
   .name {
-
     font-size: 16px;
-
   }
 
   .count {
-
     font-size:
       clamp(
         74px,
         24vw,
         120px
       );
-
   }
 
   .plus {
-
     height: 170px;
 
     font-size: 48px;
-
   }
 
   .undo {
-
     height: 56px;
 
     margin-top: 22px;
 
     font-size: 16px;
-
   }
 
   .sideReset {
-
     margin-top: 25px;
-
   }
 
 }
 
 </style>
-
 </head>
 
 
@@ -561,9 +466,9 @@ dialog p {
 <main class="app">
 
 
-<!-- ==================================================
-     HEADER
-================================================== -->
+<!-- ================================
+     ヘッダー
+================================ -->
 
 <header>
 
@@ -579,16 +484,16 @@ dialog p {
 
 
 
-<!-- ==================================================
-     COUNTERS
-================================================== -->
+<!-- ================================
+     カウンター
+================================ -->
 
 <section class="grid">
 
 
-<!-- ==================================================
+<!-- ================================
      1塁側
-================================================== -->
+================================ -->
 
 <div class="side">
 
@@ -637,9 +542,9 @@ dialog p {
 
 
 
-<!-- ==================================================
+<!-- ================================
      3塁側
-================================================== -->
+================================ -->
 
 <div class="side">
 
@@ -690,10 +595,7 @@ dialog p {
 </section>
 
 
-
-<div
-  class="saved"
->
+<div class="saved">
 自動保存
 </div>
 
@@ -702,9 +604,9 @@ dialog p {
 
 
 
-<!-- ==================================================
-     RESET DIALOG
-================================================== -->
+<!-- ================================
+     リセット確認
+================================ -->
 
 <dialog id="confirmDlg">
 
@@ -717,7 +619,8 @@ dialog p {
 <p id="resetMessage">
 
 この投球数を
-0 にします。
+<strong>0</strong>
+にします。
 
 <br>
 
@@ -754,18 +657,17 @@ dialog p {
 
 <script>
 
-
-/* ==================================================
+/* ================================
    保存キー
-================================================== */
+================================ */
 
 const KEY =
-  "pitch-counter-v3";
+  "pitch-counter-v4";
 
 
-/* ==================================================
+/* ================================
    状態
-================================================== */
+================================ */
 
 let state = {
 
@@ -782,17 +684,15 @@ let state = {
 };
 
 
-/* ==================================================
+/* ================================
    保存データ読み込み
-================================================== */
+================================ */
 
 try {
 
   const saved =
     JSON.parse(
-      localStorage.getItem(
-        KEY
-      )
+      localStorage.getItem(KEY)
     );
 
 
@@ -811,27 +711,23 @@ try {
 }
 catch (error) {
 
-  console.error(
-    error
-  );
+  console.error(error);
 
 }
 
 
-/* ==================================================
+/* ================================
    DOM helper
-================================================== */
+================================ */
 
 const $ =
   id =>
-    document.getElementById(
-      id
-    );
+    document.getElementById(id);
 
 
-/* ==================================================
+/* ================================
    保存
-================================================== */
+================================ */
 
 function save() {
 
@@ -839,40 +735,33 @@ function save() {
 
     KEY,
 
-    JSON.stringify(
-      state
-    )
+    JSON.stringify(state)
 
   );
 
 }
 
 
-/* ==================================================
+/* ================================
    表示更新
-================================================== */
+================================ */
 
 function render() {
 
-
-  $("countA")
-    .textContent =
-      state.A;
+  $("countA").textContent =
+    state.A;
 
 
-  $("countB")
-    .textContent =
-      state.B;
+  $("countB").textContent =
+    state.B;
 
 
-  $("nameA")
-    .value =
-      state.nameA;
+  $("nameA").value =
+    state.nameA;
 
 
-  $("nameB")
-    .value =
-      state.nameB;
+  $("nameB").value =
+    state.nameB;
 
 
   save();
@@ -880,20 +769,40 @@ function render() {
 }
 
 
-/* ==================================================
-   振動
-================================================== */
+/* ================================
+   バイブ
+================================ */
 
-function feedback(
-  milliseconds = 25
-) {
+/*
+  Android / 対応ブラウザ用。
 
-  if (
-    navigator.vibrate
-  ) {
+  iPhone Safariは
+  navigator.vibrate() に
+  対応していないため、
+  iPhoneでは音＋画面反応になります。
+*/
+
+function vibrateStrong() {
+
+  if (navigator.vibrate) {
+
+    navigator.vibrate([
+      35,
+      20,
+      35
+    ]);
+
+  }
+
+}
+
+
+function vibrateLight() {
+
+  if (navigator.vibrate) {
 
     navigator.vibrate(
-      milliseconds
+      20
     );
 
   }
@@ -901,13 +810,277 @@ function feedback(
 }
 
 
-/* ==================================================
-   数字アニメーション
-================================================== */
+/* ================================
+   Audio Context
+================================ */
 
-function pulseCount(
-  side
-) {
+let audioContext =
+  null;
+
+
+function getAudioContext() {
+
+  if (!audioContext) {
+
+    const AudioContextClass =
+
+      window.AudioContext
+      ||
+      window.webkitAudioContext;
+
+
+    if (!AudioContextClass) {
+
+      return null;
+
+    }
+
+
+    audioContext =
+      new AudioContextClass();
+
+  }
+
+
+  if (
+    audioContext.state ===
+    "suspended"
+  ) {
+
+    audioContext.resume();
+
+  }
+
+
+  return audioContext;
+
+}
+
+
+/* ================================
+   ＋1 クリック音
+
+   強めの「カチッ」
+================================ */
+
+function clickSoundStrong() {
+
+  const ctx =
+    getAudioContext();
+
+
+  if (!ctx) {
+    return;
+  }
+
+
+  const now =
+    ctx.currentTime;
+
+
+  /*
+    高音クリック
+  */
+
+  const osc1 =
+    ctx.createOscillator();
+
+
+  const gain1 =
+    ctx.createGain();
+
+
+  osc1.type =
+    "square";
+
+
+  osc1.frequency
+    .setValueAtTime(
+      1100,
+      now
+    );
+
+
+  osc1.frequency
+    .exponentialRampToValueAtTime(
+      250,
+      now + 0.045
+    );
+
+
+  gain1.gain
+    .setValueAtTime(
+      0.30,
+      now
+    );
+
+
+  gain1.gain
+    .exponentialRampToValueAtTime(
+      0.001,
+      now + 0.055
+    );
+
+
+  osc1.connect(
+    gain1
+  );
+
+
+  gain1.connect(
+    ctx.destination
+  );
+
+
+  osc1.start(now);
+
+
+  osc1.stop(
+    now + 0.06
+  );
+
+
+  /*
+    低音を少し重ねる
+  */
+
+  const osc2 =
+    ctx.createOscillator();
+
+
+  const gain2 =
+    ctx.createGain();
+
+
+  osc2.type =
+    "sine";
+
+
+  osc2.frequency
+    .setValueAtTime(
+      180,
+      now
+    );
+
+
+  gain2.gain
+    .setValueAtTime(
+      0.20,
+      now
+    );
+
+
+  gain2.gain
+    .exponentialRampToValueAtTime(
+      0.001,
+      now + 0.07
+    );
+
+
+  osc2.connect(
+    gain2
+  );
+
+
+  gain2.connect(
+    ctx.destination
+  );
+
+
+  osc2.start(now);
+
+
+  osc2.stop(
+    now + 0.075
+  );
+
+}
+
+
+/* ================================
+   1球戻す音
+================================ */
+
+function clickSoundUndo() {
+
+  const ctx =
+    getAudioContext();
+
+
+  if (!ctx) {
+    return;
+  }
+
+
+  const now =
+    ctx.currentTime;
+
+
+  const oscillator =
+    ctx.createOscillator();
+
+
+  const gain =
+    ctx.createGain();
+
+
+  oscillator.type =
+    "sine";
+
+
+  oscillator.frequency
+    .setValueAtTime(
+      450,
+      now
+    );
+
+
+  oscillator.frequency
+    .exponentialRampToValueAtTime(
+      220,
+      now + 0.05
+    );
+
+
+  gain.gain
+    .setValueAtTime(
+      0.16,
+      now
+    );
+
+
+  gain.gain
+    .exponentialRampToValueAtTime(
+      0.001,
+      now + 0.06
+    );
+
+
+  oscillator.connect(
+    gain
+  );
+
+
+  gain.connect(
+    ctx.destination
+  );
+
+
+  oscillator.start(now);
+
+
+  oscillator.stop(
+    now + 0.065
+  );
+
+}
+
+
+/* ================================
+   数字アニメーション
+================================ */
+
+function pulseCount(side) {
 
   const count =
     $("count" + side);
@@ -919,9 +1092,8 @@ function pulseCount(
 
 
   /*
-    同じアニメーションを
-    連続実行できるように
-    再描画を発生させる
+    再描画させて
+    連続アニメーション可能にする
   */
 
   void count.offsetWidth;
@@ -948,9 +1120,9 @@ function pulseCount(
 }
 
 
-/* ==================================================
+/* ================================
    ＋1
-================================================== */
+================================ */
 
 document
   .querySelectorAll(
@@ -958,7 +1130,6 @@ document
   )
   .forEach(
     button => {
-
 
       button.onclick =
         () => {
@@ -969,47 +1140,48 @@ document
 
 
           /*
-            投球数追加
+            1球追加
           */
 
           state[side]++;
 
 
           /*
-            振動
+            強めクリック音
           */
 
-          feedback(
-            30
-          );
+          clickSoundStrong();
 
 
           /*
-            表示・保存
+            強めバイブ
+          */
+
+          vibrateStrong();
+
+
+          /*
+            保存・表示
           */
 
           render();
 
 
           /*
-            数字を一瞬拡大
+            数字をポン
           */
 
-          pulseCount(
-            side
-          );
-
+          pulseCount(side);
 
         };
-
 
     }
   );
 
 
-/* ==================================================
+/* ================================
    1球戻す
-================================================== */
+================================ */
 
 document
   .querySelectorAll(
@@ -1017,7 +1189,6 @@ document
   )
   .forEach(
     button => {
-
 
       button.onclick =
         () => {
@@ -1039,32 +1210,45 @@ document
             state[side]--;
 
 
-            feedback(
-              15
-            );
+            /*
+              ＋1とは違う
+              低めの音
+            */
 
+            clickSoundUndo();
+
+
+            /*
+              弱いバイブ
+            */
+
+            vibrateLight();
+
+
+            /*
+              保存・表示
+            */
 
             render();
 
 
-            pulseCount(
-              side
-            );
+            /*
+              数字反応
+            */
 
+            pulseCount(side);
 
           }
 
-
         };
-
 
     }
   );
 
 
-/* ==================================================
+/* ================================
    チーム名変更
-================================================== */
+================================ */
 
 [
   "A",
@@ -1072,7 +1256,6 @@ document
 ]
 .forEach(
   side => {
-
 
     $("name" + side)
       .onchange =
@@ -1089,8 +1272,11 @@ document
           state[
             "name" + side
           ] =
+
             value
+
             ||
+
             (
               side === "A"
               ?
@@ -1102,17 +1288,15 @@ document
 
           render();
 
-
         };
-
 
   }
 );
 
 
-/* ==================================================
-   リセット
-================================================== */
+/* ================================
+   個別リセット
+================================ */
 
 const dialog =
   $("confirmDlg");
@@ -1122,10 +1306,6 @@ let resetTarget =
   null;
 
 
-/*
-  個別リセットボタン
-*/
-
 document
   .querySelectorAll(
     "[data-reset]"
@@ -1133,15 +1313,12 @@ document
   .forEach(
     button => {
 
-
       button.onclick =
         () => {
 
 
           resetTarget =
-            button
-              .dataset
-              .reset;
+            button.dataset.reset;
 
 
           const name =
@@ -1167,40 +1344,34 @@ document
                この操作は元に戻せません。`;
 
 
-          dialog
-            .showModal();
-
+          dialog.showModal();
 
         };
-
 
     }
   );
 
 
-/* ==================================================
+/* ================================
    リセットキャンセル
-================================================== */
+================================ */
 
 $("cancel")
   .onclick =
     () => {
 
-
       resetTarget =
         null;
 
 
-      dialog
-        .close();
-
+      dialog.close();
 
     };
 
 
-/* ==================================================
+/* ================================
    リセット確定
-================================================== */
+================================ */
 
 $("confirm")
   .onclick =
@@ -1217,13 +1388,15 @@ $("confirm")
         ] = 0;
 
 
-        feedback(
-          60
-        );
+        /*
+          リセット時
+          強めの振動
+        */
+
+        vibrateStrong();
 
 
         render();
-
 
       }
 
@@ -1232,19 +1405,16 @@ $("confirm")
         null;
 
 
-      dialog
-        .close();
-
+      dialog.close();
 
     };
 
 
-/* ==================================================
+/* ================================
    初期表示
-================================================== */
+================================ */
 
 render();
-
 
 </script>
 
