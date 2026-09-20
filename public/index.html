@@ -4,11 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b0f14">
-<meta name="description" content="野球の投球数を2系統で簡単に数えられる、登録不要のピッチカウンター。端末にアプリとして追加して、オフラインでも使えます。">
+<meta name="description" content="野球の投球数を2系統で簡単に数えられる、登録不要のピッチカウンター。ホーム画面に追加してアプリのように使えます。">
+<link rel="canonical" href="https://baseball-pitch-counter.refrain62.workers.dev/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Pitch Counter | 野球の投球数カウンター">
+<meta property="og:description" content="登録不要。すぐ使えて、ホーム画面にも追加できる野球用ピッチカウンター。">
+<meta property="og:url" content="https://baseball-pitch-counter.refrain62.workers.dev/">
+<meta property="og:image" content="https://baseball-pitch-counter.refrain62.workers.dev/assets/app-icon-512.png">
+<meta name="twitter:card" content="summary">
 <title>Pitch Counter | 野球の投球数カウンター</title>
 <link rel="icon" href="/assets/app-icon-192.png" type="image/png">
 <link rel="stylesheet" href="/assets/site.css">
-<script src="/assets/site.js" defer></script>
 </head>
 <body>
 <header class="site-header">
@@ -16,7 +22,10 @@
     <img src="/assets/app-icon-192.png" width="44" height="44" alt="">
     <span>Pitch Counter</span>
   </a>
-  <a class="header-link" href="/counter/">カウンターを開く</a>
+  <nav class="header-actions" aria-label="メインメニュー">
+    <a class="header-link" href="#install">アプリとして使う方法</a>
+    <a class="header-button" href="/counter/">カウンターを開く</a>
+  </nav>
 </header>
 
 <main>
@@ -24,11 +33,12 @@
     <div class="hero-copy">
       <p class="eyebrow">BASEBALL PITCH COUNTER</p>
       <h1>投球数を、<br>迷わずカウント。</h1>
-      <p class="lead">1塁側・3塁側を同時に管理できるシンプルな野球用カウンターです。登録不要。スマホにこのカウンターを追加すると、アプリのように使えます。</p>
+      <p class="lead">1塁側・3塁側を同時に数えられるシンプルな野球用カウンターです。会員登録はありません。まずは「今すぐカウンターを使う」を押せば始められます。</p>
       <div class="hero-actions">
-        <a class="button primary" href="/counter/">カウンターを使う</a>
-        <a class="button secondary" href="#install">スマホにアプリとして追加する方法</a>
+        <a class="button primary" href="/counter/">今すぐカウンターを使う</a>
+        <a class="button secondary" href="#install">スマホにアプリとして入れる</a>
       </div>
+      <p class="hero-help">迷ったら、まず「今すぐカウンターを使う」を押してください。</p>
       <ul class="trust-list" aria-label="特徴">
         <li>登録不要</li>
         <li>端末内に自動保存</li>
@@ -41,42 +51,86 @@
     </div>
   </section>
 
-  <section class="section qr-section" aria-labelledby="qr-title">
-    <div>
-      <p class="eyebrow">スマホですぐ使う</p>
-      <h2 id="qr-title">QRコードを読み取るだけ</h2>
-      <p>別のスマホへ共有するときは、このQRコードをカメラで読み取ってください。</p>
-      <a class="text-link" href="/counter/">この端末でカウンターを開く →</a>
-    </div>
-    <div class="qr-card">
-      <img src="/assets/install-qr.svg" width="240" height="240" alt="Pitch Counterを開くQRコード">
-      <p>Pitch Counter</p>
+  <section class="section start-section" aria-labelledby="start-title">
+    <p class="eyebrow">はじめての方へ</p>
+    <h2 id="start-title">やりたいことを選んでください</h2>
+    <p class="section-intro">難しい設定は必要ありません。下の3つから目的に合うものを押してください。</p>
+    <div class="choice-grid">
+      <a class="choice-card" href="/counter/">
+        <div class="choice-card-head">
+          <span class="choice-number" aria-hidden="true">1</span>
+          <strong>今すぐ数えたい</strong>
+        </div>
+        <span class="choice-desc">カウンターを開く</span>
+      </a>
+      <a class="choice-card" href="#install">
+        <div class="choice-card-head">
+          <span class="choice-number" aria-hidden="true">2</span>
+          <strong>アプリのように使いたい</strong>
+        </div>
+        <span class="choice-desc">ホーム画面への追加方法を見る</span>
+      </a>
+      <a class="choice-card" href="#qr">
+        <div class="choice-card-head">
+          <span class="choice-number" aria-hidden="true">3</span>
+          <strong>別のスマホで使いたい</strong>
+        </div>
+        <span class="choice-desc">QRコードを表示する</span>
+      </a>
     </div>
   </section>
 
-  <section class="section" id="install" aria-labelledby="install-title">
-    <p class="eyebrow">PWA INSTALL</p>
-    <h2 id="install-title">このカウンターをスマホに追加すると、アプリのように使えます</h2>
+  <section class="section install-section" id="install" aria-labelledby="install-title">
+    <a class="eyebrow eyebrow-link" href="/counter/?install=1">APP INSTALL · インストールを始める →</a>
+    <h2 id="install-title">ホーム画面に置けば、次から1タップで起動できます</h2>
+    <p class="section-intro">お使いのスマホを選び、カードの最初のボタンを押してください。カウンター画面へ移動したあとも、次に押す場所を案内します。</p>
+
     <div class="install-grid">
       <article class="install-card">
-        <span class="step-badge">iPhone</span>
+        <span class="step-badge">iPhone / iPad</span>
+        <a class="button primary install-cta" href="/counter/?install=1">ホーム画面への追加を始める</a>
         <ol>
-          <li>「カウンターを使う」をSafariで開く</li>
-          <li>下部の共有ボタンを押す</li>
+          <li>上のボタンからカウンターを開く</li>
+          <li>カウンター画面上部の「このカウンターをホーム画面に追加」を押す</li>
+          <li>案内に従ってSafariの共有ボタンを押す</li>
           <li>「ホーム画面に追加」を選ぶ</li>
-          <li>確認画面で、このカウンターの名前とアイコンを確認する</li>
           <li>右上の「追加」（iPhone標準ボタン）を押す</li>
         </ol>
+        <p class="install-note">※ iPhoneではSafariで開くと分かりやすく操作できます。</p>
       </article>
+
       <article class="install-card">
         <span class="step-badge">Android</span>
+        <a class="button primary install-cta" href="/counter/?install=1">アプリのインストールを始める</a>
         <ol>
-          <li>「カウンターを使う」をChromeで開く</li>
-          <li>「このカウンターをインストール」または「アプリをインストール」を選ぶ</li>
+          <li>上のボタンからカウンターを開く</li>
+          <li>カウンター画面上部の「このカウンターをインストール」を押す</li>
           <li>確認画面で「インストール」を押す</li>
         </ol>
+        <p class="install-note">※ ChromeなどPWAに対応したブラウザで利用できます。</p>
       </article>
     </div>
+
+    <div class="install-bottom-action">
+      <a class="button secondary" href="/counter/?install=1">どちらか分からない場合はこちら</a>
+      <p>端末に合わせて、カウンター画面側で案内を表示します。</p>
+    </div>
+  </section>
+
+  <section class="section qr-section" id="qr" aria-labelledby="qr-title">
+    <div>
+      <p class="eyebrow">別のスマホで開く</p>
+      <h2 id="qr-title">このQRコードをカメラで読み取るだけ</h2>
+      <p>パソコンでこのページを見ているときや、家族・チームの人に渡すときに使えます。QRコードはこの説明ページを開きます。</p>
+      <div class="qr-actions">
+        <a class="button primary" href="/counter/">この端末でカウンターを使う</a>
+        <a class="text-link" href="https://baseball-pitch-counter.refrain62.workers.dev/">公開ページを開く →</a>
+      </div>
+    </div>
+    <a class="qr-card" href="https://baseball-pitch-counter.refrain62.workers.dev/" aria-label="Pitch Counterの公開ページを開く">
+      <img src="/assets/install-qr.svg" width="240" height="240" alt="Pitch Counterの説明ページを開くQRコード">
+      <p>baseball-pitch-counter<br>.refrain62.workers.dev</p>
+    </a>
   </section>
 
   <section class="section privacy-section" aria-labelledby="privacy-title">
@@ -91,7 +145,10 @@
 
 <footer>
   <span>Pitch Counter</span>
-  <a href="/counter/">カウンターを開く</a>
+  <div class="footer-links">
+    <a href="#install">アプリとして使う方法</a>
+    <a href="/counter/">カウンターを開く</a>
+  </div>
 </footer>
 </body>
 </html>

@@ -7,6 +7,8 @@ SPAやフレームワークを使わず、HTML/CSS/JavaScriptの静的MPAとし�
 
 ## URL
 
+本番オリジン: `https://baseball-pitch-counter.refrain62.workers.dev`
+
 - `/` — 初めて使う人向けLP
 - `/counter/` — 実際のピッチカウンター/PWA
 

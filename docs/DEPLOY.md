@@ -1,5 +1,7 @@
 # Deploy
 
+本番: https://baseball-pitch-counter.refrain62.workers.dev/
+
 ## Cloudflare Workers Builds
 
 1. Cloudflare Dashboard → **Workers & Pages**

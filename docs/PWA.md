@@ -1,28 +1,40 @@
 # PWA / Distribution
 
-## iPhone
+本番URL:
 
-1. `/counter/` をSafariで開く
-2. 共有ボタンを押す
-3. 「ホーム画面に追加」を選ぶ
-4. カウンター名とアイコンを確認
+```text
+https://baseball-pitch-counter.refrain62.workers.dev/
+```
+
+カウンター:
+
+```text
+https://baseball-pitch-counter.refrain62.workers.dev/counter/
+```
+
+## iPhone / iPad
+
+1. LPの「ホーム画面への追加を始める」を押して `/counter/?install=1` を開く
+2. カウンター画面上部の「このカウンターをホーム画面に追加」を押す
+3. Safariの共有ボタンを押す
+4. 「ホーム画面に追加」を選ぶ
 5. 右上の「追加」（iPhone標準ボタン）を押す
 
 ## Android
 
-`/counter/` をChromeで開き、「アプリをインストール」またはページ内の「このカウンターをインストール」ボタンを使用する。
+1. LPの「アプリのインストールを始める」を押して `/counter/?install=1` を開く
+2. カウンター画面上部の「このカウンターをインストール」を押す
+3. ブラウザの確認画面で「インストール」を押す
 
 ## QRコード
 
-LPの `public/assets/install-qr.svg` は静的ファイル。
-初期版は次のURLを指す。
+LPの `public/assets/install-qr.svg` は静的ファイルで、次の本番LPを指す。
 
 ```text
-https://refrain62.github.io/baseball-pitch-counter/counter/
+https://baseball-pitch-counter.refrain62.workers.dev/
 ```
 
-Cloudflareの本番URLや独自ドメインが確定したら、そのURLでQRを再生成して同名ファイルを差し替える。
-ランタイムでQR生成ライブラリや外部QR APIを使用しないのは、依存と情報送信を減らすため。
+QRコードは実行時に生成しない。外部QR APIやQR生成ライブラリをブラウザから読み込まず、依存と情報送信を減らす。
 
 ## アプリアイコン
 

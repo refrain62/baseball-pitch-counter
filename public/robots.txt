@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://baseball-pitch-counter.refrain62.workers.dev/sitemap.xml

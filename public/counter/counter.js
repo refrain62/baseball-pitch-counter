@@ -173,6 +173,15 @@ let deferredInstallPrompt = null;
 
 const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
 const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const installIntent = new URLSearchParams(window.location.search).get("install") === "1";
+
+if (!isStandalone && installIntent) {
+  installButton.textContent = isIOS
+    ? "このカウンターをホーム画面に追加"
+    : "このカウンターをインストール";
+  installButton.hidden = false;
+  installButton.classList.add("install-focus");
+}
 
 if (!isStandalone && isIOS) {
   installButton.textContent = "このカウンターをホーム画面に追加";
