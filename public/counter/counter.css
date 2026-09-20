@@ -1,1 +1,658 @@
-:root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color-scheme:dark}*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;min-height:100%;background:#080a0d;color:#fff}body{min-height:100dvh;overscroll-behavior:none}button,input{font:inherit}.app{max-width:760px;margin:auto;padding:max(10px,env(safe-area-inset-top)) 10px max(18px,env(safe-area-inset-bottom))}.counter-header{display:grid;grid-template-columns:44px minmax(0,1fr) auto;align-items:center;text-align:center;margin:2px 0 10px}.counter-header h1{font-size:18px;letter-spacing:.08em;margin:0}.counter-header p{font-size:12px;color:#96a3b3;margin:3px 0 0}.back-link{width:44px;height:44px;border-radius:13px;background:#151b23;border:1px solid #2e3744;display:grid;place-items:center;text-decoration:none;font-size:31px;line-height:1}.install-button{min-width:0;height:40px;padding:0 10px;white-space:nowrap;border-radius:12px;border:1px solid #3a4655;background:#1b2430;color:#fff;font-size:13px;font-weight:800}.install-button.install-focus{grid-column:1/-1;width:100%;height:50px;margin-top:8px;background:#f4f5f6;color:#080a0d;border-color:#f4f5f6;font-size:15px;box-shadow:0 4px 0 #7d858f}.install-button.install-focus:active{transform:translateY(3px);box-shadow:0 1px 0 #7d858f}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.side{background:#141820;border:1px solid #303743;border-radius:22px;padding:10px;min-width:0}.side-a{box-shadow:inset 0 3px 0 #54708f}.side-b{box-shadow:inset 0 3px 0 #8b654e}.name{width:100%;height:50px;border:1px solid #39424f;border-radius:13px;background:#0d1015;color:#fff;text-align:center;font-size:18px;font-weight:800;padding:0 6px}.count{text-align:center;font-variant-numeric:tabular-nums;font-size:clamp(82px,24vw,155px);font-weight:900;line-height:.95;margin:24px 0 20px;transition:transform .11s ease}.count.pulse{transform:scale(1.1)}.plus{width:100%;height:190px;border:0;border-radius:24px;background:#f4f5f6;color:#080a0d;font-size:52px;font-weight:950;box-shadow:0 7px 0 #858c96;touch-action:manipulation;user-select:none;cursor:pointer}.plus:active{transform:translateY(6px);box-shadow:0 1px 0 #858c96;background:#dfe2e5}.plus.flash{animation:flash .16s ease}.undo{width:100%;height:58px;margin-top:26px;border:1px solid #46505e;border-radius:15px;background:#252b35;color:#fff;font-size:18px;font-weight:800;touch-action:manipulation}.undo:active{background:#343c48}.side-reset{display:block;width:72%;height:42px;margin:30px auto 4px;border:1px solid #57343a;border-radius:12px;background:transparent;color:#c08e95;font-size:13px;font-weight:700}.saved{text-align:center;color:#788696;font-size:12px;margin:11px 0 0}.dialog{border:1px solid #414957;border-radius:20px;background:#151920;color:#fff;width:min(90vw,410px);padding:22px}.dialog::backdrop{background:rgba(0,0,0,.76)}.dialog h2{font-size:22px;margin:0 0 8px}.dialog p{color:#bdc5cf;margin:0 0 20px;line-height:1.6}.dialog-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.dialog-actions.one{grid-template-columns:1fr}.dialog-actions button{height:58px;border-radius:14px;font-size:16px;font-weight:800}.dialog-cancel{background:#2a313b;color:#fff;border:1px solid #4a5564}.dialog-confirm{background:#8f2933;color:#fff;border:0}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}@keyframes flash{0%{filter:brightness(1)}50%{filter:brightness(.76)}100%{filter:brightness(1)}}@media(max-width:430px){.counter-header{grid-template-columns:40px minmax(0,1fr) auto;gap:4px}.install-button{height:38px;padding:0 7px;font-size:11px}.counter-header h1{font-size:16px}.counter-header p{font-size:10px}.app{padding-left:6px;padding-right:6px}.grid{gap:6px}.side{padding:7px}.name{font-size:16px}.count{font-size:clamp(72px,24vw,120px);margin:20px 0 16px}.plus{height:170px;font-size:47px}.undo{height:56px;margin-top:23px;font-size:16px}.side-reset{margin-top:26px}}@media(max-height:720px){.count{margin:14px 0;font-size:clamp(68px,20vw,120px)}.plus{height:145px}.undo{margin-top:18px}.side-reset{margin-top:20px}}
+:root{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color-scheme:dark;
+  --bg:#04101d;
+  --panel:#07162a;
+  --panel2:#0b1d33;
+  --text:#fff;
+  --muted:#9eb3cb;
+  --blue:#0fb9ff;
+  --blue-dark:#0065a9;
+  --red:#ff455f;
+  --red-dark:#9b233a;
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text)}
+body{
+  min-height:100dvh;
+  overscroll-behavior:none;
+  background:
+    linear-gradient(180deg,rgba(1,8,17,.06),rgba(2,8,16,.14) 31%,rgba(2,7,13,.58) 70%,rgba(0,0,0,.80)),
+    url("/counter/images/bg-stadium-mobile.png") center top/cover no-repeat;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(circle at 9% 12%,rgba(114,196,255,.18),transparent 20%),
+    radial-gradient(circle at 92% 18%,rgba(70,137,212,.1),transparent 22%),
+    linear-gradient(90deg,rgba(0,54,97,.08),transparent 42%,transparent 58%,rgba(105,0,29,.07));
+}
+button,input{font:inherit}
+button{cursor:pointer}
+
+.app{
+  width:min(100%,960px);
+  min-height:100dvh;
+  margin:0 auto;
+  padding:max(24px,env(safe-area-inset-top)) 22px max(34px,env(safe-area-inset-bottom));
+  position:relative;z-index:1;
+}
+
+/* header */
+.hero{
+  display:grid;
+  grid-template-columns:86px 1fr 130px;
+  align-items:start;
+  gap:12px;
+  min-height:180px;
+  margin-bottom:12px;
+}
+.back-link{
+  width:72px;height:72px;display:grid;place-items:center;
+  border:1px solid rgba(174,207,246,.4);border-radius:20px;
+  background:linear-gradient(180deg,rgba(29,48,71,.9),rgba(10,20,34,.94));
+  box-shadow:0 12px 26px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.13),0 0 20px rgba(50,125,210,.08);
+  color:#fff;text-decoration:none;font-size:62px;line-height:.7;font-weight:300;
+}
+.hero-title{text-align:center;padding-top:7px}
+.hero-title h1{
+  margin:0;font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(42px,7vw,76px);line-height:.95;letter-spacing:.045em;font-weight:900;
+  color:#fff;text-shadow:0 3px 0 rgba(0,0,0,.42),0 6px 22px rgba(0,0,0,.36);
+}
+.hero-ja{margin:10px 0 0;color:#58c6ff;font-size:clamp(22px,3.4vw,36px);font-weight:950;letter-spacing:.03em}
+.hero-copy{margin:25px 0 0;color:rgba(185,205,229,.7);font-size:clamp(10px,1.5vw,16px);letter-spacing:.52em;white-space:nowrap}
+.hero-side{justify-self:end;padding-top:32px;text-align:center;color:rgba(218,230,247,.87);font-size:13px;letter-spacing:.18em}
+.hero-side span{display:block;line-height:1.75}.hero-side i{display:block;width:58px;height:1px;margin:12px auto 0;background:rgba(214,229,246,.5)}
+
+/* install */
+.install-button{
+  width:100%;min-height:92px;margin:0 0 28px;padding:12px 24px;
+  display:grid;grid-template-columns:68px 1fr 34px;align-items:center;gap:14px;
+  border:2px solid #e6f2ff;border-radius:30px;
+  background:linear-gradient(180deg,#fff 0%,#e6f1ff 100%);color:#1267d7;
+  box-shadow:0 0 24px rgba(48,145,255,.48),inset 0 -6px 0 rgba(54,119,203,.1),0 12px 30px rgba(0,0,0,.22);
+  text-align:left;font-size:clamp(22px,3.5vw,38px);font-weight:950;
+}
+.install-button[hidden]{display:none}
+.install-symbol{width:58px;height:56px;position:relative;display:block}
+.install-down{position:absolute;left:13px;top:-10px;font-size:58px;line-height:1;font-weight:800}
+.install-tray{position:absolute;left:7px;right:7px;bottom:3px;height:21px;border:6px solid currentColor;border-top:0;border-radius:0 0 7px 7px}
+.install-text{line-height:1.15}.install-arrow{font-size:54px;line-height:1;font-weight:400}
+
+/* cards */
+.counter-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.counter-card{
+  min-width:0;padding:18px 16px 16px;border-radius:34px;
+  background:linear-gradient(180deg,rgba(6,21,39,.95),rgba(5,14,28,.97));
+  border:3px solid rgba(126,163,203,.18);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.02),0 18px 42px rgba(0,0,0,.3);
+}
+.side-a{border-color:rgba(0,154,244,.72);box-shadow:inset 0 0 0 1px rgba(255,255,255,.02),0 0 24px rgba(0,149,255,.16),0 18px 42px rgba(0,0,0,.3)}
+.side-b{border-color:rgba(199,45,73,.8);box-shadow:inset 0 0 0 1px rgba(255,255,255,.02),0 0 24px rgba(255,49,83,.13),0 18px 42px rgba(0,0,0,.3)}
+
+.team-header{
+  display:grid;grid-template-columns:10px 1fr 62px;align-items:center;gap:12px;
+  min-height:108px;padding:9px 9px 9px 0;border-radius:25px;
+  background:linear-gradient(180deg,rgba(7,20,38,.96),rgba(5,15,29,.98));
+  border:1px solid rgba(152,181,220,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+}
+.team-accent{width:7px;height:68px;border-radius:999px;margin-left:3px}
+.side-a .team-accent{background:var(--blue);box-shadow:0 0 14px rgba(0,185,255,.95),0 0 28px rgba(0,143,255,.38)}
+.side-b .team-accent{background:var(--red);box-shadow:0 0 14px rgba(255,54,84,.95),0 0 28px rgba(255,31,68,.32)}
+.team-name-wrap{text-align:center}
+.team-name{width:100%;padding:0;border:0;outline:0;background:transparent;color:#fff;text-align:center;font-size:clamp(28px,4.2vw,46px);line-height:1;font-weight:950}
+.team-name:focus{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:5px}
+.team-sub{display:block;margin-top:8px;color:rgba(187,212,241,.93);font-size:clamp(11px,1.45vw,17px);letter-spacing:.28em;white-space:nowrap}
+.base-map{width:58px;height:58px;display:block;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35))}
+
+/* odometer */
+.odometer-zone{position:relative;margin:16px 0 18px;padding:0 0 30px}
+.odometer{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;
+  padding:14px;border-radius:24px;background:linear-gradient(180deg,#1b2b3e,#101b29);
+  border:1px solid rgba(130,158,197,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.03),0 9px 20px rgba(0,0,0,.22);
+}
+.digit{
+  position:relative;min-width:0;height:138px;display:grid;place-items:center;overflow:hidden;
+  border:5px solid #05070a;border-radius:11px;
+  background:linear-gradient(180deg,#22252a 0%,#0c0e12 48%,#15171b 51%,#050609 100%);
+  color:#fff;font-family:Arial,Helvetica,sans-serif;font-size:clamp(82px,10.5vw,126px);font-weight:900;line-height:1;letter-spacing:-.05em;
+  text-shadow:0 3px 2px #000;box-shadow:inset 0 2px 2px rgba(255,255,255,.09),inset 0 -10px 16px rgba(0,0,0,.48),0 2px 5px rgba(0,0,0,.5);
+}
+.digit::after{content:"";position:absolute;left:0;right:0;top:50%;height:2px;background:rgba(255,255,255,.07);box-shadow:0 1px 0 rgba(0,0,0,.8)}
+.odometer.pulse{animation:counterPulse .16s ease}
+.count-unit{position:absolute;right:3px;bottom:0;color:#fff;font-size:clamp(28px,4vw,42px);font-weight:950;text-shadow:0 4px 10px rgba(0,0,0,.4)}
+
+/* count button
+   主操作は大きく保ちつつ、縦長になりすぎない横長比率にする。 */
+.pitch-button{
+  width:100%;
+  min-height:clamp(142px,15vh,162px);
+  padding:11px 10px 13px;
+  border:0;
+  border-radius:27px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  background:linear-gradient(180deg,#fff 0%,#f3f6fb 70%,#e6edf6 100%);
+  color:#06101c;
+  box-shadow:0 8px 0 #bacfe5,0 12px 28px rgba(0,0,0,.23);
+  position:relative;
+  overflow:hidden;
+}
+.side-a .pitch-button{box-shadow:0 8px 0 #b7d1e8,0 0 24px rgba(0,159,255,.4),0 12px 28px rgba(0,0,0,.22)}
+.side-b .pitch-button{box-shadow:0 8px 0 #dfc4ca,0 0 24px rgba(255,52,84,.36),0 12px 28px rgba(0,0,0,.22)}
+.pitch-button:active{transform:translateY(6px);box-shadow:0 2px 0 #b6c7d8,0 5px 14px rgba(0,0,0,.18)}
+.pitch-button.flash{animation:pitchFlash .18s ease}
+.count-ball-image{
+  display:block;
+  width:auto;
+  height:76px;
+  max-width:48%;
+  margin:0 auto 4px;
+  object-fit:contain;
+  filter:drop-shadow(0 3px 6px rgba(0,0,0,.14));
+}
+.pitch-button strong{display:block;font-size:clamp(25px,3.8vw,36px);line-height:1.05;font-weight:950;white-space:nowrap}
+.pitch-button small{margin-top:2px;color:#66758d;font-size:clamp(12px,1.8vw,17px);font-weight:850}
+
+/* secondary buttons
+   1球カウントから明確に離し、修正操作として別グループに見せる。 */
+.action-button{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;border-radius:19px;font-weight:950}
+.action-button span{font-size:1.35em;line-height:1}
+.undo-button{
+  min-height:68px;
+  margin-top:28px;
+  border:1px solid rgba(142,176,216,.55);
+  background:linear-gradient(180deg,#203047,#111d2c);
+  color:#fff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+  font-size:clamp(18px,2.9vw,26px)
+}
+.reset-button{
+  min-height:60px;
+  margin-top:18px;
+  border:2px solid #ff435c;
+  background:linear-gradient(180deg,rgba(67,15,30,.32),rgba(27,7,16,.36));
+  color:#ff4d64;
+  box-shadow:0 0 18px rgba(255,55,86,.08);
+  font-size:clamp(17px,2.7vw,24px)
+}
+.reset-icon{font-size:1.55em!important}
+
+/* footer */
+.saved{margin:38px 0 22px;text-align:center;color:rgba(231,241,255,.94);font-size:16px;text-shadow:0 3px 10px rgba(0,0,0,.4)}
+.save-icon{display:inline-block;width:20px;height:24px;margin-right:10px;vertical-align:-6px;border:2px solid #c8e7ff;border-radius:50%/18%;position:relative}
+.save-icon::before,.save-icon::after{content:"";position:absolute;left:-2px;right:-2px;height:7px;border:2px solid #c8e7ff;border-top:0;border-radius:0 0 50% 50%}
+.save-icon::before{top:6px}.save-icon::after{top:13px}
+.counter-footer{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:18px;color:rgba(198,216,238,.76);padding:10px 40px 0}
+.counter-footer span{height:1px;background:rgba(198,216,238,.48)}
+.counter-footer p{margin:0;font-size:11px;letter-spacing:.55em;white-space:nowrap}
+
+
+/* utility navigation */
+.counter-tools{
+  display:grid;
+  gap:12px;
+  margin:0 0 18px;
+}
+.counter-bottom-tools{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  width:min(100%,760px);
+  justify-content:center;
+  margin:0 auto 22px;
+}
+.tool-button{
+  min-height:68px;
+  padding:10px 16px;
+  border:1px solid rgba(134,171,211,.38);
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  background:linear-gradient(180deg,rgba(16,31,49,.88),rgba(7,19,32,.92));
+  color:#f7fbff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 10px 24px rgba(0,0,0,.16);
+  text-align:left;
+}
+.tool-button:active{transform:translateY(1px)}
+.tool-button strong{display:block;font-size:16px;line-height:1.15}
+.tool-button small{display:block;margin-top:4px;color:#9eb2c8;font-size:11px;font-weight:700}
+.tool-icon{
+  flex:0 0 38px;
+  width:38px;
+  height:38px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(145,190,230,.42);
+  border-radius:12px;
+  background:rgba(7,18,30,.76);
+  color:#74ccff;
+  font-size:22px;
+  font-weight:950;
+}
+.share-tool{border-color:rgba(143,177,212,.34)}
+.counter-bottom-tools .tool-button{
+  background:linear-gradient(180deg,rgba(14,27,43,.80),rgba(7,17,29,.86));
+  border-color:rgba(120,154,190,.30);
+}
+.share-icon{color:#fff}
+
+/* knowledge/share dialogs */
+.utility-dialog{
+  width:min(92vw,560px);
+  max-height:min(86dvh,760px);
+  overflow:auto;
+}
+.dialog-heading{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:18px;
+  margin-bottom:18px;
+}
+.dialog-heading h2{margin:2px 0 0}
+.dialog-eyebrow{
+  margin:0!important;
+  color:#5fc6ff!important;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.22em;
+}
+.dialog-close-icon{
+  flex:0 0 42px;
+  width:42px;
+  height:42px;
+  padding:0;
+  border:1px solid rgba(130,158,192,.42);
+  border-radius:12px;
+  background:#18283b;
+  color:#fff;
+  font-size:27px;
+  line-height:1;
+}
+.knowledge-list{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:20px;
+}
+.knowledge-list section{
+  padding:15px;
+  border:1px solid rgba(113,148,187,.25);
+  border-radius:15px;
+  background:rgba(4,13,24,.66);
+}
+.knowledge-list strong{
+  display:block;
+  margin-bottom:6px;
+  color:#fff;
+  font-size:15px;
+}
+.knowledge-list p{
+  margin:0;
+  color:#b8c7d7;
+  font-size:12px;
+  line-height:1.65;
+}
+.share-lead{margin-top:-4px!important}
+.share-qr-wrap{
+  width:min(300px,100%);
+  margin:0 auto 18px;
+  padding:15px;
+  border-radius:20px;
+  background:#fff;
+  text-align:center;
+  box-shadow:0 12px 30px rgba(0,0,0,.22);
+}
+.share-qr-wrap img{
+  display:block;
+  width:100%;
+  height:auto;
+  border-radius:12px;
+}
+.share-qr-wrap p{
+  margin:8px 0 0!important;
+  color:#364151!important;
+  font-size:11px;
+  line-height:1.4;
+  font-weight:800;
+}
+.share-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.share-action{
+  min-height:76px;
+  padding:10px 12px;
+  border:1px solid rgba(129,161,198,.46);
+  border-radius:15px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  background:#1a2a3d;
+  color:#fff;
+  text-align:left;
+}
+.share-action>span:first-child{
+  flex:0 0 34px;
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border-radius:10px;
+  background:rgba(255,255,255,.08);
+  font-size:21px;
+}
+.share-action strong{display:block;font-size:14px}
+.share-action small{
+  display:block;
+  margin-top:4px;
+  color:#adc0d4;
+  font-size:10px;
+  line-height:1.35;
+}
+.share-primary{
+  border-color:rgba(82,186,255,.72);
+  background:linear-gradient(180deg,#176fa8,#104f7d);
+}
+.share-primary small{color:#d8efff}
+.share-close-row{margin-top:12px}
+
+
+/* 全リセットは最下部に隔離して誤操作を防ぐ */
+.all-reset-zone{
+  width:min(100%,620px);
+  margin:26px auto 0;
+  padding-top:20px;
+  border-top:1px solid rgba(147,170,199,.18);
+}
+.all-reset-button{
+  width:100%;
+  min-height:62px;
+  padding:10px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:11px;
+  border:1px solid rgba(255,72,96,.44);
+  border-radius:16px;
+  background:rgba(56,10,22,.30);
+  color:#ff6a7e;
+  text-align:left;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.02);
+}
+.all-reset-button>span:first-child{
+  flex:0 0 34px;
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(255,84,108,.40);
+  border-radius:10px;
+  font-size:22px;
+}
+.all-reset-button strong{
+  display:block;
+  font-size:15px;
+}
+.all-reset-button small{
+  display:block;
+  margin-top:3px;
+  color:#c9939c;
+  font-size:10px;
+  font-weight:700;
+}
+.all-reset-button:active{
+  transform:translateY(1px);
+}
+.all-reset-confirm{
+  background:#bf2941;
+}
+
+/* dialogs */
+.dialog{width:min(92vw,430px);padding:24px;border:1px solid rgba(105,134,171,.7);border-radius:22px;background:linear-gradient(180deg,#132238,#0a1424);color:#fff}
+.dialog::backdrop{background:rgba(0,0,0,.8)}
+.dialog h2{margin:0 0 10px;font-size:22px}.dialog p{margin:0 0 22px;color:#c6d4e4;line-height:1.7}
+.dialog-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.dialog-actions.one{grid-template-columns:1fr}.dialog-actions button{min-height:58px;border-radius:14px;font-size:16px;font-weight:900}
+.dialog-cancel{border:1px solid #5c718b;background:#223148;color:#fff}.dialog-confirm{border:0;background:#b82e43;color:#fff}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+@keyframes counterPulse{50%{transform:scale(1.022);filter:brightness(1.16)}}
+@keyframes pitchFlash{50%{filter:brightness(.86)}}
+
+
+@media(min-width:761px){
+  body{
+    background:
+      linear-gradient(180deg,rgba(1,8,17,.05),rgba(2,8,16,.12) 30%,rgba(2,7,13,.54) 70%,rgba(0,0,0,.78)),
+      url("/counter/images/bg-stadium-desktop.png") center top/cover no-repeat fixed;
+  }
+}
+
+
+/* 低解像度ノートPC / 横向きタブレット向け
+   1280x720〜1366x768級でも主要操作が詰まりにくいよう縦方向だけ圧縮。 */
+@media(min-width:761px) and (max-height:820px){
+  .app{
+    padding-top:max(14px,env(safe-area-inset-top));
+    padding-bottom:max(22px,env(safe-area-inset-bottom));
+  }
+
+  .hero{
+    min-height:126px;
+    margin-bottom:6px;
+  }
+
+  .back-link{
+    width:58px;
+    height:58px;
+    border-radius:17px;
+    font-size:50px;
+  }
+
+  .hero-title h1{
+    font-size:clamp(38px,5.2vw,58px);
+  }
+
+  .hero-ja{
+    margin-top:6px;
+    font-size:clamp(18px,2.4vw,26px);
+  }
+
+  .hero-copy{
+    margin-top:14px;
+  }
+
+  .install-button{
+    min-height:72px;
+    margin-bottom:18px;
+    border-radius:23px;
+  }
+
+  .team-header{
+    min-height:86px;
+  }
+
+  .team-accent{
+    height:56px;
+  }
+
+  .team-name{
+    font-size:clamp(24px,3.1vw,36px);
+  }
+
+  .odometer-zone{
+    margin:10px 0 12px;
+    padding-bottom:24px;
+  }
+
+  .digit{
+    height:104px;
+    font-size:clamp(68px,8.5vw,96px);
+  }
+
+  .pitch-button{
+    min-height:132px;
+    padding:9px 8px 10px;
+  }
+
+  .count-ball-image{
+    width:auto;
+    height:66px;
+    max-width:46%;
+    margin-bottom:3px;
+  }
+
+  .pitch-button strong{
+    font-size:clamp(23px,3.1vw,31px);
+  }
+
+  .pitch-button small{
+    font-size:13px;
+  }
+
+  .undo-button{
+    min-height:56px;
+    margin-top:20px;
+    font-size:18px;
+  }
+
+  .reset-button{
+    min-height:50px;
+    margin-top:12px;
+    font-size:17px;
+  }
+
+  .saved{
+    margin:20px 0 12px;
+    font-size:13px;
+  }
+
+  .counter-footer{
+    padding-top:4px;
+  }
+}
+
+/* mobile keeps the two-panel physical-counter layout */
+@media(max-width:760px){
+
+  .counter-tools{gap:6px;margin-bottom:10px}
+  .counter-bottom-tools{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:6px;
+    width:100%;
+    margin:0 0 16px;
+  }
+  .tool-button{
+    min-height:52px;
+    padding:7px 8px;
+    gap:7px;
+    border-radius:14px
+  }
+  .tool-button strong{font-size:11px;line-height:1.2}
+  .tool-button small{font-size:7px;margin-top:2px;line-height:1.25}
+  .tool-icon{
+    flex-basis:30px;
+    width:30px;
+    height:30px;
+    border-radius:9px;
+    font-size:17px
+  }
+  .utility-dialog{width:min(94vw,520px);padding:18px}
+  .knowledge-list{grid-template-columns:1fr;gap:8px}
+  .knowledge-list section{padding:12px}
+  .share-actions{grid-template-columns:1fr}
+  .share-action{min-height:64px}
+  .share-qr-wrap{width:min(250px,100%)}
+  .all-reset-zone{
+    margin-top:18px;
+    padding-top:14px;
+  }
+  .all-reset-button{
+    min-height:54px;
+    padding:8px 10px;
+    border-radius:14px;
+  }
+  .all-reset-button strong{font-size:12px}
+  .all-reset-button small{font-size:8px}
+
+  .app{padding:max(14px,env(safe-area-inset-top)) 8px max(24px,env(safe-area-inset-bottom))}
+  .hero{
+    grid-template-columns:54px 1fr 72px;
+    gap:6px;
+    min-height:106px;
+    margin-bottom:2px
+  }
+  .back-link{width:48px;height:48px;border-radius:14px;font-size:41px}
+  .hero-title{padding-top:2px}
+  .hero-title h1{font-size:clamp(29px,8.1vw,42px)}
+  .hero-ja{margin-top:5px;font-size:16px}
+  .hero-copy{
+    margin-top:9px;
+    margin-bottom:0;
+    font-size:7px;
+    letter-spacing:.36em
+  }
+  .hero-side{padding-top:20px;font-size:8px;letter-spacing:.14em}.hero-side i{width:40px;margin-top:7px}
+  .install-button{min-height:66px;margin-bottom:13px;padding:8px 13px;grid-template-columns:42px 1fr 18px;gap:7px;border-radius:19px;font-size:clamp(14px,4vw,18px)}
+  .install-symbol{width:38px;height:40px}.install-down{left:8px;top:-9px;font-size:42px}.install-tray{left:5px;right:5px;bottom:1px;height:15px;border-width:4px}.install-arrow{font-size:30px}
+  .counter-grid{gap:6px}
+  .counter-card{padding:7px 5px 9px;border-radius:21px;border-width:2px}
+  .team-header{grid-template-columns:5px 1fr 35px;gap:4px;min-height:78px;padding:6px 4px 6px 0;border-radius:15px}
+  .team-accent{width:4px;height:46px;margin-left:1px}.team-name{font-size:clamp(18px,5vw,25px)}.team-sub{margin-top:5px;font-size:7px;letter-spacing:.17em}.base-map{width:34px;height:34px}
+  .odometer-zone{margin:10px 0 12px;padding-bottom:20px}.odometer{gap:3px;padding:6px;border-radius:13px}.digit{height:82px;border-width:3px;border-radius:7px;font-size:clamp(48px,13vw,68px)}.count-unit{right:1px;font-size:18px}
+  .pitch-button{
+    min-height:118px;
+    padding:7px 4px 9px;
+    border-radius:18px
+  }
+  .count-ball-image{
+    display:block;
+    width:auto;
+    height:62px;
+    max-width:50%;
+    margin:0 auto 3px;
+    object-fit:contain;
+    filter:drop-shadow(0 3px 6px rgba(0,0,0,.14));
+  }
+  .pitch-button strong{font-size:clamp(16px,4.7vw,22px)}
+  .pitch-button small{font-size:10px;margin-top:1px}
+  .undo-button{
+    min-height:54px;
+    margin-top:18px;
+    border-radius:14px;
+    gap:7px;
+    font-size:14px
+  }
+  .reset-button{
+    min-height:50px;
+    margin-top:12px;
+    border-radius:14px;
+    gap:7px;
+    font-size:13px
+  }
+  .saved{margin:24px 0 14px;font-size:12px}.save-icon{width:16px;height:20px;margin-right:7px;vertical-align:-5px}
+  .counter-footer{padding:5px 18px 0;gap:10px}.counter-footer p{font-size:6px;letter-spacing:.36em}
+}
+
+@media(max-width:390px){
+  .hero{grid-template-columns:48px 1fr 54px}.hero-side{font-size:7px}.hero-title h1{font-size:27px}.hero-copy{font-size:6px;letter-spacing:.3em}
+  .team-name{font-size:17px}
+  .digit{height:76px;font-size:50px}
+  .pitch-button{min-height:112px}
+  .count-ball-image{width:auto;height:56px;max-width:48%}
+  .pitch-button strong{font-size:15px}
+  .pitch-button small{font-size:9px}
+  .undo-button{min-height:50px;margin-top:16px;font-size:12px}
+  .reset-button{min-height:46px;margin-top:10px;font-size:12px}
+}

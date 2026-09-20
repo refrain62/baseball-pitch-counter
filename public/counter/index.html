@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<meta name="theme-color" content="#080a0d">
-<meta name="description" content="野球の投球数を2系統でカウントするシンプルなPWA">
+<meta name="theme-color" content="#061526">
+<meta name="description" content="野球の投球数を1塁側・3塁側で同時に数えられるピッチカウンター">
 <link rel="canonical" href="https://baseball-pitch-counter.refrain62.workers.dev/counter/">
 <meta property="og:url" content="https://baseball-pitch-counter.refrain62.workers.dev/counter/">
-<title>Pitch Counter</title>
+<title>Pitch Counter | 投球数カウンター</title>
 <link rel="manifest" href="/counter/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/counter/icons/apple-touch-icon.png">
 <link rel="icon" href="/counter/icons/icon-192.png" type="image/png">
@@ -16,37 +16,214 @@
 </head>
 <body>
 <main class="app">
-  <header class="counter-header">
+  <header class="hero">
     <a class="back-link" href="/" aria-label="説明ページへ戻る">‹</a>
-    <div>
+
+    <div class="hero-title">
       <h1>PITCH COUNTER</h1>
-      <p>投球ごとに大きいボタンをタップ</p>
+      <p class="hero-ja">投球数カウンター</p>
+      <p class="hero-copy">ONE PITCH&nbsp;&nbsp; MORE STORIES</p>
     </div>
-    <button class="install-button" id="installButton" type="button" hidden>このカウンターをホーム画面に追加</button>
+
+    <div class="hero-side" aria-hidden="true">
+      <span>BASEBALL</span>
+      <span>LIFE</span>
+      <i></i>
+    </div>
   </header>
 
-  <section class="grid" aria-label="投球数カウンター">
-    <article class="side side-a">
-      <label class="sr-only" for="nameA">左側の名称</label>
-      <input id="nameA" class="name" value="1塁側" maxlength="12" autocomplete="off">
-      <div id="countA" class="count" aria-live="polite">0</div>
-      <button class="plus" type="button" data-plus="A" aria-label="1塁側を1球増やす"><span>＋1</span></button>
-      <button class="undo" type="button" data-undo="A">↶ 1球戻す</button>
-      <button class="side-reset" type="button" data-reset="A">リセット</button>
+  <button class="install-button" id="installButton" type="button" hidden>
+    <span class="install-symbol" aria-hidden="true">
+      <span class="install-down">↓</span>
+      <span class="install-tray"></span>
+    </span>
+    <span class="install-text" id="installButtonText">このカウンターをインストール</span>
+    <span class="install-arrow" aria-hidden="true">›</span>
+  </button>
+
+  <section class="counter-grid" aria-label="投球数カウンター">
+    <article class="counter-card side-a">
+      <div class="team-header">
+        <span class="team-accent" aria-hidden="true"></span>
+        <div class="team-name-wrap">
+          <label class="sr-only" for="nameA">1塁側の名称</label>
+          <input id="nameA" class="team-name" value="1塁側" maxlength="12" autocomplete="off" aria-label="1塁側の名称">
+          <span class="team-sub">HOME TEAM</span>
+        </div>
+        <img class="base-map" src="/counter/images/base-first.svg" width="62" height="62" alt="" aria-hidden="true">
+      </div>
+
+      <div class="odometer-zone">
+        <div id="countA" class="odometer" aria-live="polite" aria-label="1塁側 0球"></div>
+        <span class="count-unit">球</span>
+      </div>
+
+      <button class="pitch-button" type="button" data-plus="A" aria-label="1塁側を1球増やす">
+        <img class="count-ball-image" src="/counter/images/baseball-count-button.png" alt="" width="210" height="75" aria-hidden="true">
+        <strong>1球カウント</strong>
+        <small>投球ごとにタップ</small>
+      </button>
+
+      <button class="action-button undo-button" type="button" data-undo="A">
+        <span class="undo-icon" aria-hidden="true">↶</span>
+        <strong>1球戻す</strong>
+      </button>
+
+      <button class="action-button reset-button" type="button" data-reset="A">
+        <span class="reset-icon" aria-hidden="true">↻</span>
+        <strong>リセット</strong>
+      </button>
     </article>
 
-    <article class="side side-b">
-      <label class="sr-only" for="nameB">右側の名称</label>
-      <input id="nameB" class="name" value="3塁側" maxlength="12" autocomplete="off">
-      <div id="countB" class="count" aria-live="polite">0</div>
-      <button class="plus" type="button" data-plus="B" aria-label="3塁側を1球増やす"><span>＋1</span></button>
-      <button class="undo" type="button" data-undo="B">↶ 1球戻す</button>
-      <button class="side-reset" type="button" data-reset="B">リセット</button>
+    <article class="counter-card side-b">
+      <div class="team-header">
+        <span class="team-accent" aria-hidden="true"></span>
+        <div class="team-name-wrap">
+          <label class="sr-only" for="nameB">3塁側の名称</label>
+          <input id="nameB" class="team-name" value="3塁側" maxlength="12" autocomplete="off" aria-label="3塁側の名称">
+          <span class="team-sub">VISITOR TEAM</span>
+        </div>
+        <img class="base-map" src="/counter/images/base-third.svg" width="62" height="62" alt="" aria-hidden="true">
+      </div>
+
+      <div class="odometer-zone">
+        <div id="countB" class="odometer" aria-live="polite" aria-label="3塁側 0球"></div>
+        <span class="count-unit">球</span>
+      </div>
+
+      <button class="pitch-button" type="button" data-plus="B" aria-label="3塁側を1球増やす">
+        <img class="count-ball-image" src="/counter/images/baseball-count-button.png" alt="" width="210" height="75" aria-hidden="true">
+        <strong>1球カウント</strong>
+        <small>投球ごとにタップ</small>
+      </button>
+
+      <button class="action-button undo-button" type="button" data-undo="B">
+        <span class="undo-icon" aria-hidden="true">↶</span>
+        <strong>1球戻す</strong>
+      </button>
+
+      <button class="action-button reset-button" type="button" data-reset="B">
+        <span class="reset-icon" aria-hidden="true">↻</span>
+        <strong>リセット</strong>
+      </button>
     </article>
   </section>
 
-  <p class="saved">端末内に自動保存</p>
+  <p class="saved"><span class="save-icon" aria-hidden="true"></span>端末内に自動保存</p>
+
+  <nav class="counter-bottom-tools" aria-label="補助機能">
+    <button class="tool-button knowledge-tool" id="knowledgeButton" type="button">
+      <span class="tool-icon" aria-hidden="true">?</span>
+      <span>
+        <strong>使い方・ナレッジ</strong>
+        <small>操作方法を確認</small>
+      </span>
+    </button>
+
+    <button class="tool-button share-tool" id="shareButton" type="button">
+      <span class="tool-icon share-icon" aria-hidden="true">↗</span>
+      <span>
+        <strong>知り合いに共有する</strong>
+        <small>QR・LINEなどで送る</small>
+      </span>
+    </button>
+  </nav>
+
+  <footer class="counter-footer" aria-hidden="true">
+    <span></span>
+    <p>BASEBALL MAKES A BETTER DAY</p>
+    <span></span>
+  </footer>
+
+  <section class="all-reset-zone" aria-label="全データのリセット">
+    <button class="all-reset-button" id="allResetButton" type="button">
+      <span aria-hidden="true">↻</span>
+      <span>
+        <strong>すべてリセット</strong>
+        <small>球数とチーム名を初期状態に戻す</small>
+      </span>
+    </button>
+  </section>
 </main>
+
+<dialog id="knowledgeDialog" class="dialog utility-dialog">
+  <div class="dialog-heading">
+    <div>
+      <p class="dialog-eyebrow">QUICK KNOWLEDGE</p>
+      <h2>使い方・ナレッジ</h2>
+    </div>
+    <button class="dialog-close-icon" id="closeKnowledge" type="button" aria-label="使い方を閉じる">×</button>
+  </div>
+
+  <div class="knowledge-list">
+    <section>
+      <strong>1球カウント</strong>
+      <p>投球ごとに白い「1球カウント」を1回タップします。</p>
+    </section>
+    <section>
+      <strong>1球戻す</strong>
+      <p>押し間違えた時だけ使います。追加とは違う音で分かります。</p>
+    </section>
+    <section>
+      <strong>リセット</strong>
+      <p>確認画面を出してから0球へ戻すため、誤操作しにくくしています。</p>
+    </section>
+    <section>
+      <strong>自動保存</strong>
+      <p>球数とチーム名はこの端末内に保存され、続きから使えます。</p>
+    </section>
+    <section>
+      <strong>1塁側 / 3塁側</strong>
+      <p>左右を独立してカウントできます。チーム名も変更できます。</p>
+    </section>
+  </div>
+
+  <div class="dialog-actions one">
+    <button id="closeKnowledgeBottom" class="dialog-cancel" type="button">閉じる</button>
+  </div>
+</dialog>
+
+<dialog id="shareDialog" class="dialog utility-dialog share-dialog">
+  <div class="dialog-heading">
+    <div>
+      <p class="dialog-eyebrow">SHARE</p>
+      <h2>知り合いに共有する</h2>
+    </div>
+    <button class="dialog-close-icon" id="closeShare" type="button" aria-label="共有画面を閉じる">×</button>
+  </div>
+
+  <p class="share-lead">このカウンターの説明ページを共有できます。</p>
+
+  <div class="share-qr-wrap">
+    <img src="/counter/images/share-qr.png"
+         width="320"
+         height="320"
+         alt="投球数カウンターの説明ページを開くQRコード">
+    <p>相手のスマホで読み取ってください</p>
+  </div>
+
+  <div class="share-actions">
+    <button class="share-action share-primary" id="nativeShareButton" type="button">
+      <span aria-hidden="true">↗</span>
+      <span>
+        <strong>LINEなどで共有</strong>
+        <small>端末の共有メニューを開く</small>
+      </span>
+    </button>
+
+    <button class="share-action" id="copyShareLink" type="button">
+      <span aria-hidden="true">⧉</span>
+      <span>
+        <strong>リンクをコピー</strong>
+        <small id="copyShareStatus">URLをクリップボードへコピー</small>
+      </span>
+    </button>
+  </div>
+
+  <div class="dialog-actions one share-close-row">
+    <button id="closeShareBottom" class="dialog-cancel" type="button">閉じる</button>
+  </div>
+</dialog>
 
 <dialog id="resetDialog" class="dialog">
   <h2>リセットしますか？</h2>
@@ -54,6 +231,19 @@
   <div class="dialog-actions">
     <button id="cancelReset" class="dialog-cancel" type="button">キャンセル</button>
     <button id="confirmReset" class="dialog-confirm" type="button">リセットする</button>
+  </div>
+</dialog>
+
+<dialog id="allResetDialog" class="dialog all-reset-dialog">
+  <h2>すべてリセットしますか？</h2>
+  <p>
+    1塁側・3塁側の<strong>球数を0</strong>にし、<br>
+    チーム名も<strong>「1塁側」「3塁側」</strong>へ戻します。<br>
+    この操作は元に戻せません。
+  </p>
+  <div class="dialog-actions">
+    <button id="cancelAllReset" class="dialog-cancel" type="button">キャンセル</button>
+    <button id="confirmAllReset" class="dialog-confirm all-reset-confirm" type="button">すべてリセット</button>
   </div>
 </dialog>
 

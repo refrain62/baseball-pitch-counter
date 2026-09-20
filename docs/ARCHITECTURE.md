@@ -39,3 +39,27 @@ public/
 ## Service Worker
 
 `/counter/sw.js` を `/counter/` scopeで登録する。LPにはService Workerを適用しない。
+
+## Counter UI v12
+
+`/counter/` は実機カウンターをモチーフにした2カラムUI。1塁側は青、3塁側は赤で識別し、各ヘッダーのダイヤモンドでも1塁・3塁を明示する。表示は3桁の機械式カウンター風で、投球数は0〜999。背景・ベース表示・PWAアイコンを含め、外部CDNや外部JSは使用しない。
+
+
+### Counter image assets
+
+`public/counter/images/` では、カウンター画面に使う実画像を同梱する。
+
+- `bg-stadium-mobile.png`: スマホ向け縦背景
+- `bg-stadium-desktop.png`: タブレット/PC向け横背景
+- `baseball-count-button.png`: 1球カウントボタン上部の共通ボール画像
+- `base-first.svg`: 1塁側表示
+- `base-third.svg`: 3塁側表示
+
+## LP background assets
+
+The landing page uses local self-hosted background assets only:
+
+- `public/assets/lp-bg-mobile.png`
+- `public/assets/lp-bg-desktop.png`
+
+The mobile and desktop backgrounds are selected with CSS media queries. A dark overlay is always applied to preserve text contrast.

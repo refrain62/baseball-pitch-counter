@@ -13,8 +13,10 @@
 <meta property="og:image" content="https://baseball-pitch-counter.refrain62.workers.dev/assets/app-icon-512.png">
 <meta name="twitter:card" content="summary">
 <title>Pitch Counter | 野球の投球数カウンター</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<meta property="og:image" content="https://baseball-pitch-counter.refrain62.workers.dev/og-image.png">
 <link rel="icon" href="/assets/app-icon-192.png" type="image/png">
-<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/site.css?v=28">
 </head>
 <body>
 <header class="site-header">
@@ -23,6 +25,7 @@
     <span>Pitch Counter</span>
   </a>
   <nav class="header-actions" aria-label="メインメニュー">
+    <a class="knowledge-button" href="#knowledge">使い方・ナレッジ</a>
     <a class="header-link" href="#install">アプリとして使う方法</a>
     <a class="header-button" href="/counter/">カウンターを開く</a>
   </nav>
@@ -33,10 +36,17 @@
     <div class="hero-copy">
       <p class="eyebrow">BASEBALL PITCH COUNTER</p>
       <h1>投球数を、<br>迷わずカウント。</h1>
-      <p class="lead">1塁側・3塁側を同時に数えられるシンプルな野球用カウンターです。会員登録はありません。まずは「今すぐカウンターを使う」を押せば始められます。</p>
+      <p class="lead">
+        <span class="lead-line">1塁側・3塁側を同時に数えられる、シンプルな野球用カウンターです。</span>
+        <span class="lead-line">会員登録不要。個人情報の入力もありません。</span>
+        <span class="lead-line">「今すぐカウンターを使う」を押せば、すぐに始められます。</span>
+      </p>
       <div class="hero-actions">
         <a class="button primary" href="/counter/">今すぐカウンターを使う</a>
         <a class="button secondary" href="#install">スマホにアプリとして入れる</a>
+        <button class="button share-lp-button" type="button" data-open-share>
+          知り合いに共有する
+        </button>
       </div>
       <p class="hero-help">迷ったら、まず「今すぐカウンターを使う」を押してください。</p>
       <ul class="trust-list" aria-label="特徴">
@@ -47,7 +57,10 @@
       </ul>
     </div>
     <div class="hero-visual" aria-hidden="true">
-      <img src="/assets/app-icon-512.png" width="360" height="360" alt="">
+      <picture>
+        <source media="(max-width: 760px)" srcset="/assets/hero-visual-sp.png">
+        <img src="/assets/hero-visual-desktop.png" width="360" height="360" alt="">
+      </picture>
     </div>
   </section>
 
@@ -77,6 +90,44 @@
         </div>
         <span class="choice-desc">QRコードを表示する</span>
       </a>
+    </div>
+  </section>
+
+  <section class="section knowledge-section" id="knowledge" aria-labelledby="knowledge-title">
+    <p class="eyebrow">QUICK KNOWLEDGE</p>
+    <h2 id="knowledge-title">迷ったときの使い方</h2>
+    <p class="section-intro">試合中に必要な操作だけ、すぐ確認できます。</p>
+
+    <div class="knowledge-grid">
+      <article class="knowledge-item">
+        <strong>1球カウント</strong>
+        <span>投球ごとに白いボタンを1回タップします。</span>
+      </article>
+      <article class="knowledge-item">
+        <strong>1球戻す</strong>
+        <span>押し間違えたときだけ使います。追加とは別の音で分かります。</span>
+      </article>
+      <article class="knowledge-item">
+        <strong>リセット</strong>
+        <span>確認画面を出してから0球に戻すので、誤操作しにくい設計です。</span>
+      </article>
+      <article class="knowledge-item">
+        <strong>自動保存</strong>
+        <span>球数はこの端末内に保存され、ページを閉じても続きから使えます。</span>
+      </article>
+      <article class="knowledge-item">
+        <strong>アプリとして使う</strong>
+        <span>ホーム画面に追加すると、次回から1タップで起動できます。</span>
+      </article>
+      <article class="knowledge-item">
+        <strong>1塁側 / 3塁側</strong>
+        <span>左右を独立してカウントでき、チーム名も変更できます。</span>
+      </article>
+    </div>
+
+    <div class="knowledge-actions">
+      <a class="button primary" href="/counter/">今すぐカウンターを使う</a>
+      <a class="button secondary" href="#install">インストール方法を見る</a>
     </div>
   </section>
 
@@ -124,12 +175,14 @@
       <p>パソコンでこのページを見ているときや、家族・チームの人に渡すときに使えます。QRコードはこの説明ページを開きます。</p>
       <div class="qr-actions">
         <a class="button primary" href="/counter/">この端末でカウンターを使う</a>
-        <a class="text-link" href="https://baseball-pitch-counter.refrain62.workers.dev/">公開ページを開く →</a>
+        <button class="button share-lp-button" type="button" data-open-share>
+          知り合いに共有する
+        </button>
       </div>
     </div>
     <a class="qr-card" href="https://baseball-pitch-counter.refrain62.workers.dev/" aria-label="Pitch Counterの公開ページを開く">
-      <img src="/assets/install-qr.svg" width="240" height="240" alt="Pitch Counterの説明ページを開くQRコード">
-      <p>baseball-pitch-counter<br>.refrain62.workers.dev</p>
+      <img src="/assets/install-qr.png" width="240" height="240" alt="Pitch Counterの説明ページを開くQRコード">
+      <p>スマホで読み取って開く</p>
     </a>
   </section>
 
@@ -143,12 +196,55 @@
   </section>
 </main>
 
+<dialog id="lpShareDialog" class="lp-share-dialog">
+  <div class="lp-share-heading">
+    <div>
+      <p class="eyebrow">SHARE</p>
+      <h2>知り合いに共有する</h2>
+    </div>
+    <button class="lp-share-close" id="lpShareClose" type="button" aria-label="共有画面を閉じる">×</button>
+  </div>
+
+  <p class="lp-share-lead">この説明ページを、チームや家族へ共有できます。</p>
+
+  <div class="lp-share-qr">
+    <img src="/assets/install-qr.png"
+         width="320"
+         height="320"
+         alt="Pitch Counterの説明ページを開くQRコード">
+    <p>相手のスマホで読み取ってください</p>
+  </div>
+
+  <div class="lp-share-actions">
+    <button class="lp-share-action lp-share-primary" id="lpNativeShare" type="button">
+      <span aria-hidden="true">↗</span>
+      <span>
+        <strong>LINEなどで共有</strong>
+        <small>端末の共有メニューを開く</small>
+      </span>
+    </button>
+
+    <button class="lp-share-action" id="lpCopyShare" type="button">
+      <span aria-hidden="true">⧉</span>
+      <span>
+        <strong>リンクをコピー</strong>
+        <small id="lpCopyShareStatus">URLをクリップボードへコピー</small>
+      </span>
+    </button>
+  </div>
+
+  <button class="lp-share-dismiss" id="lpShareCloseBottom" type="button">閉じる</button>
+</dialog>
+
+
 <footer>
   <span>Pitch Counter</span>
   <div class="footer-links">
+    <a href="#knowledge">使い方・ナレッジ</a>
     <a href="#install">アプリとして使う方法</a>
     <a href="/counter/">カウンターを開く</a>
   </div>
 </footer>
+<script src="/assets/site.js" defer></script>
 </body>
 </html>
