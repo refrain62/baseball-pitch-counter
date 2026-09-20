@@ -1,0 +1,33 @@
+{
+  "id": "/counter/",
+  "name": "野球 ピッチカウンター",
+  "short_name": "Pitch Counter",
+  "description": "野球の投球数を2系統でカウントするシンプルなアプリ",
+  "start_url": "/counter/",
+  "scope": "/counter/",
+  "display": "standalone",
+  "background_color": "#080a0d",
+  "theme_color": "#080a0d",
+  "orientation": "portrait",
+  "lang": "ja",
+  "icons": [
+    {
+      "src": "/counter/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/counter/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/counter/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
