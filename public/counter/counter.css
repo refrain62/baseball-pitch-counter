@@ -913,3 +913,56 @@ button{cursor:pointer}
     width:min(100%,210px);
   }
 }
+
+
+/* v35 install guides: cropped original screenshots */
+.install-guide-dialog{
+  width:min(94vw, 760px);
+  max-height:min(90dvh, 900px);
+  overflow:auto;
+}
+.install-platform-guide{
+  display:grid;
+  gap:14px;
+}
+.dialog-shot{
+  margin:0;
+  padding:10px;
+  border-radius:18px;
+  border:1px solid rgba(88,162,255,.24);
+  background:linear-gradient(180deg, rgba(7,18,36,.76), rgba(5,10,23,.92));
+}
+.dialog-shot img{
+  display:block;
+  width:100%;
+  height:auto;
+  border-radius:14px;
+}
+.dialog-shot figcaption{
+  display:grid;
+  gap:4px;
+  margin-top:10px;
+}
+.dialog-shot figcaption strong{
+  font-size:14px;
+  line-height:1.45;
+}
+.dialog-shot figcaption span{
+  font-size:12px;
+  line-height:1.6;
+  color:rgba(236,243,255,.84);
+}
+.install-final-note{
+  margin:0;
+  color:rgba(236,243,255,.84);
+  font-size:12px;
+  line-height:1.65;
+}
+@media(max-width:760px){
+  .install-guide-dialog{
+    width:min(96vw, 620px);
+  }
+  .dialog-shot{
+    padding:8px;
+  }
+}

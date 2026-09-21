@@ -25,7 +25,7 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/assets/app-icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="/assets/app-icon-192.png">
-<link rel="stylesheet" href="/assets/site.css?v=34">
+<link rel="stylesheet" href="/assets/site.css?v=35">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://baseball-pitch-counter.refrain62.workers.dev/#website","url":"https://baseball-pitch-counter.refrain62.workers.dev/","name":"Pitch Counter","alternateName":"野球の投球数カウンター","inLanguage":"ja-JP","description":"野球・ベースボールの投球数を1塁側と3塁側で同時に数えられる、無料・登録不要の投球数カウンター。"},{"@type":"WebApplication","@id":"https://baseball-pitch-counter.refrain62.workers.dev/#app","name":"Pitch Counter - 野球の投球数カウンター","url":"https://baseball-pitch-counter.refrain62.workers.dev/counter/","applicationCategory":"SportsApplication","operatingSystem":"iOS, Android, Windows, macOS","browserRequirements":"Requires a modern web browser with JavaScript","isAccessibleForFree":true,"inLanguage":"ja-JP","description":"少年野球、部活、草野球、練習試合などで使える野球用の投球数カウンター。左右独立カウント、選手交代履歴、チーム名変更、自動保存、PWAに対応。","image":"https://baseball-pitch-counter.refrain62.workers.dev/og-image.png","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"featureList":["1塁側と3塁側の投球数を同時カウント","チーム名変更","1球戻す","選手交代と投球数履歴","端末内自動保存","PWAとしてホーム画面に追加","QRコードと共有機能"]}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"野球の投球数を無料で数えられますか？","acceptedAnswer":{"@type":"Answer","text":"はい。会員登録や個人情報の入力なしで、無料で利用できます。"}},{"@type":"Question","name":"iPhoneでも使えますか？","acceptedAnswer":{"@type":"Answer","text":"はい。Safariからそのまま使えます。ホーム画面に追加するとアプリのように起動できます。"}},{"@type":"Question","name":"Androidでも使えますか？","acceptedAnswer":{"@type":"Answer","text":"はい。ChromeなどPWAに対応したブラウザから利用・インストールできます。"}},{"@type":"Question","name":"アプリをインストールしなくても使えますか？","acceptedAnswer":{"@type":"Answer","text":"はい。ブラウザでカウンターを開くだけですぐ使えます。"}},{"@type":"Question","name":"投手が交代したときの球数は残せますか？","acceptedAnswer":{"@type":"Answer","text":"はい。「選手交代」を押すと、その投手の投球数を履歴として残し、次の投手を0球からカウントできます。"}},{"@type":"Question","name":"1塁側と3塁側を同時に数えられますか？","acceptedAnswer":{"@type":"Answer","text":"はい。左右のカウンターは独立しているので、両チームの投球数を同時に管理できます。"}},{"@type":"Question","name":"投球数のデータはどこに保存されますか？","acceptedAnswer":{"@type":"Answer","text":"現在の球数、チーム名、選手交代履歴は利用中の端末内に自動保存されます。"}},{"@type":"Question","name":"間違えてカウントした球を戻せますか？","acceptedAnswer":{"@type":"Answer","text":"はい。「1球戻す」で直前のカウントを1球だけ戻せます。"}}]}</script>
 </head>
@@ -161,51 +161,38 @@
   <section class="section install-section" id="install" aria-labelledby="install-title">
     <a class="eyebrow eyebrow-link" href="/counter/?install=1">APP INSTALL · インストールを始める →</a>
     <h2 id="install-title">ホーム画面に置けば、次から1タップで起動できます</h2>
-    <p class="section-intro">お使いのスマホを選び、カードの最初のボタンを押してください。カウンター画面へ移動したあとも、次に押す場所を案内します。</p>
+    <p class="section-intro">お使いのスマホを選んでください。画像は実際の案内画像を切り出したもので、青く囲われた場所を見ると迷いにくくなります。</p>
 
     <div class="install-grid">
       <article class="install-card install-card-iphone">
         <span class="step-badge">iPhone / iPad</span>
         <a class="button primary install-cta" href="/counter/?install=1">ホーム画面への追加を始める</a>
-        <p class="install-short">端末画面を<strong>俯瞰した図</strong>です。実際の画面で<strong>青く囲った場所</strong>を探して押してください。</p>
-        <div class="overview-guide-grid" aria-label="iPhoneのホーム画面追加手順">
-          <div class="overview-step">
-            <div class="overview-step-head"><span class="overview-step-no">1</span><span><strong>Safariの共有を押す</strong><small>画面下のツールバー</small></span></div>
-            <div class="phone-overview iphone-overview" aria-hidden="true">
-              <div class="phone-status"><span>9:41</span><span>● ● ●</span></div>
-              <div class="mini-browser-page"><div class="mini-site-head"><span>‹</span><b>PITCH COUNTER</b><span>BB</span></div><div class="mini-counter-panels"><i></i><i></i></div><div class="mini-page-lines"><i></i><i></i><i></i></div></div>
-              <div class="iphone-toolbar"><span>‹</span><span>›</span><span class="overview-target share-target"><span class="share-symbol"><i></i></span><em>ここ</em></span><span>▭</span><span>☰</span></div>
-            </div>
-          </div>
-          <div class="overview-step">
-            <div class="overview-step-head"><span class="overview-step-no">2</span><span><strong>「ホーム画面に追加」</strong><small>共有メニューの下の方</small></span></div>
-            <div class="phone-overview iphone-overview share-overview" aria-hidden="true">
-              <div class="phone-status"><span>9:41</span><span>● ● ●</span></div><div class="share-screen-bg"></div>
-              <div class="overview-share-sheet"><div class="share-app-row"><i></i><i></i><i></i><i></i></div><div class="share-menu-row"><span>コピー</span><span>›</span></div><div class="share-menu-row overview-target home-target"><span><b>＋</b> ホーム画面に追加</span><em>ここ</em></div><div class="share-menu-row"><span>ページを検索</span><span>›</span></div></div>
-            </div>
-          </div>
+        <p class="install-short">Safariで開いたあと、<strong>下の共有ボタン</strong>と<strong>「ホーム画面に追加」</strong>だけ分かればOKです。</p>
+        <div class="install-shot-list" aria-label="iPhoneのホーム画面追加手順">
+          <figure class="install-shot">
+            <img src="/assets/install-iphone-share.png" width="902" height="380" loading="lazy" decoding="async" alt="iPhoneのSafari画面全体。下部の共有ボタンが青く強調されている">
+            <figcaption><strong>1. Safariの共有を押す</strong><span>画面下の共有ボタンをタップします。</span></figcaption>
+          </figure>
+          <figure class="install-shot">
+            <img src="/assets/install-iphone-addhome.png" width="902" height="385" loading="lazy" decoding="async" alt="iPhoneの共有メニュー。ホーム画面に追加が青く強調されている">
+            <figcaption><strong>2. 「ホーム画面に追加」を押す</strong><span>共有メニューを少し下に見て選びます。最後に右上の「追加」で完了です。</span></figcaption>
+          </figure>
         </div>
-        <p class="install-note">最後に右上の「追加」で完了です。iPhoneはSafariの仕様上、サイト側から自動追加はできません。</p>
+        <p class="install-note">iPhoneはSafariの仕様上、サイト側から自動でホーム画面に追加することはできません。</p>
       </article>
       <article class="install-card install-card-android">
         <span class="step-badge">Android / Chrome</span>
         <a class="button primary install-cta" href="/counter/?install=1">アプリのインストールを始める</a>
-        <p class="install-short">Chrome画面全体の中で<strong>青く囲った場所</strong>を確認してください。通常はインストールボタン、表示されない時だけ右上の︙です。</p>
-        <div class="overview-guide-grid android-overview-grid" aria-label="Androidのインストール手順">
-          <div class="overview-step">
-            <div class="overview-step-head"><span class="overview-step-no">1</span><span><strong>通常はこちら</strong><small>ページ内のインストール</small></span></div>
-            <div class="phone-overview android-overview" aria-hidden="true">
-              <div class="android-status"><span>9:41</span><span>● ◉ ▪</span></div><div class="chrome-bar"><span>⌂</span><span class="chrome-address">baseball-pitch-counter…</span><span>□</span><span>⋮</span></div>
-              <div class="mini-browser-page android-page"><div class="mini-site-head"><span>‹</span><b>PITCH COUNTER</b><span>BB</span></div><div class="overview-target install-target"><span class="mini-install-icon">⇩</span><strong>このカウンターをインストール</strong><em>まずここ</em></div><div class="mini-counter-panels"><i></i><i></i></div></div>
-            </div>
-          </div>
-          <div class="overview-step fallback-step">
-            <div class="overview-step-head"><span class="overview-step-no">?</span><span><strong>ボタンが出ない時</strong><small>Chrome右上の︙</small></span></div>
-            <div class="phone-overview android-overview menu-overview" aria-hidden="true">
-              <div class="android-status"><span>9:41</span><span>● ◉ ▪</span></div><div class="chrome-bar"><span>⌂</span><span class="chrome-address">baseball-pitch-counter…</span><span>□</span><span class="overview-target dots-target">⋮<em>ここ</em></span></div><div class="mini-browser-page android-page faded"></div>
-              <div class="chrome-menu-popup"><div>新しいタブ</div><div>共有...</div><div class="overview-target menu-install-target"><span>アプリをインストール</span><em>選ぶ</em></div><div>ホーム画面に追加</div></div>
-            </div>
-          </div>
+        <p class="install-short">通常は<strong>ページ内のインストールボタン</strong>だけで進めます。出ない端末だけ<strong>右上の︙</strong>を使います。</p>
+        <div class="install-shot-list" aria-label="Androidのインストール手順">
+          <figure class="install-shot">
+            <img src="/assets/install-android-button.png" width="902" height="405" loading="lazy" decoding="async" alt="AndroidのChrome画面全体。このカウンターをインストールのボタンが青く強調されている">
+            <figcaption><strong>1. まずは「このカウンターをインストール」</strong><span>表示されたら、このボタンを押すのが最短です。確認画面が出たら「インストール」を押します。</span></figcaption>
+          </figure>
+          <figure class="install-shot">
+            <img src="/assets/install-android-menu.png" width="902" height="275" loading="lazy" decoding="async" alt="AndroidのChrome右上メニュー。ホーム画面に追加が青く強調されている">
+            <figcaption><strong>2. ボタンが出ない時だけ右上の︙</strong><span>Chrome右上のメニューから「アプリをインストール」または「ホーム画面に追加」を選んでください。</span></figcaption>
+          </figure>
         </div>
       </article>
     </div>

@@ -326,17 +326,30 @@
   </div>
 </dialog>
 
-<dialog id="installDialog" class="dialog install-guide-dialog">
+<dialog id="installDialog" class="dialog install-guide-dialog" aria-labelledby="installTitle" aria-describedby="installHelp">
   <div class="dialog-heading install-dialog-heading"><div><p class="dialog-eyebrow">ADD TO HOME SCREEN</p><h2 id="installTitle">ホーム画面に追加</h2></div><button class="dialog-close-icon" id="closeInstallTop" type="button" aria-label="インストール説明を閉じる">×</button></div>
-  <p id="installHelp">端末画面全体の図から、青く囲った場所を探して押してください。</p>
+  <p id="installHelp">実際の案内画像を切り出しています。青く囲った場所をそのまま押してください。</p>
   <div class="ios-install-steps install-platform-guide" id="iosInstallSteps" hidden>
-    <div class="compact-overview-row"><div class="compact-overview-copy"><b>① Safari下部の共有</b><small>画面全体で見るとここです</small></div><div class="phone-overview compact-phone iphone-overview" aria-hidden="true"><div class="phone-status"><span>9:41</span><span>● ●</span></div><div class="mini-browser-page"><div class="mini-site-head"><span>‹</span><b>PITCH COUNTER</b><span>BB</span></div><div class="mini-counter-panels"><i></i><i></i></div></div><div class="iphone-toolbar"><span>‹</span><span>›</span><span class="overview-target share-target"><span class="share-symbol"><i></i></span><em>ここ</em></span><span>▭</span><span>☰</span></div></div></div>
-    <div class="compact-overview-row"><div class="compact-overview-copy"><b>② ホーム画面に追加</b><small>共有メニューを下へ見る</small></div><div class="phone-overview compact-phone iphone-overview share-overview" aria-hidden="true"><div class="phone-status"><span>9:41</span><span>● ●</span></div><div class="share-screen-bg"></div><div class="overview-share-sheet"><div class="share-menu-row"><span>コピー</span><span>›</span></div><div class="share-menu-row overview-target home-target"><span><b>＋</b> ホーム画面に追加</span><em>ここ</em></div><div class="share-menu-row"><span>ページを検索</span><span>›</span></div></div></div></div>
-    <p class="install-final-note">最後に右上の「追加」を押せば完了です。</p>
+    <figure class="install-shot dialog-shot">
+      <img src="/assets/install-iphone-share.png" width="902" height="380" loading="lazy" decoding="async" alt="iPhoneのSafari画面全体。下部の共有ボタンが青く強調されている">
+      <figcaption><strong>1. Safari下の共有を押す</strong><span>画面全体の中では下中央の共有ボタンです。</span></figcaption>
+    </figure>
+    <figure class="install-shot dialog-shot">
+      <img src="/assets/install-iphone-addhome.png" width="902" height="385" loading="lazy" decoding="async" alt="iPhoneの共有メニュー。ホーム画面に追加が青く強調されている">
+      <figcaption><strong>2. 「ホーム画面に追加」を押す</strong><span>最後に右上の「追加」で完了です。</span></figcaption>
+    </figure>
+    <p class="install-final-note">iPhoneはSafariでのみホーム画面追加できます。</p>
   </div>
   <div class="android-install-steps install-platform-guide" id="androidInstallSteps" hidden>
-    <div class="compact-overview-row"><div class="compact-overview-copy"><b>① 通常はページ内ボタン</b><small>青く囲った場所を押すだけ</small></div><div class="phone-overview compact-phone android-overview" aria-hidden="true"><div class="android-status"><span>9:41</span><span>● ◉</span></div><div class="chrome-bar"><span>⌂</span><span class="chrome-address">Pitch Counter</span><span>⋮</span></div><div class="mini-browser-page android-page"><div class="mini-site-head"><span>‹</span><b>PITCH COUNTER</b><span>BB</span></div><div class="overview-target install-target"><span class="mini-install-icon">⇩</span><strong>インストール</strong><em>ここ</em></div><div class="mini-counter-panels"><i></i><i></i></div></div></div></div>
-    <div class="compact-overview-row"><div class="compact-overview-copy"><b>出ない場合だけ</b><small>Chrome右上の︙から</small></div><div class="phone-overview compact-phone android-overview menu-overview" aria-hidden="true"><div class="android-status"><span>9:41</span><span>● ◉</span></div><div class="chrome-bar"><span>⌂</span><span class="chrome-address">Pitch Counter</span><span class="overview-target dots-target">⋮<em>ここ</em></span></div><div class="mini-browser-page android-page faded"></div><div class="chrome-menu-popup compact-menu"><div>共有...</div><div class="overview-target menu-install-target"><span>アプリをインストール</span><em>選ぶ</em></div><div>ホーム画面に追加</div></div></div></div>
+    <figure class="install-shot dialog-shot">
+      <img src="/assets/install-android-button.png" width="902" height="405" loading="lazy" decoding="async" alt="AndroidのChrome画面全体。このカウンターをインストールのボタンが青く強調されている">
+      <figcaption><strong>1. まずはページ内のインストール</strong><span>表示されたらこのボタンを押すのが最短です。</span></figcaption>
+    </figure>
+    <figure class="install-shot dialog-shot">
+      <img src="/assets/install-android-menu.png" width="902" height="275" loading="lazy" decoding="async" alt="AndroidのChrome右上メニュー。ホーム画面に追加が青く強調されている">
+      <figcaption><strong>2. 出ない時だけ右上の︙</strong><span>「アプリをインストール」または「ホーム画面に追加」を選んでください。</span></figcaption>
+    </figure>
+    <p class="install-final-note">確認画面が出たら「インストール」または「追加」を押します。</p>
   </div>
   <div class="dialog-actions one"><button id="closeInstall" class="dialog-cancel" type="button">閉じる</button></div>
 </dialog>
