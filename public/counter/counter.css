@@ -84,9 +84,8 @@ button{cursor:pointer}
   text-align:left;font-size:clamp(22px,3.5vw,38px);font-weight:950;
 }
 .install-button[hidden]{display:none}
-.install-symbol{width:58px;height:56px;position:relative;display:block}
-.install-down{position:absolute;left:13px;top:-10px;font-size:58px;line-height:1;font-weight:800}
-.install-tray{position:absolute;left:7px;right:7px;bottom:3px;height:21px;border:6px solid currentColor;border-top:0;border-radius:0 0 7px 7px}
+.install-symbol{width:58px;height:58px;display:block;overflow:visible}
+.install-icon-line{fill:none;stroke:currentColor;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
 .install-text{line-height:1.15}.install-arrow{font-size:54px;line-height:1;font-weight:400}
 
 /* cards */
@@ -174,13 +173,22 @@ button{cursor:pointer}
 .action-button>span:first-child{font-size:1.35em;line-height:1}
 .action-copy{display:block;text-align:center}
 .action-copy strong{display:block}
-.action-copy small{
+.change-player-meta{
   display:block;
-  margin-top:3px;
-  color:#a9b8c9;
-  font-size:.48em;
-  font-weight:750;
-  line-height:1.1;
+  margin-top:4px;
+  color:#a9bdd0;
+  font-size:12px;
+  font-weight:800;
+  line-height:1.15;
+  white-space:nowrap;
+}
+.change-player-meta strong{
+  display:inline;
+  margin-left:3px;
+  color:#fff;
+  font-size:17px;
+  font-weight:950;
+  letter-spacing:.01em;
 }
 .change-player-button{
   min-height:62px;
@@ -678,6 +686,15 @@ button{cursor:pointer}
   .share-actions{grid-template-columns:1fr}
   .share-action{min-height:64px}
   .share-qr-wrap{width:min(250px,100%)}
+  .ios-share-guide-button{
+    min-height:58px;
+    padding:8px 10px;
+    gap:9px;
+  }
+  .ios-share-guide-button>span:last-child>strong{font-size:13px}
+  .ios-share-guide-button>span:last-child>small{font-size:9px}
+  .ios-share-mark{flex-basis:32px;width:32px;height:35px}
+
   .all-reset-zone{
     margin-top:18px;
     padding-top:14px;
@@ -710,7 +727,7 @@ button{cursor:pointer}
   }
   .hero-side{padding-top:20px;font-size:8px;letter-spacing:.14em}.hero-side i{width:40px;margin-top:7px}
   .install-button{min-height:66px;margin-bottom:13px;padding:8px 13px;grid-template-columns:42px 1fr 18px;gap:7px;border-radius:19px;font-size:clamp(14px,4vw,18px)}
-  .install-symbol{width:38px;height:40px}.install-down{left:8px;top:-9px;font-size:42px}.install-tray{left:5px;right:5px;bottom:1px;height:15px;border-width:4px}.install-arrow{font-size:30px}
+  .install-symbol{width:38px;height:38px}.install-icon-line{stroke-width:5.5}.install-arrow{font-size:30px}
   .counter-grid{gap:6px}
   .counter-card{padding:7px 5px 9px;border-radius:21px;border-width:2px}
   .team-header{grid-template-columns:5px 1fr 35px;gap:4px;min-height:78px;padding:6px 4px 6px 0;border-radius:15px}
@@ -746,7 +763,14 @@ button{cursor:pointer}
     gap:6px;
     font-size:13px
   }
-  .action-copy small{font-size:7px}
+  .change-player-meta{
+    margin-top:3px;
+    font-size:9px
+  }
+  .change-player-meta strong{
+    margin-left:2px;
+    font-size:13px
+  }
   .lap-history{margin-top:8px;gap:5px}
   .lap-title{font-size:9px}
   .lap-chip{
@@ -779,4 +803,113 @@ button{cursor:pointer}
   .pitch-button small{font-size:9px}
   .undo-button{min-height:50px;margin-top:16px;font-size:12px}
   .reset-button{min-height:46px;margin-top:10px;font-size:12px}
+}
+
+
+/* compact install visual hints */
+.install-dialog-heading{margin-bottom:10px}.install-guide-dialog>p{margin-bottom:16px}
+.install-platform-guide{display:grid;gap:10px;margin:0 0 18px}
+.install-guide-focus{padding:13px;border:1px solid rgba(118,157,196,.28);border-radius:14px;background:rgba(5,15,27,.68)}
+.install-guide-focus>strong{display:block;margin-bottom:9px;font-size:14px}.install-guide-focus>small{display:block;margin-top:7px;color:#aebfd1;font-size:10px;line-height:1.45}
+.counter-safari-bar{margin-top:3px}.counter-share-sheet{margin-top:3px}.counter-android-hint{margin-top:3px}
+.safari-mini-bar{height:46px;padding:6px 8px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:7px;border-radius:12px;background:#eef1f5;color:#1b2430}.safari-aa{font-size:10px;font-weight:900}.safari-url{overflow:hidden;padding:6px 8px;border-radius:8px;background:#fff;color:#697786;font-size:9px;text-align:center;white-space:nowrap;text-overflow:ellipsis}
+.share-symbol{width:28px;height:30px;position:relative;display:block;color:#0878dd}.share-symbol::before{content:"";position:absolute;left:6px;right:6px;bottom:1px;height:17px;border:2px solid currentColor;border-radius:4px}.share-symbol::after{content:"";position:absolute;left:13px;top:1px;width:2px;height:16px;background:currentColor}.share-symbol i::before,.share-symbol i::after{content:"";position:absolute;top:2px;width:9px;height:2px;background:currentColor}.share-symbol i::before{left:7px;transform:rotate(-45deg);transform-origin:right center}.share-symbol i::after{right:7px;transform:rotate(45deg);transform-origin:left center}
+.share-sheet-mini{min-height:44px;padding:8px 10px;display:flex;align-items:center;gap:9px;border-radius:11px;background:#f4f5f7;color:#18222d}.share-sheet-mini strong{font-size:11px}.home-add-icon{width:25px;height:25px;display:grid;place-items:center;border:1px solid #a7b0ba;border-radius:6px;background:#fff;font-size:18px;line-height:1}
+.android-primary-hint,.android-fallback-hint{min-height:58px;padding:9px 10px;display:flex;align-items:center;gap:10px;border:1px solid rgba(115,163,203,.28);border-radius:12px;background:rgba(5,15,26,.72)}.android-primary-hint span:last-child,.android-fallback-hint span:last-child{min-width:0}.android-primary-hint strong,.android-fallback-hint strong{display:block;font-size:12px}.android-primary-hint small,.android-fallback-hint small{display:block;margin-top:3px;color:#a7b8c9;font-size:9px;line-height:1.4}
+.android-install-glyph{flex:0 0 32px;width:32px;height:32px;position:relative;display:block;color:#66c7ff}.android-install-glyph::before{content:"";position:absolute;left:15px;top:2px;width:3px;height:17px;border-radius:2px;background:currentColor}.android-install-glyph::after{content:"";position:absolute;left:9px;top:12px;width:11px;height:11px;border-right:3px solid currentColor;border-bottom:3px solid currentColor;transform:rotate(45deg)}.android-install-glyph i{position:absolute;left:4px;right:4px;bottom:1px;height:10px;border:3px solid currentColor;border-top:0;border-radius:0 0 4px 4px}.dots-menu{flex:0 0 32px;width:32px;height:32px;display:grid;place-items:center;border-radius:9px;background:#14283b;color:#fff;font-size:23px;line-height:1}.install-guide-fallback{opacity:.92}
+
+
+/* v33 install overview diagrams */
+.overview-guide-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0 8px}
+.overview-step{min-width:0;padding:12px;border:1px solid rgba(132,170,208,.25);border-radius:18px;background:rgba(4,13,23,.66)}
+.overview-step-head{min-height:42px;display:flex;align-items:center;gap:9px;margin-bottom:10px}.overview-step-no{flex:0 0 28px;width:28px;height:28px;display:grid;place-items:center;border-radius:50%;background:#eaf6ff;color:#086bae;font-size:13px;font-weight:950}.overview-step-head strong{display:block;font-size:13px}.overview-step-head small{display:block;margin-top:2px;color:#91a7bc;font-size:9px}
+.phone-overview{width:min(100%,190px);aspect-ratio:9/16;margin:0 auto;position:relative;overflow:hidden;border:4px solid #182431;border-radius:25px;background:#081422;box-shadow:0 12px 28px rgba(0,0,0,.28)}
+.phone-status,.android-status{height:22px;padding:0 9px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:4;background:#f7f8fa;color:#1a222b;font-size:7px;font-weight:900}
+.mini-browser-page{position:absolute;left:0;right:0;top:22px;bottom:42px;padding:9px 8px;background:radial-gradient(circle at 50% 15%,rgba(82,169,241,.16),transparent 30%),linear-gradient(180deg,#0c2032,#07121e 68%,#091625)}
+.mini-site-head{height:27px;display:grid;grid-template-columns:18px 1fr 18px;align-items:center;color:#eef7ff;font-size:6px;text-align:center}.mini-site-head b{font-size:8px;letter-spacing:.04em}.mini-counter-panels{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:12px}.mini-counter-panels i{height:76px;border:1px solid rgba(106,171,222,.55);border-radius:9px;background:linear-gradient(#142b3e 0 22%,#0b1622 22% 38%,#f4f6f8 38% 72%,#15283b 72%)}.mini-counter-panels i:last-child{border-color:rgba(229,91,112,.58)}.mini-page-lines{margin-top:9px;display:grid;gap:4px}.mini-page-lines i{height:4px;border-radius:9px;background:rgba(202,223,242,.20)}.mini-page-lines i:nth-child(2){width:78%}.mini-page-lines i:nth-child(3){width:60%}
+.iphone-toolbar{position:absolute;left:0;right:0;bottom:0;height:42px;padding:4px 9px 5px;display:flex;align-items:center;justify-content:space-between;background:#f6f7f9;color:#0878dd;font-size:15px;z-index:6}
+.overview-target{position:relative!important;outline:3px solid #14a8ff!important;outline-offset:2px;box-shadow:0 0 0 5px rgba(20,168,255,.19),0 0 18px rgba(20,168,255,.48)!important;z-index:8!important}.overview-target em{position:absolute;right:-4px;top:-19px;padding:2px 5px;border-radius:999px;background:#0ca4fa;color:#fff;font-size:7px;font-style:normal;font-weight:950;white-space:nowrap;line-height:1.2;box-shadow:0 2px 7px rgba(0,0,0,.25)}.share-target{width:34px;height:31px;display:grid;place-items:center;border-radius:7px}.share-target .share-symbol{transform:scale(.78)}
+.share-screen-bg{position:absolute;inset:22px 0 0;background:linear-gradient(180deg,#213747,#0d1721);opacity:.75}.overview-share-sheet{position:absolute;left:5px;right:5px;bottom:6px;padding:9px 6px 7px;border-radius:15px;background:#f1f2f4;color:#1e2934;z-index:5}.share-app-row{height:38px;display:flex;gap:8px;margin-bottom:8px;padding:0 5px}.share-app-row i{width:30px;height:30px;border-radius:9px;background:#fff;border:1px solid #d7dce1}.share-menu-row{min-height:30px;padding:6px 8px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid #d7dce1;background:#fff;font-size:7px}.home-target{margin:4px 2px;border-radius:7px!important;border-top:0}.home-target em{top:-10px;right:-1px}
+.android-overview{background:#fff}.android-status{height:20px;background:#fff}.chrome-bar{height:33px;padding:4px 5px;display:grid;grid-template-columns:20px 1fr 20px 20px;align-items:center;gap:3px;color:#3a4652;background:#f3f5f7;font-size:11px;position:relative;z-index:7}.chrome-address{overflow:hidden;padding:6px 7px;border-radius:14px;background:#e5e9ed;font-size:6px;white-space:nowrap;text-overflow:ellipsis}.android-page{top:53px;bottom:0}.install-target{min-height:36px;margin:5px 2px 8px;padding:6px 7px;border-radius:8px;display:flex;align-items:center;justify-content:center;gap:5px;background:#f4f8fc;color:#1674bf;font-size:7px}.install-target em{top:-13px}.mini-install-icon{font-size:12px}.faded{filter:brightness(.75);opacity:.7}.dots-target{width:20px;height:26px;display:grid;place-items:center;border-radius:5px}.dots-target em{top:-13px;right:-4px}.chrome-menu-popup{position:absolute;right:5px;top:47px;width:116px;padding:5px;border-radius:8px;background:#fff;color:#273441;box-shadow:0 8px 24px rgba(0,0,0,.32);z-index:8}.chrome-menu-popup>div{min-height:25px;padding:6px 7px;display:flex;align-items:center;font-size:6.5px;border-radius:5px}.menu-install-target{margin:3px 0}.menu-install-target em{top:-11px;right:-3px}.fallback-step{border-style:dashed}
+
+@media(max-width:760px){.overview-guide-grid{grid-template-columns:1fr 1fr;gap:7px}.overview-step{padding:8px;border-radius:14px}.overview-step-head{min-height:48px;align-items:flex-start;gap:6px}.overview-step-no{flex-basis:24px;width:24px;height:24px;font-size:11px}.overview-step-head strong{font-size:11px}.overview-step-head small{font-size:8px}.phone-overview{width:min(100%,150px);border-width:3px;border-radius:21px}.faq-list summary{padding:14px 15px;font-size:14px}.faq-list details p{padding:0 15px 15px;font-size:13px}}
+
+/* v33 counter install dialog + stable back button */
+.back-link{font-size:0;line-height:1;align-self:start;justify-self:start}
+.back-link-icon{width:36px;height:36px;display:block;fill:none;stroke:currentColor;stroke-width:2.25;stroke-linecap:round;stroke-linejoin:round}
+.install-guide-dialog{width:min(94vw,620px)}.compact-overview-row{display:grid;grid-template-columns:minmax(130px,.82fr) minmax(150px,1fr);gap:14px;align-items:center;padding:12px;border:1px solid rgba(118,157,196,.27);border-radius:15px;background:rgba(5,15,27,.65)}.compact-overview-copy b{display:block;font-size:14px}.compact-overview-copy small{display:block;margin-top:4px;color:#9eb2c6;font-size:10px;line-height:1.45}.compact-phone{width:min(100%,150px);border-radius:21px}.install-final-note{margin:0!important;color:#9fb4c8!important;font-size:11px!important;text-align:center}.compact-menu{width:98px}.compact-menu>div{min-height:22px;padding:5px;font-size:5.8px}
+@media(max-width:760px){
+  .hero{grid-template-columns:48px minmax(0,1fr) 48px;gap:4px;align-items:start}
+  .back-link{width:44px;height:44px;margin-top:1px;border-radius:13px;place-items:center}
+  .back-link-icon{width:27px;height:27px;transform:translateX(-1px)}
+  .hero-title{padding-top:0}
+  .hero-side{justify-self:end;width:48px;padding-top:13px;font-size:7px;letter-spacing:.10em}
+  .hero-side i{width:32px;margin-top:5px}
+  .install-guide-dialog{width:min(96vw,580px)}.compact-overview-row{grid-template-columns:100px 1fr;gap:9px;padding:9px}.compact-overview-copy b{font-size:11px}.compact-overview-copy small{font-size:8px}.compact-phone{width:min(100%,132px)}
+}
+
+
+/* v34: large overview diagrams inside install dialog */
+.install-guide-dialog{
+  width:min(94vw,650px);
+}
+.compact-overview-row{
+  grid-template-columns:minmax(145px,.8fr) minmax(220px,1.2fr);
+  gap:18px;
+  padding:14px;
+}
+.compact-overview-copy b{
+  font-size:15px;
+}
+.compact-overview-copy small{
+  font-size:11px;
+}
+.compact-phone{
+  width:min(100%,210px);
+}
+.install-guide-dialog .overview-target{
+  outline:4px solid #10b4ff!important;
+  outline-offset:3px;
+  box-shadow:
+    0 0 0 7px rgba(16,180,255,.22),
+    0 0 24px rgba(16,180,255,.70)!important;
+}
+.install-guide-dialog .overview-target em{
+  padding:3px 7px;
+  font-size:8px;
+}
+
+@media(max-width:760px){
+  .install-guide-dialog{
+    width:min(96vw,590px);
+    padding:16px;
+  }
+  .install-platform-guide{
+    gap:12px;
+  }
+  .compact-overview-row{
+    grid-template-columns:1fr;
+    gap:10px;
+    padding:12px;
+  }
+  .compact-overview-copy{
+    text-align:left;
+  }
+  .compact-overview-copy b{
+    font-size:14px;
+  }
+  .compact-overview-copy small{
+    margin-top:3px;
+    font-size:10px;
+  }
+  .compact-phone{
+    width:min(100%,225px);
+    justify-self:center;
+  }
+}
+
+@media(max-width:390px){
+  .compact-phone{
+    width:min(100%,210px);
+  }
 }

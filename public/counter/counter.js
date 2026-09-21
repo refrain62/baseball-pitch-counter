@@ -214,7 +214,7 @@ function renderLapHistory(side) {
   );
 
   meta.textContent =
-    `現在 ${laps.length + 1}人目`;
+    `${laps.length + 1}人目`;
 }
 
 function renderAll() {
@@ -862,6 +862,11 @@ const isIOS =
     navigator.userAgent
   );
 
+const isAndroid =
+  /android/i.test(
+    navigator.userAgent
+  );
+
 function showInstallButton() {
   /*
     LPの「今すぐ使う」から来た場合は
@@ -899,10 +904,13 @@ if (
         "ホーム画面に追加";
 
       installHelp.textContent =
-        "次の3ステップで完了します。";
+        "迷いやすい2か所だけ確認してください。";
 
       $("iosInstallSteps").hidden =
         false;
+
+      $("androidInstallSteps").hidden =
+        true;
 
       if (!installDialog.open) {
         installDialog.showModal();
@@ -946,16 +954,36 @@ installButton.addEventListener(
     const iosSteps =
       $("iosInstallSteps");
 
+    const androidSteps =
+      $("androidInstallSteps");
+
     if (isIOS) {
+      installTitle.textContent =
+        "iPhoneのホーム画面に追加";
+
       installHelp.textContent =
-        "iPhoneではWebサイトから自動インストールできないため、次の3ステップだけ操作してください。";
+        "迷いやすい2か所だけ確認してください。";
 
       iosSteps.hidden = false;
-    } else {
+      androidSteps.hidden = true;
+    } else if (isAndroid) {
+      installTitle.textContent =
+        "Androidにインストール";
+
       installHelp.textContent =
-        "ブラウザのメニューから「このカウンターをインストール」または「ホーム画面に追加」を選んでください。";
+        "通常はインストールボタンだけで完了します。出ない場合だけChromeメニューを使います。";
 
       iosSteps.hidden = true;
+      androidSteps.hidden = false;
+    } else {
+      installTitle.textContent =
+        "このカウンターをインストール";
+
+      installHelp.textContent =
+        "ブラウザのメニューにある「インストール」または「ホーム画面に追加」を選んでください。";
+
+      iosSteps.hidden = true;
+      androidSteps.hidden = true;
     }
 
     installDialog.showModal();
@@ -963,6 +991,13 @@ installButton.addEventListener(
 );
 
 $("closeInstall").addEventListener(
+  "click",
+  () => {
+    installDialog.close();
+  }
+);
+
+$("closeInstallTop").addEventListener(
   "click",
   () => {
     installDialog.close();
