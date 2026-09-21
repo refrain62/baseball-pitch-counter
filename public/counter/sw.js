@@ -1,7 +1,7 @@
 "use strict";
 
 const CACHE_NAME =
-  "pitch-counter-shell-v30";
+  "pitch-counter-shell-v36";
 
 const APP_SHELL = [
   "/counter/",
@@ -22,6 +22,10 @@ const APP_SHELL = [
   "/counter/images/bg-stadium-desktop.png",
   "/counter/images/baseball-count-button.png",
   "/counter/images/share-qr.png",
+  "/assets/install-iphone-share.png",
+  "/assets/install-iphone-addhome.png",
+  "/assets/install-android-button.png",
+  "/assets/install-android-menu.png",
 
   "/counter/audio/counter-click.ogg",
   "/counter/audio/counter-click.wav"
@@ -95,11 +99,13 @@ self.addEventListener(
       new URL(request.url);
 
     /*
-      同一オリジンかつ /counter/ のみを制御。
+      同一オリジンのアプリ本体と共有アセットだけを制御。
+      インストール手順画像は LP と共有するため /assets/ に置く。
     */
     if (
       url.origin !== self.location.origin ||
-      !url.pathname.startsWith("/counter/")
+      (!url.pathname.startsWith("/counter/") &&
+        !url.pathname.startsWith("/assets/"))
     ) {
       return;
     }

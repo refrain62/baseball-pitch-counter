@@ -332,3 +332,201 @@ body::before{
     backdrop-filter:none;
   }
 }
+
+
+/* compact install visual guides */
+.install-short{margin:0 0 16px!important;color:#c8d5e2!important;font-size:14px!important;line-height:1.65}
+.install-visual-flow{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin:18px 0}
+.install-visual-card{min-width:0;padding:14px;border:1px solid rgba(133,169,207,.28);border-radius:16px;background:rgba(4,13,23,.72)}
+.install-visual-card>strong{display:block;margin-top:11px;font-size:14px}.install-visual-card>small{display:block;margin-top:4px;color:#9fb0c3;font-size:10px;line-height:1.45}
+.mini-label{display:block;margin-bottom:8px;color:#74cfff;font-size:10px;font-weight:900;letter-spacing:.08em}
+.install-flow-arrow{color:#73caff;font-size:30px;font-weight:300}
+.safari-mini-bar{height:44px;padding:6px 8px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:7px;border-radius:12px;background:#eef1f5;color:#1b2430}
+.safari-aa{font-size:10px;font-weight:900}.safari-url{overflow:hidden;padding:6px 8px;border-radius:8px;background:#fff;color:#697786;font-size:9px;text-align:center;white-space:nowrap;text-overflow:ellipsis}
+.share-symbol{width:28px;height:30px;position:relative;display:block;color:#0878dd}
+.share-symbol::before{content:"";position:absolute;left:6px;right:6px;bottom:1px;height:17px;border:2px solid currentColor;border-radius:4px}
+.share-symbol::after{content:"";position:absolute;left:13px;top:1px;width:2px;height:16px;background:currentColor}
+.share-symbol i::before,.share-symbol i::after{content:"";position:absolute;top:2px;width:9px;height:2px;background:currentColor}
+.share-symbol i::before{left:7px;transform:rotate(-45deg);transform-origin:right center}.share-symbol i::after{right:7px;transform:rotate(45deg);transform-origin:left center}
+.share-sheet-mini{min-height:44px;padding:8px 10px;display:flex;align-items:center;gap:9px;border-radius:11px;background:#f4f5f7;color:#18222d}
+.share-sheet-mini strong{font-size:11px}.home-add-icon{width:25px;height:25px;display:grid;place-items:center;border:1px solid #a7b0ba;border-radius:6px;background:#fff;font-size:18px;line-height:1}
+.android-install-hint{display:grid;gap:9px;margin-top:16px}.android-primary-hint,.android-fallback-hint{min-height:60px;padding:10px 12px;display:flex;align-items:center;gap:11px;border:1px solid rgba(115,163,203,.28);border-radius:14px;background:rgba(5,15,26,.72)}
+.android-primary-hint strong,.android-fallback-hint strong{display:block;font-size:13px}.android-primary-hint small,.android-fallback-hint small{display:block;margin-top:3px;color:#a7b8c9;font-size:10px;line-height:1.45}
+.android-install-glyph{flex:0 0 34px;width:34px;height:34px;position:relative;display:block;color:#66c7ff}.android-install-glyph::before{content:"";position:absolute;left:16px;top:3px;width:3px;height:18px;border-radius:2px;background:currentColor}.android-install-glyph::after{content:"";position:absolute;left:10px;top:13px;width:12px;height:12px;border-right:3px solid currentColor;border-bottom:3px solid currentColor;transform:rotate(45deg)}.android-install-glyph i{position:absolute;left:5px;right:5px;bottom:2px;height:11px;border:3px solid currentColor;border-top:0;border-radius:0 0 4px 4px}
+.dots-menu{flex:0 0 34px;width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#14283b;color:#fff;font-size:25px;line-height:1}
+.usecase-section{background:linear-gradient(135deg,rgba(7,17,28,.50),rgba(8,18,29,.30));border-color:rgba(124,174,217,.22)}
+.usecase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}.usecase-grid article{padding:20px;border:1px solid rgba(134,169,205,.22);border-radius:18px;background:rgba(5,14,24,.68)}.usecase-grid strong{display:block;margin-bottom:8px;font-size:17px}.usecase-grid span{display:block;color:#b9c7d6;font-size:13px;line-height:1.65}
+
+
+@media(max-width:760px){
+  .install-visual-flow{grid-template-columns:1fr;gap:7px}.install-flow-arrow{transform:rotate(90deg);justify-self:center;font-size:24px}.install-visual-card{padding:12px}.install-short{font-size:13px!important}.usecase-grid{grid-template-columns:1fr}.usecase-grid article{padding:17px}
+}
+
+
+/* v33 install overview diagrams */
+.overview-guide-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0 8px}
+.overview-step{min-width:0;padding:12px;border:1px solid rgba(132,170,208,.25);border-radius:18px;background:rgba(4,13,23,.66)}
+.overview-step-head{min-height:42px;display:flex;align-items:center;gap:9px;margin-bottom:10px}.overview-step-no{flex:0 0 28px;width:28px;height:28px;display:grid;place-items:center;border-radius:50%;background:#eaf6ff;color:#086bae;font-size:13px;font-weight:950}.overview-step-head strong{display:block;font-size:13px}.overview-step-head small{display:block;margin-top:2px;color:#91a7bc;font-size:9px}
+.phone-overview{width:min(100%,190px);aspect-ratio:9/16;margin:0 auto;position:relative;overflow:hidden;border:4px solid #182431;border-radius:25px;background:#081422;box-shadow:0 12px 28px rgba(0,0,0,.28)}
+.phone-status,.android-status{height:22px;padding:0 9px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:4;background:#f7f8fa;color:#1a222b;font-size:7px;font-weight:900}
+.mini-browser-page{position:absolute;left:0;right:0;top:22px;bottom:42px;padding:9px 8px;background:radial-gradient(circle at 50% 15%,rgba(82,169,241,.16),transparent 30%),linear-gradient(180deg,#0c2032,#07121e 68%,#091625)}
+.mini-site-head{height:27px;display:grid;grid-template-columns:18px 1fr 18px;align-items:center;color:#eef7ff;font-size:6px;text-align:center}.mini-site-head b{font-size:8px;letter-spacing:.04em}.mini-counter-panels{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:12px}.mini-counter-panels i{height:76px;border:1px solid rgba(106,171,222,.55);border-radius:9px;background:linear-gradient(#142b3e 0 22%,#0b1622 22% 38%,#f4f6f8 38% 72%,#15283b 72%)}.mini-counter-panels i:last-child{border-color:rgba(229,91,112,.58)}.mini-page-lines{margin-top:9px;display:grid;gap:4px}.mini-page-lines i{height:4px;border-radius:9px;background:rgba(202,223,242,.20)}.mini-page-lines i:nth-child(2){width:78%}.mini-page-lines i:nth-child(3){width:60%}
+.iphone-toolbar{position:absolute;left:0;right:0;bottom:0;height:42px;padding:4px 9px 5px;display:flex;align-items:center;justify-content:space-between;background:#f6f7f9;color:#0878dd;font-size:15px;z-index:6}
+.overview-target{position:relative!important;outline:3px solid #14a8ff!important;outline-offset:2px;box-shadow:0 0 0 5px rgba(20,168,255,.19),0 0 18px rgba(20,168,255,.48)!important;z-index:8!important}.overview-target em{position:absolute;right:-4px;top:-19px;padding:2px 5px;border-radius:999px;background:#0ca4fa;color:#fff;font-size:7px;font-style:normal;font-weight:950;white-space:nowrap;line-height:1.2;box-shadow:0 2px 7px rgba(0,0,0,.25)}.share-target{width:34px;height:31px;display:grid;place-items:center;border-radius:7px}.share-target .share-symbol{transform:scale(.78)}
+.share-screen-bg{position:absolute;inset:22px 0 0;background:linear-gradient(180deg,#213747,#0d1721);opacity:.75}.overview-share-sheet{position:absolute;left:5px;right:5px;bottom:6px;padding:9px 6px 7px;border-radius:15px;background:#f1f2f4;color:#1e2934;z-index:5}.share-app-row{height:38px;display:flex;gap:8px;margin-bottom:8px;padding:0 5px}.share-app-row i{width:30px;height:30px;border-radius:9px;background:#fff;border:1px solid #d7dce1}.share-menu-row{min-height:30px;padding:6px 8px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid #d7dce1;background:#fff;font-size:7px}.home-target{margin:4px 2px;border-radius:7px!important;border-top:0}.home-target em{top:-10px;right:-1px}
+.android-overview{background:#fff}.android-status{height:20px;background:#fff}.chrome-bar{height:33px;padding:4px 5px;display:grid;grid-template-columns:20px 1fr 20px 20px;align-items:center;gap:3px;color:#3a4652;background:#f3f5f7;font-size:11px;position:relative;z-index:7}.chrome-address{overflow:hidden;padding:6px 7px;border-radius:14px;background:#e5e9ed;font-size:6px;white-space:nowrap;text-overflow:ellipsis}.android-page{top:53px;bottom:0}.install-target{min-height:36px;margin:5px 2px 8px;padding:6px 7px;border-radius:8px;display:flex;align-items:center;justify-content:center;gap:5px;background:#f4f8fc;color:#1674bf;font-size:7px}.install-target em{top:-13px}.mini-install-icon{font-size:12px}.faded{filter:brightness(.75);opacity:.7}.dots-target{width:20px;height:26px;display:grid;place-items:center;border-radius:5px}.dots-target em{top:-13px;right:-4px}.chrome-menu-popup{position:absolute;right:5px;top:47px;width:116px;padding:5px;border-radius:8px;background:#fff;color:#273441;box-shadow:0 8px 24px rgba(0,0,0,.32);z-index:8}.chrome-menu-popup>div{min-height:25px;padding:6px 7px;display:flex;align-items:center;font-size:6.5px;border-radius:5px}.menu-install-target{margin:3px 0}.menu-install-target em{top:-11px;right:-3px}.fallback-step{border-style:dashed}
+.faq-section{background:rgba(7,16,26,.46)}.faq-list{display:grid;gap:9px;margin-top:24px}.faq-list details{border:1px solid rgba(132,166,201,.24);border-radius:15px;background:rgba(5,14,24,.70);overflow:hidden}.faq-list summary{padding:16px 18px;cursor:pointer;color:#f7fbff;font-weight:850;line-height:1.45}.faq-list details p{margin:0;padding:0 18px 17px;color:#b9c7d6;font-size:14px;line-height:1.7}
+@media(max-width:760px){.overview-guide-grid{grid-template-columns:1fr 1fr;gap:7px}.overview-step{padding:8px;border-radius:14px}.overview-step-head{min-height:48px;align-items:flex-start;gap:6px}.overview-step-no{flex-basis:24px;width:24px;height:24px;font-size:11px}.overview-step-head strong{font-size:11px}.overview-step-head small{font-size:8px}.phone-overview{width:min(100%,150px);border-width:3px;border-radius:21px}.faq-list summary{padding:14px 15px;font-size:14px}.faq-list details p{padding:0 15px 15px;font-size:13px}}
+
+
+/* v34: install diagrams should be overview-first, not tiny closeups */
+.overview-guide-grid{
+  gap:18px;
+}
+.overview-step{
+  padding:16px;
+}
+.overview-step-head{
+  margin-bottom:14px;
+}
+.phone-overview{
+  width:min(100%,230px);
+  border-width:4px;
+}
+.overview-target{
+  outline:4px solid #10b4ff!important;
+  outline-offset:3px;
+  box-shadow:
+    0 0 0 7px rgba(16,180,255,.22),
+    0 0 24px rgba(16,180,255,.70)!important;
+}
+.overview-target em{
+  padding:3px 7px;
+  font-size:9px;
+  letter-spacing:.02em;
+}
+.share-target{
+  width:38px;
+  height:34px;
+}
+.home-target{
+  min-height:34px;
+}
+.dots-target{
+  width:24px;
+  height:30px;
+}
+.chrome-menu-popup{
+  width:136px;
+}
+.chrome-menu-popup>div{
+  min-height:29px;
+  font-size:7.5px;
+}
+.install-target{
+  min-height:42px;
+  font-size:8px;
+}
+.install-target strong{
+  font-size:8px;
+}
+
+@media(max-width:760px){
+  /* One step per row: overview remains readable on an iPhone. */
+  .overview-guide-grid{
+    grid-template-columns:1fr;
+    gap:14px;
+  }
+  .overview-step{
+    padding:14px 12px 16px;
+    border-radius:17px;
+  }
+  .overview-step-head{
+    min-height:auto;
+    margin-bottom:12px;
+    align-items:center;
+  }
+  .overview-step-no{
+    flex-basis:30px;
+    width:30px;
+    height:30px;
+    font-size:13px;
+  }
+  .overview-step-head strong{
+    font-size:14px;
+  }
+  .overview-step-head small{
+    margin-top:3px;
+    font-size:10px;
+  }
+  .phone-overview{
+    width:min(100%,230px);
+    border-width:4px;
+    border-radius:27px;
+  }
+  .overview-target em{
+    font-size:9px;
+  }
+}
+
+@media(max-width:390px){
+  .phone-overview{
+    width:min(100%,215px);
+  }
+}
+
+
+/* v35 install guides: use cropped original images */
+.install-shot-list{
+  display:grid;
+  gap:16px;
+  margin-top:14px;
+}
+.install-shot{
+  margin:0;
+  padding:12px;
+  border:1px solid rgba(110,180,255,.22);
+  border-radius:22px;
+  background:linear-gradient(180deg, rgba(7,19,40,.72), rgba(5,12,28,.86));
+  box-shadow:0 18px 40px rgba(0,0,0,.24), inset 0 0 0 1px rgba(255,255,255,.03);
+}
+.install-shot img{
+  display:block;
+  width:100%;
+  height:auto;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.08);
+}
+.install-shot figcaption{
+  display:grid;
+  gap:4px;
+  margin-top:12px;
+}
+.install-shot figcaption strong{
+  font-size:15px;
+  line-height:1.45;
+}
+.install-shot figcaption span{
+  color:rgba(233,242,255,.86);
+  font-size:13px;
+  line-height:1.65;
+}
+.install-short{
+  margin-bottom:0;
+}
+@media(max-width:760px){
+  .install-shot{
+    padding:10px;
+    border-radius:18px;
+  }
+  .install-shot img{
+    border-radius:14px;
+  }
+  .install-shot figcaption strong{
+    font-size:14px;
+  }
+  .install-shot figcaption span{
+    font-size:12px;
+    line-height:1.6;
+  }
+}

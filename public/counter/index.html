@@ -7,10 +7,19 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#061526">
-<meta name="description" content="野球の投球数を1塁側・3塁側で同時に数えられるピッチカウンター">
+<meta name="description" content="野球の投球数を1塁側・3塁側でカウント。投手交代ごとの球数も保存できる無料のピッチカウンターです。">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
 <link rel="canonical" href="https://baseball-pitch-counter.refrain62.workers.dev/counter/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:title" content="野球 投球数カウンター | Pitch Counter">
+<meta property="og:description" content="1塁側・3塁側を同時に数えられる無料の野球用投球数カウンター。">
 <meta property="og:url" content="https://baseball-pitch-counter.refrain62.workers.dev/counter/">
-<title>Pitch Counter | 投球数カウンター</title>
+<meta property="og:image" content="https://baseball-pitch-counter.refrain62.workers.dev/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="野球の投球数カウンター Pitch Counter">
+<title>投球数を数える｜野球用ピッチカウンター</title>
 <link rel="manifest" href="/counter/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/counter/icons/apple-touch-icon.png">
 <link rel="icon" href="/counter/icons/icon-192.png" type="image/png">
@@ -20,7 +29,11 @@
 <body>
 <main class="app">
   <header class="hero">
-    <a class="back-link" href="/" aria-label="説明ページへ戻る">‹</a>
+    <a class="back-link" href="/" aria-label="説明ページへ戻る">
+      <svg class="back-link-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M15.5 4.5 8 12l7.5 7.5"/>
+      </svg>
+    </a>
 
     <div class="hero-title">
       <h1>PITCH COUNTER</h1>
@@ -36,10 +49,10 @@
   </header>
 
   <button class="install-button" id="installButton" type="button" hidden>
-    <span class="install-symbol" aria-hidden="true">
-      <span class="install-down">↓</span>
-      <span class="install-tray"></span>
-    </span>
+    <svg class="install-symbol" aria-hidden="true" viewBox="0 0 48 48" focusable="false">
+      <path class="install-icon-line" d="M24 5v23M15 20l9 9 9-9"/>
+      <path class="install-icon-line" d="M8 31v9h32v-9"/>
+    </svg>
     <span class="install-text" id="installButtonText">このカウンターをインストール</span>
     <span class="install-arrow" aria-hidden="true">›</span>
   </button>
@@ -76,7 +89,7 @@
         <span class="change-player-icon" aria-hidden="true">⇄</span>
         <span class="action-copy">
           <strong>選手交代</strong>
-          <small id="changeMetaA">現在 1人目</small>
+          <span class="change-player-meta">現在 <strong id="changeMetaA">1人目</strong></span>
         </span>
       </button>
 
@@ -119,7 +132,7 @@
         <span class="change-player-icon" aria-hidden="true">⇄</span>
         <span class="action-copy">
           <strong>選手交代</strong>
-          <small id="changeMetaB">現在 1人目</small>
+          <span class="change-player-meta">現在 <strong id="changeMetaB">1人目</strong></span>
         </span>
       </button>
 
@@ -313,37 +326,32 @@
   </div>
 </dialog>
 
-<dialog id="installDialog" class="dialog install-guide-dialog">
-  <h2 id="installTitle">このカウンターをアプリとして使う</h2>
-  <p id="installHelp">ホーム画面に追加すると、次回からアプリのように1タップで起動できます。</p>
-
-  <div class="ios-install-steps" id="iosInstallSteps" hidden>
-    <div class="ios-install-step">
-      <span class="step-no">1</span>
-      <div>
-        <strong>共有ボタンをタップ</strong>
-        <small>Safariの下部または上部にある「□↑」です。</small>
-      </div>
-    </div>
-    <div class="ios-install-step">
-      <span class="step-no">2</span>
-      <div>
-        <strong>「ホーム画面に追加」</strong>
-        <small>共有メニューを少し下へスクロールすると表示されます。</small>
-      </div>
-    </div>
-    <div class="ios-install-step">
-      <span class="step-no">3</span>
-      <div>
-        <strong>右上の「追加」</strong>
-        <small>これでホーム画面にPitch Counterが追加されます。</small>
-      </div>
-    </div>
+<dialog id="installDialog" class="dialog install-guide-dialog" aria-labelledby="installTitle" aria-describedby="installHelp">
+  <div class="dialog-heading install-dialog-heading"><div><p class="dialog-eyebrow">ADD TO HOME SCREEN</p><h2 id="installTitle">ホーム画面に追加</h2></div><button class="dialog-close-icon" id="closeInstallTop" type="button" aria-label="インストール説明を閉じる">×</button></div>
+  <p id="installHelp">実際の案内画像を切り出しています。青く囲った場所をそのまま押してください。</p>
+  <div class="ios-install-steps install-platform-guide" id="iosInstallSteps" hidden>
+    <figure class="install-shot dialog-shot">
+      <img src="/assets/install-iphone-share.png" width="902" height="380" loading="lazy" decoding="async" alt="iPhoneのSafari画面全体。下部の共有ボタンが青く強調されている">
+      <figcaption><strong>1. Safari下の共有を押す</strong><span>画面全体の中では下中央の共有ボタンです。</span></figcaption>
+    </figure>
+    <figure class="install-shot dialog-shot">
+      <img src="/assets/install-iphone-addhome.png" width="902" height="385" loading="lazy" decoding="async" alt="iPhoneの共有メニュー。ホーム画面に追加が青く強調されている">
+      <figcaption><strong>2. 「ホーム画面に追加」を押す</strong><span>最後に右上の「追加」で完了です。</span></figcaption>
+    </figure>
+    <p class="install-final-note">iPhoneはSafariでのみホーム画面追加できます。</p>
   </div>
-
-  <div class="dialog-actions one">
-    <button id="closeInstall" class="dialog-cancel" type="button">閉じる</button>
+  <div class="android-install-steps install-platform-guide" id="androidInstallSteps" hidden>
+    <figure class="install-shot dialog-shot">
+      <img src="/assets/install-android-button.png" width="902" height="405" loading="lazy" decoding="async" alt="AndroidのChrome画面全体。このカウンターをインストールのボタンが青く強調されている">
+      <figcaption><strong>1. まずはページ内のインストール</strong><span>表示されたらこのボタンを押すのが最短です。</span></figcaption>
+    </figure>
+    <figure class="install-shot dialog-shot">
+      <img src="/assets/install-android-menu.png" width="902" height="275" loading="lazy" decoding="async" alt="AndroidのChrome右上メニュー。ホーム画面に追加が青く強調されている">
+      <figcaption><strong>2. 出ない時だけ右上の︙</strong><span>「アプリをインストール」または「ホーム画面に追加」を選んでください。</span></figcaption>
+    </figure>
+    <p class="install-final-note">確認画面が出たら「インストール」または「追加」を押します。</p>
   </div>
+  <div class="dialog-actions one"><button id="closeInstall" class="dialog-cancel" type="button">閉じる</button></div>
 </dialog>
 </body>
 </html>
