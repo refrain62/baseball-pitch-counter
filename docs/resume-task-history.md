@@ -23,3 +23,12 @@
 - LPの説明・FAQ・構造化データ、およびカウンター内の使い方説明を、投手ごとのイニング別記録と交代後の確認・訂正に合わせて更新した。
 - `pnpm test`、`pnpm build`、`git diff --check` とPR CIが成功。静的レビューで重大な指摘なし。
 - 追加実装PR: [#4](https://github.com/refrain62/baseball-pitch-counter/pull/4)（`develop` へ統合、マージコミット `165d55933a9c`）
+
+### 投手情報の文字サイズ調整
+
+- スマートフォンの投手見出し・累計球数・状態バッジ・履歴案内・イニングチップを拡大。狭幅時の基準を見出し12px、累計14px、バッジと案内10px、回表示10px、球数12pxとし、チップを74×36pxにした。
+- 320px・360pxの画面で文字の切れ・重なりとページ横はみ出しがないことを確認。独立レビューで指摘なし。
+- `pnpm test`、`pnpm build`、`git diff --check`、Workers Buildsが成功。
+- CSSの参照をv51、Service Workerキャッシュをv56へ更新。
+- 実装PR: [#7](https://github.com/refrain62/baseball-pitch-counter/pull/7)（`develop` へ統合、マージコミット `719690ed344d`）
+- 実装コミット: `6532a52`（`feature/pitcher-info-readability`）
