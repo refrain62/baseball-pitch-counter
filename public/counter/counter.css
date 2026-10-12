@@ -884,7 +884,7 @@ summary.pitcher-section-heading::-webkit-details-marker{display:none}
   }
   .lap-history{margin-top:8px;gap:5px}.pitcher-section{gap:5px;margin-top:7px;padding-top:7px}.pitcher-section-heading .lap-player{font-size:10px}.pitcher-section-heading .lap-count{font-size:12px}.current-pitcher-badge{min-height:18px;padding:2px 5px;font-size:8px}.pitcher-history-hint{font-size:8px}
   .inning-chip-list{gap:4px;padding-bottom:4px}.inning-chip{flex-basis:68px;min-height:31px;padding:4px 5px;border-radius:7px}.inning-chip span{font-size:8px}.inning-chip strong{font-size:10px}
-  .pitcher-edit-row{grid-template-columns:minmax(60px,1fr) minmax(204px,1fr);gap:6px}.pitcher-edit-row label{font-size:13px}.pitcher-edit-controls{grid-template-columns:56px minmax(0,1fr) 56px}.pitcher-edit-controls input{min-height:50px;font-size:18px}
+  .pitcher-edit-row{grid-template-columns:minmax(48px,1fr) minmax(190px,1fr);gap:4px}.pitcher-edit-row label{font-size:13px}.pitcher-edit-controls{grid-template-columns:56px minmax(0,1fr) 56px}.pitcher-edit-controls input{min-height:50px;padding:7px 2px;font-size:16px}
 
   .reset-button{
     min-height:50px;
