@@ -353,7 +353,7 @@ summary.pitcher-section-heading::-webkit-details-marker{display:none}
 .dialog.pitcher-edit-dialog{width:min(94vw,520px)}
 .pitcher-edit-lead{margin:0 0 14px;color:#b4c9dc;font-size:13px;line-height:1.5}
 .pitcher-edit-fields{display:grid;gap:8px;max-height:42vh;overflow:auto;padding:2px}
-.pitcher-edit-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,42%);align-items:center;gap:12px;min-width:0}
+.pitcher-edit-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(204px,1fr);align-items:center;gap:12px;min-width:0}
 .pitcher-edit-row label{min-width:0;color:#dbeaf7;font-size:14px;font-weight:800;overflow-wrap:anywhere}
 .pitcher-edit-row input{width:100%;min-width:0;min-height:44px;padding:7px 10px;border:1px solid rgba(132,186,225,.5);border-radius:10px;background:#0b2036;color:#fff;text-align:right;font-size:18px;font-weight:850}
 .pitcher-edit-row input:focus{outline:2px solid #54c8ff;outline-offset:1px}
