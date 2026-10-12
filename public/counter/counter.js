@@ -633,6 +633,7 @@ function updateCurrentPitcherHistory(side) {
   );
 
   if (!section) {
+    renderLapHistory(side);
     return;
   }
 
@@ -649,6 +650,7 @@ function updateCurrentPitcherHistory(side) {
     const inningCounts = getPitcherCounts(side, currentIndex, false);
     count.textContent = `${normalizeCount(inningCounts[getCurrentInning(side) - 1])}球`;
   }
+  renderLapHistory(side);
 }
 
 function renderAll() {
