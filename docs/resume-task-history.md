@@ -11,7 +11,7 @@
 - 実装コミット: `c443930`（`feature/inning-pitch-count-edit`）
 - UIコミット: `7eeff92`（`feature/inning-pitch-count-edit`）
 - 操作サイズ・ダイアログ調整: `7ed4441`、狭幅での横並び維持: `79fcb42`（`feature/inning-pitch-count-edit`）
-- デザインレビュー: 320px・360pxでの横並び、±の44pxタップ領域、対象箇所の横はみ出しを静的確認。重大な残課題なし。
+- デザインレビュー: 320px・360pxでの横並び、±56pxボタン、320px未満での縦積み、対象箇所の横はみ出しなしを実画面で確認。重大な残課題なし。
 - 実装PR: [#2](https://github.com/refrain62/baseball-pitch-counter/pull/2)（`develop` へ統合、マージコミット `b845dc45d9b4`）
 - 記録PR: [#3](https://github.com/refrain62/baseball-pitch-counter/pull/3)（本記録を含めて `develop` へ統合）
 - 実装ブランチ: `feature/inning-pitch-count-edit`（統合後に削除）
