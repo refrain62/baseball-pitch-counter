@@ -57,6 +57,16 @@
     <span class="install-arrow" aria-hidden="true">›</span>
   </button>
 
+  <section class="inning-toolbar" aria-label="イニング切り替え">
+    <button class="inning-step" type="button" data-inning-step="-1" aria-label="前のイニングへ">−</button>
+    <div class="inning-current">
+      <span>現在のイニング</span>
+      <strong id="currentInning" aria-live="polite">1</strong>
+      <span>回</span>
+    </div>
+    <button class="inning-step" type="button" data-inning-step="1" aria-label="次のイニングへ">＋</button>
+  </section>
+
   <section class="counter-grid" aria-label="投球数カウンター">
     <article class="counter-card side-a">
       <div class="team-header">
@@ -72,6 +82,7 @@
       <div class="odometer-zone">
         <div id="countA" class="odometer" aria-live="polite" aria-label="1塁側 0球"></div>
         <span class="count-unit">球</span>
+        <button class="inning-meta" id="inningMetaA" type="button" data-edit-current="A" aria-label="現在の投手のイニング別投球数を訂正">現在 1回・この回 0球</button>
       </div>
 
       <button class="pitch-button" type="button" data-plus="A" aria-label="1塁側を1球増やす">
@@ -115,6 +126,7 @@
       <div class="odometer-zone">
         <div id="countB" class="odometer" aria-live="polite" aria-label="3塁側 0球"></div>
         <span class="count-unit">球</span>
+        <button class="inning-meta" id="inningMetaB" type="button" data-edit-current="B" aria-label="現在の投手のイニング別投球数を訂正">現在 1回・この回 0球</button>
       </div>
 
       <button class="pitch-button" type="button" data-plus="B" aria-label="3塁側を1球増やす">
@@ -209,7 +221,12 @@
 
     <section>
       <strong>選手交代（Lap）</strong>
-      <p>現在の投球数を選手ごとの履歴へ保存し、新しい投手を0球から数え始めます。履歴は画面内に残ります。</p>
+      <p>交代すると現在の投手を履歴へ保存し、新しい投手を0球から数え始めます。現在の投手の内訳表示や交代済み投手の履歴をタップすると、未設定分・イニング別の球数を訂正できます。</p>
+    </section>
+
+    <section>
+      <strong>イニング切り替え</strong>
+      <p>画面上部の−／＋で回を切り替えます。投手の合計は維持したまま、その回の球数を別に記録できます。</p>
     </section>
 
     <section>
@@ -291,15 +308,27 @@
 </dialog>
 
 <dialog id="playerChangeDialog" class="dialog player-change-dialog">
-  <h2>選手交代しますか？</h2>
-  <p>
+  <h2 id="playerChangeTitle">選手交代しますか？</h2>
+  <p id="playerChangePrompt">
     <strong id="playerChangeName"></strong> の現在の
     <strong id="playerChangeCount"></strong>球を交代履歴へ保存し、
     新しい投手を <strong>0球</strong> から開始します。
   </p>
+  <p id="playerChangeLimit" hidden></p>
   <div class="dialog-actions">
     <button id="cancelPlayerChange" class="dialog-cancel" type="button">キャンセル</button>
     <button id="confirmPlayerChange" class="dialog-confirm player-change-confirm" type="button">選手交代する</button>
+  </div>
+</dialog>
+
+<dialog id="pitcherEditDialog" class="dialog pitcher-edit-dialog">
+  <h2 id="pitcherEditTitle">投手の球数を訂正</h2>
+  <p class="pitcher-edit-lead">イニングごとの球数を入力すると、合計も自動で更新されます。</p>
+  <div id="pitcherEditFields" class="pitcher-edit-fields"></div>
+  <p id="pitcherEditError" class="pitcher-edit-error" role="alert" hidden></p>
+  <div class="dialog-actions">
+    <button id="cancelPitcherEdit" class="dialog-cancel" type="button">キャンセル</button>
+    <button id="savePitcherEdit" class="dialog-confirm" type="button">保存する</button>
   </div>
 </dialog>
 
