@@ -4,6 +4,9 @@ const STORAGE_KEY = "pitch-counter-state-v3";
 const MAX_COUNT = 999;
 const MAX_INNING = 99;
 const MAX_PITCHERS = 100;
+// 通常の履歴上限とは分け、破損した保存データによる巨大ループを防ぐ。
+const MAX_SAVED_PITCHERS = 1000;
+const MAX_ARCHIVED_PITCHERS = MAX_SAVED_PITCHERS - MAX_PITCHERS;
 const $ = (id) => document.getElementById(id);
 
 let state = {
@@ -14,10 +17,14 @@ let state = {
   lapsA: [],
   lapsB: [],
   inning: 1,
+  inningA: 1,
+  inningB: 1,
   unassignedA: [],
   unassignedB: [],
   inningsA: [],
-  inningsB: []
+  inningsB: [],
+  overflowA: null,
+  overflowB: null
 };
 let stateNeedsMigration = false;
 
@@ -32,11 +39,32 @@ try {
       !Number.isInteger(savedInning) ||
       savedInning < 1 ||
       savedInning > MAX_INNING ||
+      saved.inningA === undefined ||
+      saved.inningB === undefined ||
+      !Number.isInteger(Number(saved.inningA)) ||
+      Number(saved.inningA) < 1 ||
+      Number(saved.inningA) > MAX_INNING ||
+      !Number.isInteger(Number(saved.inningB)) ||
+      Number(saved.inningB) < 1 ||
+      Number(saved.inningB) > MAX_INNING ||
       (Array.isArray(saved.lapsA) && saved.lapsA.length > MAX_PITCHERS - 1) ||
       (Array.isArray(saved.lapsB) && saved.lapsB.length > MAX_PITCHERS - 1) ||
       (Array.isArray(saved.inningsA) && saved.inningsA.length > MAX_PITCHERS) ||
-      (Array.isArray(saved.inningsB) && saved.inningsB.length > MAX_PITCHERS);
+      (Array.isArray(saved.inningsB) && saved.inningsB.length > MAX_PITCHERS) ||
+      (Array.isArray(saved.lapsA) && saved.lapsA.length > MAX_SAVED_PITCHERS - 1) ||
+      (Array.isArray(saved.lapsB) && saved.lapsB.length > MAX_SAVED_PITCHERS - 1) ||
+      (Array.isArray(saved.unassignedA) && saved.unassignedA.length > MAX_SAVED_PITCHERS) ||
+      (Array.isArray(saved.unassignedB) && saved.unassignedB.length > MAX_SAVED_PITCHERS) ||
+      (Array.isArray(saved.inningsA) && saved.inningsA.length > MAX_SAVED_PITCHERS) ||
+      (Array.isArray(saved.inningsB) && saved.inningsB.length > MAX_SAVED_PITCHERS);
     state = { ...state, ...saved };
+    // 旧形式は両側で共有していた回を、初期値として引き継ぐ。
+    if (saved.inningA === undefined) {
+      state.inningA = savedInning;
+    }
+    if (saved.inningB === undefined) {
+      state.inningB = savedInning;
+    }
   }
 } catch (error) {
   console.warn("Saved state could not be loaded", error);
@@ -57,6 +85,20 @@ state.inning = Math.max(
   Math.min(MAX_INNING, Math.floor(Number(state.inning) || 1))
 );
 
+// 旧形式は回を共有していたため、初回だけ同じ回を両側へ引き継ぐ。
+["A", "B"].forEach((side) => {
+  const key = "inning" + side;
+  const savedInning = Number(state[key]);
+
+  state[key] = Number.isInteger(savedInning)
+    ? Math.max(1, Math.min(MAX_INNING, savedInning))
+    : state.inning;
+});
+
+function getCurrentInning(side) {
+  return state["inning" + side];
+}
+
 /*
   v3 の lapsA/lapsB は投手ごとの合計だけを持つため、
   イニング配列がない保存データは「イニング未設定」として読み込む。
@@ -66,24 +108,97 @@ function normalizeSide(side) {
   const lapsKey = "laps" + side;
   const unassignedKey = "unassigned" + side;
   const inningsKey = "innings" + side;
-  const rawLaps = Array.isArray(state[lapsKey])
-    ? state[lapsKey].slice(0, MAX_PITCHERS - 1)
+  const overflowKey = "overflow" + side;
+  const sourceLaps = Array.isArray(state[lapsKey]) ? state[lapsKey] : [];
+  const sourceUnassigned = Array.isArray(state[unassignedKey])
+    ? state[unassignedKey]
     : [];
-  const rawUnassigned = Array.isArray(state[unassignedKey])
-    ? state[unassignedKey].slice(0, MAX_PITCHERS)
+  const sourceInnings = Array.isArray(state[inningsKey])
+    ? state[inningsKey]
     : [];
-  const rawInnings = Array.isArray(state[inningsKey])
-    ? state[inningsKey].slice(0, MAX_PITCHERS)
-    : [];
-  const playerCount = Math.max(
-    rawLaps.length + 1,
-    rawUnassigned.length,
-    rawInnings.length
+  const sourcePlayerCount = Math.max(
+    sourceLaps.length + 1,
+    sourceUnassigned.length,
+    sourceInnings.length
   );
+  const retainedStart = Math.max(0, sourcePlayerCount - MAX_SAVED_PITCHERS);
+  const playerCount = Math.min(sourcePlayerCount, MAX_SAVED_PITCHERS);
+  let rawLaps = sourceLaps.slice(
+    retainedStart,
+    Math.min(sourcePlayerCount - 1, sourceLaps.length)
+  );
+  let rawUnassigned = sourceUnassigned.slice(
+    retainedStart,
+    Math.min(sourcePlayerCount, sourceUnassigned.length)
+  );
+  let rawInnings = sourceInnings.slice(
+    retainedStart,
+    Math.min(sourcePlayerCount, sourceInnings.length)
+  );
+  const overflowCount = Math.max(0, playerCount - MAX_PITCHERS);
+  const discardedCount = Math.max(0, sourcePlayerCount - playerCount);
+  const previousOverflow = state[overflowKey] && typeof state[overflowKey] === "object"
+    ? state[overflowKey]
+    : null;
+
+  if (overflowCount > 0 || discardedCount > 0) {
+    state[overflowKey] = {
+      count: overflowCount,
+      discarded: discardedCount,
+      laps: rawLaps.slice(0, overflowCount),
+      unassigned: rawUnassigned.slice(0, overflowCount),
+      innings: rawInnings.slice(0, overflowCount)
+    };
+    rawLaps = rawLaps.slice(overflowCount, playerCount - 1);
+    rawUnassigned = rawUnassigned.slice(overflowCount, playerCount);
+    rawInnings = rawInnings.slice(overflowCount, playerCount);
+    stateNeedsMigration = true;
+  } else if (previousOverflow) {
+    const previousLaps = Array.isArray(previousOverflow.laps)
+      ? previousOverflow.laps
+      : [];
+    const previousUnassigned = Array.isArray(previousOverflow.unassigned)
+      ? previousOverflow.unassigned
+      : [];
+    const previousInnings = Array.isArray(previousOverflow.innings)
+      ? previousOverflow.innings
+      : [];
+    const previousCount = Number(previousOverflow.count);
+    const safePreviousCount = Number.isSafeInteger(previousCount) && previousCount > 0
+      ? previousCount
+      : 0;
+    const previousSize = Math.max(
+      previousLaps.length,
+      previousUnassigned.length,
+      previousInnings.length,
+      safePreviousCount
+    );
+    const previousStart = Math.max(0, previousSize - MAX_ARCHIVED_PITCHERS);
+    const discardedOverflow = Math.max(
+      0,
+      previousSize - MAX_ARCHIVED_PITCHERS
+    );
+
+    state[overflowKey] = {
+      count: Math.min(MAX_ARCHIVED_PITCHERS, previousSize),
+      discarded: (Number.isSafeInteger(Number(previousOverflow.discarded))
+        ? Math.max(0, Number(previousOverflow.discarded))
+        : 0) + discardedOverflow,
+      laps: previousLaps.slice(previousStart),
+      unassigned: previousUnassigned.slice(previousStart),
+      innings: previousInnings.slice(previousStart)
+    };
+
+    if (discardedOverflow > 0) {
+      stateNeedsMigration = true;
+    }
+  }
+
+  const activePlayerCount = Math.min(playerCount, MAX_PITCHERS);
   const unassigned = [];
   const innings = [];
 
-  for (let index = 0; index < playerCount; index += 1) {
+  for (let index = 0; index < activePlayerCount; index += 1) {
     const savedCounts = rawInnings[index];
     const legacyFallback = index < rawLaps.length
       ? normalizeCount(rawLaps[index])
@@ -251,7 +366,7 @@ function getPitcherCounts(side, index, ensureCurrent = true) {
   }
 
   if (ensureCurrent) {
-    while (innings[index].length < state.inning) {
+    while (innings[index].length < getCurrentInning(side)) {
       innings[index].push(0);
     }
   }
@@ -298,22 +413,25 @@ function syncSideTotals(side) {
 }
 
 function renderInningMeta(side) {
-  const mount = $("inningMeta" + side);
-
-  if (!mount) {
-    return;
-  }
-
+  const currentInning = getCurrentInning(side);
+  const inningBadge = $("currentInning" + side);
+  const meta = $("inningMeta" + side);
   const counts = getPitcherCounts(side, getInnings(side).length - 1);
-  const current = normalizeCount(counts[state.inning - 1]);
+  const current = normalizeCount(counts[currentInning - 1]);
   const unassigned = getPitcherUnassigned(
     side,
     getInnings(side).length - 1
   );
 
-  mount.textContent = unassigned > 0
-    ? `現在 ${state.inning}回・この回 ${current}球 / 未設定 ${unassigned}球`
-    : `現在 ${state.inning}回・この回 ${current}球`;
+  if (inningBadge) {
+    inningBadge.textContent = `${currentInning}回`;
+  }
+
+  if (meta) {
+    meta.textContent = unassigned > 0
+      ? `${currentInning}回 ${current}球・未設定 ${unassigned}球`
+      : `${currentInning}回 ${current}球をチップから訂正`;
+  }
 }
 
 function getLaps(side) {
@@ -325,102 +443,205 @@ function getLaps(side) {
     : [];
 }
 
-function renderLapHistory(side) {
-  const mount =
-    $("lap" + side);
+function getOverflowCounts(side) {
+  const overflow = state["overflow" + side];
+  const archivedValue = Number(overflow?.count);
+  const discardedValue = Number(overflow?.discarded);
 
-  const meta =
-    $("changeMeta" + side);
+  return {
+    archived: Number.isFinite(archivedValue)
+      ? Math.min(MAX_ARCHIVED_PITCHERS, Math.max(0, Math.floor(archivedValue)))
+      : 0,
+    discarded: Number.isSafeInteger(discardedValue)
+      ? Math.max(0, discardedValue)
+      : 0
+  };
+}
+
+function renderPitcherInningChips(side, index, mount) {
+  const currentIndex = getInnings(side).length - 1;
+  const { archived, discarded } = getOverflowCounts(side);
+  const pitcherNumber = index + 1 + archived + discarded;
+  const pitcherLabel = index === currentIndex
+    ? "現在の投手"
+    : `${pitcherNumber}人目の投手`;
+  const chips = document.createElement("div");
+  chips.className = "inning-chip-list";
+  const counts = getPitcherCounts(side, index, false);
+  const currentInning = getCurrentInning(side);
+  const inningCount = Math.min(
+    MAX_INNING,
+    Math.max(currentInning, counts.length)
+  );
+
+  for (let inningIndex = 0; inningIndex < inningCount; inningIndex += 1) {
+    const chip = document.createElement("button");
+    chip.className = "inning-chip";
+    const isCurrentInning = inningIndex + 1 === currentInning;
+    if (isCurrentInning) {
+      chip.classList.add("inning-chip-current");
+      chip.setAttribute("aria-current", "true");
+    }
+    chip.type = "button";
+    chip.dataset.editInning = side;
+    chip.dataset.pitcherIndex = String(index);
+    chip.dataset.inningIndex = String(inningIndex);
+    chip.setAttribute(
+      "aria-label",
+      `${pitcherLabel} ${inningIndex + 1}回の投球数を訂正${isCurrentInning ? "（現在の回）" : ""}`
+    );
+
+    const label = document.createElement("span");
+    label.textContent = `${inningIndex + 1}回`;
+    const value = document.createElement("strong");
+    value.className = "inning-chip-count";
+    value.textContent = `${normalizeCount(counts[inningIndex])}球`;
+    chip.append(label, value);
+    chips.appendChild(chip);
+  }
+
+  const unassigned = getPitcherUnassigned(side, index);
+  if (unassigned > 0) {
+    const chip = document.createElement("button");
+    chip.className = "inning-chip inning-chip-unassigned";
+    chip.type = "button";
+    chip.dataset.editUnassigned = side;
+    chip.dataset.pitcherIndex = String(index);
+    chip.setAttribute(
+      "aria-label",
+      `${pitcherLabel}のイニング未設定分 ${unassigned}球を訂正`
+    );
+
+    const label = document.createElement("span");
+    label.textContent = "未設定";
+    const value = document.createElement("strong");
+    value.textContent = `${unassigned}球`;
+    chip.append(label, value);
+    chips.appendChild(chip);
+  }
+
+  mount.appendChild(chips);
+}
+
+function renderLapHistory(side) {
+  const mount = $("lap" + side);
+  const meta = $("changeMeta" + side);
 
   if (!mount || !meta) {
     return;
   }
 
-  const laps =
-    getLaps(side);
+  const laps = getLaps(side);
+  const innings = getInnings(side);
+  const currentIndex = innings.length - 1;
+  const visibleStart = Math.max(0, innings.length - MAX_PITCHERS);
+  const { archived: archivedCount, discarded: discardedCount } =
+    getOverflowCounts(side);
+  const expandedIndex = mount.querySelector("details[open]")?.dataset.pitcherIndex;
 
   mount.replaceChildren();
 
-  if (laps.length > 0) {
-    const title =
-      document.createElement("div");
-
-    title.className =
-      "lap-title";
-
-    title.textContent =
-      "交代済み投手（タップで訂正）";
-
-    mount.appendChild(title);
+  if (visibleStart > 0 || archivedCount > 0 || discardedCount > 0) {
+    const note = document.createElement("p");
+    note.className = "pitcher-history-overflow-note";
+    const olderCount = visibleStart + archivedCount;
+    note.textContent = discardedCount > 0
+      ? `直近${MAX_PITCHERS}人分を表示中。以前の${olderCount}人分を保存しています。保存上限を超えた${discardedCount}人分は読み込み対象外です。`
+      : `直近${MAX_PITCHERS}人分を表示中。以前の${olderCount}人分も保存されています。`;
+    mount.appendChild(note);
   }
 
-  laps.forEach(
-    (count, index) => {
-      const row =
-        document.createElement("button");
+  for (let index = visibleStart; index < innings.length; index += 1) {
+    const isCurrent = index === currentIndex;
+    const section = document.createElement(isCurrent ? "section" : "details");
+    section.className = "pitcher-section";
+    section.dataset.pitcherIndex = String(index);
 
-      row.className =
-        "lap-chip";
-      row.type = "button";
-      row.dataset.editPitcher = side;
-      row.dataset.pitcherIndex = String(index);
-      row.setAttribute(
-        "aria-label",
-        `${index + 1}人目のイニング別投球数を訂正`
-      );
+    const heading = document.createElement(isCurrent ? "div" : "summary");
+    heading.className = "pitcher-section-heading";
 
-      const player =
-        document.createElement("span");
+    const player = document.createElement("strong");
+    player.className = "lap-player";
+    player.textContent = isCurrent
+      ? "現在の投手"
+      : `${index + 1 + archivedCount + discardedCount}人目の投手`;
 
-      player.className =
-        "lap-player";
+    const pitches = document.createElement("strong");
+    pitches.className = "lap-count";
+    pitches.dataset.pitcherTotal = String(index);
+    pitches.textContent = `累計 ${getPitcherTotal(side, index)}球`;
+    heading.append(player, pitches);
 
-      player.textContent =
-        `${index + 1}人目`;
+    const badge = document.createElement("span");
+    badge.className = isCurrent
+      ? "current-pitcher-badge"
+      : "pitcher-history-hint";
+    badge.textContent = isCurrent ? "現役" : "回別を見る";
+    heading.appendChild(badge);
+    section.appendChild(heading);
 
-      const pitches =
-        document.createElement("strong");
+    if (isCurrent) {
+      renderPitcherInningChips(side, index, section);
+    } else {
+      section.addEventListener("toggle", () => {
+        if (!section.open) {
+          return;
+        }
 
-      pitches.className =
-        "lap-count";
+        mount.querySelectorAll("details[open]").forEach((other) => {
+          if (other !== section) {
+            other.open = false;
+          }
+        });
 
-      pitches.textContent =
-        `合計 ${count}球`;
+        if (!section.dataset.chipsRendered) {
+          renderPitcherInningChips(side, index, section);
+          section.dataset.chipsRendered = "true";
+        }
+      });
 
-      const breakdown =
-        document.createElement("small");
-
-      breakdown.className =
-        "lap-breakdown";
-
-      const counts = getPitcherCounts(side, index, false);
-      const breakdownParts = [
-        `未設定 ${getPitcherUnassigned(side, index)}球`,
-        ...counts.map((pitchCount, inningIndex) =>
-          `${inningIndex + 1}回 ${pitchCount}球`
-        )
-      ];
-      breakdown.textContent = breakdownParts.join(" / ");
-
-      row.append(
-        player,
-        pitches,
-        breakdown
-      );
-
-      mount.appendChild(row);
+      if (String(index) === expandedIndex) {
+        section.open = true;
+        renderPitcherInningChips(side, index, section);
+        section.dataset.chipsRendered = "true";
+      }
     }
+
+    mount.appendChild(section);
+  }
+
+  meta.textContent = `${laps.length + archivedCount + discardedCount + 1}人目`;
+}
+
+function updateCurrentPitcherHistory(side) {
+  const currentIndex = getInnings(side).length - 1;
+  const section = $("lap" + side)?.querySelector(
+    `section[data-pitcher-index="${currentIndex}"]`
   );
 
-  meta.textContent =
-    `${laps.length + 1}人目`;
+  if (!section) {
+    return;
+  }
+
+  const total = section.querySelector("[data-pitcher-total]");
+  if (total) {
+    total.textContent = `累計 ${getPitcherTotal(side, currentIndex)}球`;
+  }
+
+  const chip = section.querySelector(
+    `[data-edit-inning="${side}"][data-pitcher-index="${currentIndex}"][data-inning-index="${getCurrentInning(side) - 1}"]`
+  );
+  const count = chip?.querySelector(".inning-chip-count");
+  if (count) {
+    const inningCounts = getPitcherCounts(side, currentIndex, false);
+    count.textContent = `${normalizeCount(inningCounts[getCurrentInning(side) - 1])}球`;
+  }
 }
 
 function renderAll() {
   updateDigits("A");
   updateDigits("B");
   renderNames();
-  $("currentInning").textContent = String(state.inning);
   renderInningMeta("A");
   renderInningMeta("B");
   renderLapHistory("A");
@@ -742,13 +963,15 @@ document
           getInnings(side).length - 1
         );
 
-        counts[state.inning - 1] = normalizeCount(
-          counts[state.inning - 1] + 1
+        const inning = getCurrentInning(side);
+        counts[inning - 1] = normalizeCount(
+          counts[inning - 1] + 1
         );
         syncSideTotals(side);
 
         updateDigits(side);
         renderInningMeta(side);
+        updateCurrentPitcherHistory(side);
         scheduleSave();
 
         playCounterClick();
@@ -784,18 +1007,20 @@ document
 
         if (
           state[side] <= 0 ||
-          normalizeCount(counts[state.inning - 1]) <= 0
+          normalizeCount(counts[getCurrentInning(side) - 1]) <= 0
         ) {
           return;
         }
 
-        counts[state.inning - 1] = normalizeCount(
-          counts[state.inning - 1] - 1
+        const inning = getCurrentInning(side);
+        counts[inning - 1] = normalizeCount(
+          counts[inning - 1] - 1
         );
         syncSideTotals(side);
 
         updateDigits(side);
         renderInningMeta(side);
+        updateCurrentPitcherHistory(side);
         scheduleSave();
 
         undoClick();
@@ -922,7 +1147,7 @@ $("confirmPlayerChange").addEventListener(
     const unassignedKey = "unassigned" + side;
     state[unassignedKey].push(0);
     state[inningsKey].push(
-      new Array(state.inning).fill(0)
+      new Array(getCurrentInning(side)).fill(0)
     );
 
     state[side] = 0;
@@ -954,21 +1179,23 @@ document
       "click",
       () => {
         const step = Number(button.dataset.inningStep) || 0;
-        const nextInning = state.inning + step;
+        const side = button.dataset.inningSide;
+
+        if (side !== "A" && side !== "B") {
+          return;
+        }
+
+        const nextInning = getCurrentInning(side) + step;
 
         if (nextInning < 1 || nextInning > MAX_INNING) {
           return;
         }
 
-        state.inning = nextInning;
-        $("currentInning").textContent = String(state.inning);
-        renderInningMeta("A");
-        renderInningMeta("B");
-        renderLapHistory("A");
-        renderLapHistory("B");
+        state["inning" + side] = nextInning;
+        renderInningMeta(side);
+        renderLapHistory(side);
 
-        saveDirty = true;
-        flushSave();
+        scheduleSave();
         vibrate(18);
       }
     );
@@ -988,95 +1215,132 @@ function showPitcherEditError(message) {
   pitcherEditError.hidden = !message;
 }
 
-function openPitcherEdit(side, index) {
-  const laps = getLaps(side);
+function openPitcherEdit(side, index, inningIndex, unassigned = false) {
+  const innings = getInnings(side);
+  const currentIndex = innings.length - 1;
 
-  if (index < 0 || index > laps.length) {
+  if (
+    index < 0 ||
+    index > currentIndex ||
+    (!unassigned && (
+      !Number.isInteger(inningIndex) ||
+      inningIndex < 0 ||
+      inningIndex >= MAX_INNING
+    ))
+  ) {
     return;
   }
 
   const counts = getPitcherCounts(side, index, false);
-  pitcherEditTarget = { side, index };
+  const currentValue = unassigned
+    ? getPitcherUnassigned(side, index)
+    : normalizeCount(counts[inningIndex]);
+  const otherTotal = getPitcherTotal(side, index) - currentValue;
+  const maximum = Math.max(0, MAX_COUNT - otherTotal);
+  const { archived, discarded } = getOverflowCounts(side);
+  const pitcherNumber = index + 1 + archived + discarded;
+  const pitcherName = index === currentIndex
+    ? "現在の投手"
+    : `${pitcherNumber}人目の投手`;
+  const targetLabel = unassigned
+    ? "イニング未設定分"
+    : `${inningIndex + 1}回`;
+
+  pitcherEditTarget = { side, index, inningIndex, unassigned };
   $("pitcherEditTitle").textContent =
-    index === laps.length
-      ? "現在の投手の投球数を訂正"
-      : `${index + 1}人目の投球数を訂正`;
+    `${pitcherName}・${targetLabel}を訂正`;
+  $("pitcherEditLead").textContent =
+    `${side === "A" ? state.nameA : state.nameB} / ${pitcherName} / ${targetLabel}。現在 ${currentValue}球（投手累計の上限 ${MAX_COUNT}球）`;
   pitcherEditFields.replaceChildren();
   showPitcherEditError("");
 
-  const unassignedRow = document.createElement("div");
-  unassignedRow.className = "pitcher-edit-row";
+  const row = document.createElement("div");
+  row.className = "pitcher-edit-row pitcher-edit-stepper";
 
-  const unassignedLabel = document.createElement("label");
-  const unassignedInput = document.createElement("input");
-  unassignedLabel.htmlFor = `pitcherEdit${side}${index}_unassigned`;
-  unassignedLabel.textContent = "イニング未設定";
-  unassignedInput.id = unassignedLabel.htmlFor;
-  unassignedInput.type = "number";
-  unassignedInput.inputMode = "numeric";
-  unassignedInput.min = "0";
-  unassignedInput.max = String(MAX_COUNT);
-  unassignedInput.step = "1";
-  unassignedInput.value = String(getPitcherUnassigned(side, index));
-  unassignedInput.dataset.unassigned = "true";
-  unassignedRow.append(unassignedLabel, unassignedInput);
-  pitcherEditFields.appendChild(unassignedRow);
+  const label = document.createElement("label");
+  const inputId = unassigned
+    ? `pitcherEdit${side}${index}_unassigned`
+    : `pitcherEdit${side}${index}_${inningIndex}`;
+  label.htmlFor = inputId;
+  label.textContent = unassigned ? "イニング未設定分" : "この回の球数";
 
-  const inningCount = Math.min(
-    MAX_INNING,
-    Math.max(state.inning, counts.length)
-  );
+  const controls = document.createElement("div");
+  controls.className = "pitcher-edit-controls";
 
-  for (let inningIndex = 0; inningIndex < inningCount; inningIndex += 1) {
-    const row = document.createElement("div");
-    row.className = "pitcher-edit-row";
+  const decrement = document.createElement("button");
+  decrement.type = "button";
+  decrement.className = "pitcher-edit-step";
+  decrement.dataset.editAdjust = "-1";
+  decrement.textContent = "−";
+  decrement.setAttribute("aria-label", "1球減らす");
 
-    const label = document.createElement("label");
-    const inputId = `pitcherEdit${side}${index}_${inningIndex}`;
-    label.htmlFor = inputId;
-    label.textContent = `${inningIndex + 1}回`;
+  const input = document.createElement("input");
+  input.id = inputId;
+  input.type = "number";
+  input.inputMode = "numeric";
+  input.min = "0";
+  input.max = String(maximum);
+  input.step = "1";
+  input.value = String(currentValue);
+  input.setAttribute("aria-label", `${targetLabel}の球数`);
 
-    const input = document.createElement("input");
-    input.id = inputId;
-    input.type = "number";
-    input.inputMode = "numeric";
-    input.min = "0";
-    input.max = String(MAX_COUNT);
-    input.step = "1";
-    input.value = String(normalizeCount(counts[inningIndex]));
-    input.dataset.inningIndex = String(inningIndex);
+  const increment = document.createElement("button");
+  increment.type = "button";
+  increment.className = "pitcher-edit-step";
+  increment.dataset.editAdjust = "1";
+  increment.textContent = "＋";
+  increment.setAttribute("aria-label", "1球増やす");
 
-    row.append(label, input);
-    pitcherEditFields.appendChild(row);
-  }
+  controls.append(decrement, input, increment);
+  row.append(label, controls);
+  pitcherEditFields.appendChild(row);
 
   pitcherEditDialog.showModal();
+  $("pitcherEditTitle").focus();
 }
 
 document.addEventListener("click", (event) => {
-  const button = event.target.closest(
-    "[data-edit-pitcher], [data-edit-current]"
-  );
+  const button = event.target.closest("[data-edit-inning], [data-edit-unassigned]");
 
   if (!button) {
     return;
   }
 
-  const side = button.dataset.editPitcher || button.dataset.editCurrent;
-  const index = button.dataset.editCurrent === undefined
-    ? Number(button.dataset.pitcherIndex)
-    : getLaps(side).length;
+  const unassigned = button.dataset.editUnassigned !== undefined;
+  const side = unassigned
+    ? button.dataset.editUnassigned
+    : button.dataset.editInning;
+  const index = Number(button.dataset.pitcherIndex);
+  const inningIndex = Number(button.dataset.inningIndex);
 
-  openPitcherEdit(side, index);
+  openPitcherEdit(side, index, inningIndex, unassigned);
 });
 
-$("cancelPitcherEdit").addEventListener(
-  "click",
-  () => {
-    pitcherEditTarget = null;
-    pitcherEditDialog.close();
+pitcherEditFields.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-edit-adjust]");
+
+  if (!button) {
+    return;
   }
-);
+
+  const input = pitcherEditFields.querySelector("input");
+
+  if (!input) {
+    return;
+  }
+
+  const nextValue = Number(input.value) + Number(button.dataset.editAdjust);
+  input.value = String(Math.max(Number(input.min), Math.min(Number(input.max), nextValue)));
+  input.focus();
+});
+
+function closePitcherEditDialog() {
+  pitcherEditTarget = null;
+  pitcherEditDialog.close();
+}
+
+$("cancelPitcherEdit").addEventListener("click", closePitcherEditDialog);
+$("closePitcherEdit").addEventListener("click", closePitcherEditDialog);
 
 $("savePitcherEdit").addEventListener(
   "click",
@@ -1086,47 +1350,37 @@ $("savePitcherEdit").addEventListener(
       return;
     }
 
-    const inputs = pitcherEditFields.querySelectorAll("input");
-    const counts = [];
-    let total = 0;
-    let unassigned = 0;
+    const input = pitcherEditFields.querySelector("input");
+    const value = Number(input && input.value);
 
-    for (const input of inputs) {
-      const value = Number(input.value);
-
-      if (!Number.isInteger(value) || value < 0 || value > MAX_COUNT) {
-        showPitcherEditError(`各イニングは0〜${MAX_COUNT}球の整数で入力してください。`);
-        input.focus();
-        return;
-      }
-
-      if (input.dataset.unassigned === "true") {
-        unassigned = value;
-      } else {
-        counts.push(value);
-      }
-
-      total += value;
+    if (!input || !Number.isInteger(value) || value < 0 || value > MAX_COUNT) {
+      showPitcherEditError(`この回は0〜${MAX_COUNT}球の整数で入力してください。`);
+      input?.focus();
+      return;
     }
 
-    if (total > MAX_COUNT) {
+    const { side, index, inningIndex, unassigned } = pitcherEditTarget;
+    const counts = getPitcherCounts(side, index, false);
+    const currentValue = unassigned
+      ? getPitcherUnassigned(side, index)
+      : normalizeCount(counts[inningIndex]);
+    const otherTotal = getPitcherTotal(side, index) - currentValue;
+
+    if (otherTotal + value > MAX_COUNT) {
       showPitcherEditError(`投手ごとの合計は${MAX_COUNT}球以内で入力してください。`);
       return;
     }
 
-    const { side, index } = pitcherEditTarget;
-    state["unassigned" + side][index] = unassigned;
-    state["innings" + side][index] = counts;
-    syncSideTotals(side);
-
-    if (index === getInnings(side).length - 1) {
-      updateDigits(side);
-      renderInningMeta(side);
+    if (unassigned) {
+      state["unassigned" + side][index] = value;
+    } else {
+      counts[inningIndex] = value;
     }
-
+    syncSideTotals(side);
+    updateDigits(side);
+    renderInningMeta(side);
     renderLapHistory(side);
-    saveDirty = true;
-    flushSave();
+    scheduleSave();
     vibrate(24);
 
     pitcherEditTarget = null;
@@ -1227,6 +1481,7 @@ $("confirmReset").addEventListener(
 
       updateDigits(resetTarget);
       renderInningMeta(resetTarget);
+      renderLapHistory(resetTarget);
 
       saveDirty = true;
       flushSave();
@@ -1272,6 +1527,10 @@ $("confirmAllReset").addEventListener(
     state.lapsA = [];
     state.lapsB = [];
     state.inning = 1;
+    state.inningA = 1;
+    state.inningB = 1;
+    state.overflowA = null;
+    state.overflowB = null;
     state.unassignedA = [0];
     state.unassignedB = [0];
     state.inningsA = [[0]];
@@ -1285,7 +1544,6 @@ $("confirmAllReset").addEventListener(
 
     updateDigits("A");
     updateDigits("B");
-    $("currentInning").textContent = "1";
     renderInningMeta("A");
     renderInningMeta("B");
     renderLapHistory("A");

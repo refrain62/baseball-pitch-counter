@@ -1,7 +1,7 @@
 "use strict";
 
 const CACHE_NAME =
-  "pitch-counter-shell-v37";
+  "pitch-counter-shell-v38";
 
 const APP_SHELL = [
   "/counter/",

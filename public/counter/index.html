@@ -57,16 +57,6 @@
     <span class="install-arrow" aria-hidden="true">›</span>
   </button>
 
-  <section class="inning-toolbar" aria-label="イニング切り替え">
-    <button class="inning-step" type="button" data-inning-step="-1" aria-label="前のイニングへ">−</button>
-    <div class="inning-current">
-      <span>現在のイニング</span>
-      <strong id="currentInning" aria-live="polite">1</strong>
-      <span>回</span>
-    </div>
-    <button class="inning-step" type="button" data-inning-step="1" aria-label="次のイニングへ">＋</button>
-  </section>
-
   <section class="counter-grid" aria-label="投球数カウンター">
     <article class="counter-card side-a">
       <div class="team-header">
@@ -80,9 +70,13 @@
       </div>
 
       <div class="odometer-zone">
+        <div class="odometer-caption">
+          <span>投手累計</span>
+          <span id="currentPitcherBadgeA" class="pitcher-status-badge">現在の投手</span>
+        </div>
         <div id="countA" class="odometer" aria-live="polite" aria-label="1塁側 0球"></div>
         <span class="count-unit">球</span>
-        <button class="inning-meta" id="inningMetaA" type="button" data-edit-current="A" aria-label="現在の投手のイニング別投球数を訂正">現在 1回・この回 0球</button>
+        <p class="current-inning-note" id="inningMetaA">1回の投球数をチップから訂正できます</p>
       </div>
 
       <button class="pitch-button" type="button" data-plus="A" aria-label="1塁側を1球増やす">
@@ -96,6 +90,20 @@
         <strong>1球戻す</strong>
       </button>
 
+      <div class="side-inning-toolbar" aria-label="1塁側のイニング切り替え">
+        <div class="inning-badge">
+          <span>現在の回</span>
+          <strong id="currentInningA" aria-live="polite">1回</strong>
+        </div>
+        <div class="inning-switch">
+          <span>イニング変更</span>
+          <div class="inning-switch-buttons">
+            <button class="inning-step" type="button" data-inning-side="A" data-inning-step="-1" aria-label="1塁側を前のイニングへ">−</button>
+            <button class="inning-step" type="button" data-inning-side="A" data-inning-step="1" aria-label="1塁側を次のイニングへ">＋</button>
+          </div>
+        </div>
+      </div>
+
       <button class="action-button change-player-button" type="button" data-change-player="A">
         <span class="change-player-icon" aria-hidden="true">⇄</span>
         <span class="action-copy">
@@ -104,7 +112,7 @@
         </span>
       </button>
 
-      <div class="lap-history" id="lapA" aria-live="polite"></div>
+      <div class="lap-history" id="lapA" role="group" aria-label="1塁側の投手別イニング球数"></div>
 
       <button class="action-button reset-button" type="button" data-reset="A">
         <span class="reset-icon" aria-hidden="true">↻</span>
@@ -124,9 +132,13 @@
       </div>
 
       <div class="odometer-zone">
+        <div class="odometer-caption">
+          <span>投手累計</span>
+          <span id="currentPitcherBadgeB" class="pitcher-status-badge">現在の投手</span>
+        </div>
         <div id="countB" class="odometer" aria-live="polite" aria-label="3塁側 0球"></div>
         <span class="count-unit">球</span>
-        <button class="inning-meta" id="inningMetaB" type="button" data-edit-current="B" aria-label="現在の投手のイニング別投球数を訂正">現在 1回・この回 0球</button>
+        <p class="current-inning-note" id="inningMetaB">1回の投球数をチップから訂正できます</p>
       </div>
 
       <button class="pitch-button" type="button" data-plus="B" aria-label="3塁側を1球増やす">
@@ -140,6 +152,20 @@
         <strong>1球戻す</strong>
       </button>
 
+      <div class="side-inning-toolbar" aria-label="3塁側のイニング切り替え">
+        <div class="inning-badge">
+          <span>現在の回</span>
+          <strong id="currentInningB" aria-live="polite">1回</strong>
+        </div>
+        <div class="inning-switch">
+          <span>イニング変更</span>
+          <div class="inning-switch-buttons">
+            <button class="inning-step" type="button" data-inning-side="B" data-inning-step="-1" aria-label="3塁側を前のイニングへ">−</button>
+            <button class="inning-step" type="button" data-inning-side="B" data-inning-step="1" aria-label="3塁側を次のイニングへ">＋</button>
+          </div>
+        </div>
+      </div>
+
       <button class="action-button change-player-button" type="button" data-change-player="B">
         <span class="change-player-icon" aria-hidden="true">⇄</span>
         <span class="action-copy">
@@ -148,7 +174,7 @@
         </span>
       </button>
 
-      <div class="lap-history" id="lapB" aria-live="polite"></div>
+      <div class="lap-history" id="lapB" role="group" aria-label="3塁側の投手別イニング球数"></div>
 
       <button class="action-button reset-button" type="button" data-reset="B">
         <span class="reset-icon" aria-hidden="true">↻</span>
@@ -226,7 +252,7 @@
 
     <section>
       <strong>イニング切り替え</strong>
-      <p>画面上部の−／＋で回を切り替えます。投手の合計は維持したまま、その回の球数を別に記録できます。</p>
+      <p>各チームの「イニング変更」にある−／＋で、その側の回を切り替えます。投手の合計は維持したまま、その回の球数を別に記録できます。</p>
     </section>
 
     <section>
@@ -321,9 +347,12 @@
   </div>
 </dialog>
 
-<dialog id="pitcherEditDialog" class="dialog pitcher-edit-dialog">
-  <h2 id="pitcherEditTitle">投手の球数を訂正</h2>
-  <p class="pitcher-edit-lead">イニングごとの球数を入力すると、合計も自動で更新されます。</p>
+<dialog id="pitcherEditDialog" class="dialog pitcher-edit-dialog" aria-labelledby="pitcherEditTitle" aria-describedby="pitcherEditLead">
+  <div class="dialog-heading pitcher-edit-heading">
+    <h2 id="pitcherEditTitle" tabindex="-1">投手の球数を訂正</h2>
+    <button class="dialog-close-icon" id="closePitcherEdit" type="button" aria-label="投手の球数訂正を閉じる">×</button>
+  </div>
+  <p id="pitcherEditLead" class="pitcher-edit-lead">対象の回だけを訂正します。合計は自動で更新されます。</p>
   <div id="pitcherEditFields" class="pitcher-edit-fields"></div>
   <p id="pitcherEditError" class="pitcher-edit-error" role="alert" hidden></p>
   <div class="dialog-actions">
