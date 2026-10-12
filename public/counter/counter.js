@@ -1509,6 +1509,7 @@ function openPitcherEdit(side, index, inningIndex, unassigned = false) {
     : `${inningIndex + 1}回`;
 
   pitcherEditTarget = { side, index, inningIndex, unassigned };
+  pitcherEditDialog.classList.toggle("side-b", side === "B");
   $("pitcherEditTitle").textContent =
     `${pitcherName}・${targetLabel}を訂正`;
   $("pitcherEditLead").textContent =
@@ -1598,6 +1599,7 @@ pitcherEditFields.addEventListener("click", (event) => {
 
 function closePitcherEditDialog() {
   pitcherEditTarget = null;
+  pitcherEditDialog.classList.remove("side-b");
   pitcherEditDialog.close();
 }
 
@@ -1608,6 +1610,7 @@ $("savePitcherEdit").addEventListener(
   "click",
   () => {
     if (!pitcherEditTarget) {
+      pitcherEditDialog.classList.remove("side-b");
       pitcherEditDialog.close();
       return;
     }
@@ -1646,6 +1649,7 @@ $("savePitcherEdit").addEventListener(
     vibrate(24);
 
     pitcherEditTarget = null;
+    pitcherEditDialog.classList.remove("side-b");
     pitcherEditDialog.close();
   }
 );
