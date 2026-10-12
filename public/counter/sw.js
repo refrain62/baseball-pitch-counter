@@ -1,12 +1,12 @@
 "use strict";
 
 const CACHE_NAME =
-  "pitch-counter-shell-v52";
+  "pitch-counter-shell-v53";
 
 const APP_SHELL = [
   "/counter/",
 
-  "/counter/counter.css?v=49",
+  "/counter/counter.css?v=50",
   "/counter/counter.js?v=48",
 
   "/counter/manifest.webmanifest",
