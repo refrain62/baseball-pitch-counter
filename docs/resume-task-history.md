@@ -16,3 +16,10 @@
 - 記録PR: [#3](https://github.com/refrain62/baseball-pitch-counter/pull/3)（本記録を含めて `develop` へ統合）
 - 実装ブランチ: `feature/inning-pitch-count-edit`（統合後に削除）
 - 記録ブランチ: `docs/pc-001-pitch-count-records`（本記録PRの統合後に削除）
+
+### 表示文言・LPの追加更新
+
+- 投手情報と交代済み投手カードの見出しを「N人目の投手」に統一し、左右どちら側でも投手の順番が分かるようにした。
+- LPの説明・FAQ・構造化データ、およびカウンター内の使い方説明を、投手ごとのイニング別記録と交代後の確認・訂正に合わせて更新した。
+- `pnpm test`、`pnpm build`、`git diff --check` とPR CIが成功。静的レビューで重大な指摘なし。
+- 追加実装PR: [#4](https://github.com/refrain62/baseball-pitch-counter/pull/4)（`develop` へ統合、マージコミット `165d55933a9c`）
