@@ -2,6 +2,8 @@
 
 野球の投球数を2系統で数える、ビルド不要の静的PWAです。
 
+投手ごとの累計投球数とイニング別球数を記録でき、交代後の投手履歴も確認・訂正できます。
+
 - 本番: https://baseball-pitch-counter.refrain62.workers.dev/
 - LP: `/`
 - カウンター: `/counter/`
