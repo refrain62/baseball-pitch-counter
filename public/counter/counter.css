@@ -304,9 +304,9 @@ button{cursor:pointer}
 .pitcher-section-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:4px 8px;min-width:0}
 summary.pitcher-section-heading{cursor:pointer;list-style:none}
 summary.pitcher-section-heading::-webkit-details-marker{display:none}
-.pitcher-section-heading .lap-player{min-width:0;color:#b8cee2;font-size:13px;font-weight:900;line-height:1.25}
-.pitcher-section-heading .lap-count{grid-column:2;grid-row:1;color:#fff;font-size:16px;font-weight:950;white-space:nowrap}
-.pitcher-history-hint{color:#9cb9d0;font-size:9px;font-weight:800;white-space:nowrap}
+.pitcher-section-heading .lap-player{min-width:0;color:#b8cee2;font-size:14px;font-weight:900;line-height:1.25}
+.pitcher-section-heading .lap-count{grid-column:2;grid-row:1;color:#fff;font-size:17px;font-weight:950;white-space:nowrap}
+.pitcher-history-hint{color:#9cb9d0;font-size:10px;font-weight:800;white-space:nowrap}
 .pitcher-section-heading .current-pitcher-badge,.pitcher-section-heading .pitcher-history-hint{grid-column:2;grid-row:2;justify-self:end}
 .pitcher-history-overflow-note{margin:0;color:#aabed1;font-size:10px;line-height:1.4}
 .inning-chip-list{display:flex;flex-wrap:nowrap;gap:5px;min-width:0;overflow-x:auto;padding:2px 2px 5px;scrollbar-width:thin}
@@ -317,7 +317,7 @@ summary.pitcher-section-heading::-webkit-details-marker{display:none}
 .side-b .inning-chip{border-color:rgba(222,95,118,.38);background:rgba(49,17,29,.68)}
 .inning-chip-current{border-color:#64d0ff;background:rgba(21,100,147,.72);box-shadow:0 0 0 2px rgba(100,208,255,.22),0 0 12px rgba(46,184,255,.18)}
 .side-b .inning-chip-current{border-color:#ff8196;background:rgba(123,35,52,.78);box-shadow:0 0 0 2px rgba(255,129,150,.22),0 0 12px rgba(255,69,98,.18)}
-.inning-chip span{font-size:10px;font-weight:800}.inning-chip strong{color:#fff;font-size:12px;font-weight:950;white-space:nowrap}
+.inning-chip span{font-size:11px;font-weight:800}.inning-chip strong{color:#fff;font-size:13px;font-weight:950;white-space:nowrap}
 .inning-chip:hover,.inning-chip:focus-visible{border-color:#6bcfff;outline:2px solid rgba(107,207,255,.45);outline-offset:1px}
 .inning-chip-unassigned{border-style:dashed;color:#c0d1df}
 .inning-chip-unassigned strong{color:#fff}
@@ -843,7 +843,7 @@ summary.pitcher-section-heading::-webkit-details-marker{display:none}
   .side-inning-toolbar{grid-template-columns:1fr;gap:6px;margin:7px 0 2px;padding:0}
   .inning-switch{min-height:50px;padding:7px 8px;gap:2px 6px;border-radius:14px}.inning-switch-icon{font-size:19px}.inning-switch-label{font-size:11px}
   .side-inning-toolbar .inning-step{min-width:44px;min-height:44px;border-radius:8px;font-size:19px}
-  .odometer-zone{margin:8px 0 10px;padding-bottom:18px}.odometer-caption{margin:0 2px 4px;font-size:8px}.pitcher-status-badge{min-height:18px;padding:2px 5px;font-size:8px}.odometer{gap:3px;padding:6px;border-radius:13px}.digit{height:82px;border-width:3px;border-radius:7px;font-size:clamp(48px,13vw,68px)}.count-unit{right:1px;font-size:18px}.current-inning-note{margin-top:6px;font-size:8px}
+  .odometer-zone{margin:8px 0 10px;padding-bottom:18px}.odometer-caption{margin:0 2px 4px;font-size:10px}.pitcher-status-badge{min-height:20px;padding:2px 6px;font-size:10px}.odometer{gap:3px;padding:6px;border-radius:13px}.digit{height:82px;border-width:3px;border-radius:7px;font-size:clamp(48px,13vw,68px)}.count-unit{right:1px;font-size:18px}.current-inning-note{margin-top:6px;font-size:8px}
   .pitch-button{
     min-height:118px;
     padding:7px 4px 9px;
@@ -882,8 +882,8 @@ summary.pitcher-section-heading::-webkit-details-marker{display:none}
     margin-left:2px;
     font-size:13px
   }
-  .lap-history{margin-top:8px;gap:5px}.pitcher-section{gap:5px;margin-top:7px;padding-top:7px}.pitcher-section-heading .lap-player{font-size:10px}.pitcher-section-heading .lap-count{font-size:12px}.current-pitcher-badge{min-height:18px;padding:2px 5px;font-size:8px}.pitcher-history-hint{font-size:8px}
-  .inning-chip-list{gap:4px;padding-bottom:4px}.inning-chip{flex-basis:68px;min-height:31px;padding:4px 5px;border-radius:7px}.inning-chip span{font-size:8px}.inning-chip strong{font-size:10px}
+  .lap-history{margin-top:8px;gap:5px}.pitcher-section{gap:5px;margin-top:7px;padding-top:7px}.pitcher-section-heading{gap:4px 6px}.pitcher-section-heading .lap-player{font-size:12px}.pitcher-section-heading .lap-count{font-size:14px}.current-pitcher-badge{min-height:20px;padding:2px 5px;font-size:10px}.pitcher-history-hint{font-size:10px}
+  .inning-chip-list{gap:4px;padding-bottom:4px}.inning-chip{flex-basis:74px;min-height:36px;padding:5px 6px;border-radius:8px}.inning-chip span{font-size:10px}.inning-chip strong{font-size:12px}
   .pitcher-edit-fields{padding:2px 0}.pitcher-edit-row{grid-template-columns:minmax(48px,1fr) minmax(190px,1fr);gap:4px}.pitcher-edit-row label{font-size:13px}.pitcher-edit-controls{grid-template-columns:56px minmax(0,1fr) 56px;gap:6px}.pitcher-edit-controls input{min-height:50px;padding:7px 2px;font-size:16px}
 
   .reset-button{
