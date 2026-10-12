@@ -880,7 +880,7 @@ summary.pitcher-section-heading::-webkit-details-marker{display:none}
   .inning-switch-buttons{grid-template-columns:1fr}
 }
 
-@media(max-width:360px){
+@media(max-width:280px){
   .pitcher-edit-row{grid-template-columns:1fr}
 }
 
