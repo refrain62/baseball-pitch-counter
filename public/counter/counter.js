@@ -1188,6 +1188,9 @@ const inningRegularStepButtons = inningSelectDialog.querySelectorAll(
 );
 const inningExtraInput = $("inningExtraInput");
 const inningExtraError = $("inningExtraError");
+const inningExtraStepButtons = inningSelectDialog.querySelectorAll(
+  "[data-extension-step]"
+);
 let inningSelectTarget = null;
 let inningSelectValue = 1;
 let inningExtraInputTouched = false;
@@ -1210,6 +1213,14 @@ function updateInningStepControls() {
     const step = Number(button.dataset.inningStep);
     const atMinimum = step < 0 && inningSelectValue <= 1;
     const atMaximum = step > 0 && inningSelectValue >= MAX_INNING;
+    button.disabled = atMinimum || atMaximum;
+    button.setAttribute("aria-disabled", String(button.disabled));
+  });
+  const extensionValue = Math.max(10, inningSelectValue);
+  inningExtraStepButtons.forEach((button) => {
+    const step = Number(button.dataset.extensionStep);
+    const atMinimum = step < 0 && extensionValue <= 10;
+    const atMaximum = step > 0 && extensionValue >= MAX_INNING;
     button.disabled = atMinimum || atMaximum;
     button.setAttribute("aria-disabled", String(button.disabled));
   });
