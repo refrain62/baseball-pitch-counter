@@ -473,8 +473,13 @@ function renderPitcherInningChips(side, index, mount) {
     MAX_INNING,
     Math.max(currentInning, counts.length)
   );
+  let hasPitchCount = false;
 
   for (let inningIndex = 0; inningIndex < inningCount; inningIndex += 1) {
+    if (normalizeCount(counts[inningIndex]) === 0) {
+      continue;
+    }
+    hasPitchCount = true;
     const chip = document.createElement("button");
     chip.className = "inning-chip";
     const isCurrentInning = inningIndex + 1 === currentInning;
@@ -501,6 +506,9 @@ function renderPitcherInningChips(side, index, mount) {
   }
 
   const unassigned = getPitcherUnassigned(side, index);
+  if (!hasPitchCount && unassigned === 0) {
+    return;
+  }
   if (unassigned > 0) {
     const chip = document.createElement("button");
     chip.className = "inning-chip inning-chip-unassigned";
