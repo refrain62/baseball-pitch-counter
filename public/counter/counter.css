@@ -96,7 +96,7 @@ button{cursor:pointer}
 .inning-step:active{transform:translateY(1px)}
 
 /* cards */
-.counter-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.counter-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;min-width:0}
 .counter-card{
   min-width:0;padding:18px 16px 16px;border-radius:34px;
   background:linear-gradient(180deg,rgba(6,21,39,.95),rgba(5,14,28,.97));
@@ -908,6 +908,11 @@ summary.pitcher-section-heading::-webkit-details-marker{display:none}
   .undo-button{min-height:50px;margin-top:16px;font-size:12px}
   .reset-button{min-height:46px;margin-top:10px;font-size:12px}
   .inning-options{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .counter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pitcher-section-heading{grid-template-columns:minmax(0,1fr);gap:4px;min-width:0}
+  .pitcher-section-heading .lap-player,.pitcher-section-heading .lap-count,.pitcher-section-heading .current-pitcher-badge,.pitcher-section-heading .pitcher-history-hint{grid-column:1;grid-row:auto;justify-self:start;max-width:100%}
+  .pitcher-section-heading .lap-player{overflow-wrap:anywhere}
+  .pitcher-section-heading .lap-count{white-space:normal;overflow-wrap:anywhere}
 }
 
 @media(max-width:319px){
