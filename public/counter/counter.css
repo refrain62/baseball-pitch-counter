@@ -88,6 +88,13 @@ button{cursor:pointer}
 .install-icon-line{fill:none;stroke:currentColor;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
 .install-text{line-height:1.15}.install-arrow{font-size:54px;line-height:1;font-weight:400}
 
+/* 各側のイニングは独立して切り替える。 */
+.inning-step{
+  min-height:48px;border:1px solid rgba(122,196,246,.5);border-radius:12px;
+  background:rgba(15,82,122,.6);color:#fff;font-size:28px;line-height:1;
+}
+.inning-step:active{transform:translateY(1px)}
+
 /* cards */
 .counter-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 .counter-card{
@@ -114,6 +121,91 @@ button{cursor:pointer}
 .team-sub{display:block;margin-top:8px;color:rgba(187,212,241,.93);font-size:clamp(11px,1.45vw,17px);letter-spacing:.28em;white-space:nowrap}
 .base-map{width:58px;height:58px;display:block;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35))}
 
+/* 各側が独立して持つイニング状態 */
+.side-inning-toolbar{
+  display:grid;
+  grid-template-columns:1fr;
+  align-items:center;
+  gap:8px;
+  margin:12px 0 4px;
+  padding:0;
+}
+.inning-switch{
+  width:100%;min-width:0;min-height:62px;padding:8px 12px;display:grid;
+  grid-template-columns:auto minmax(0,1fr);grid-template-areas:"icon label";
+  align-items:center;gap:2px 8px;border:1px solid rgba(111,195,255,.55);border-radius:19px;
+  background:linear-gradient(180deg,rgba(20,66,96,.72),rgba(9,34,55,.82));color:#e8f7ff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 0 16px rgba(25,163,245,.08);text-align:center;
+  justify-content:center;
+}
+.inning-switch-icon{grid-area:icon;color:#67caff;font-size:22px;font-weight:900;line-height:1}
+.inning-switch-label{grid-area:label;min-width:0;color:#e8f7ff;font-size:13px;font-weight:900;line-height:1.25;overflow-wrap:anywhere}
+.side-b .inning-switch{border-color:rgba(255,117,139,.56);background:linear-gradient(180deg,rgba(108,29,47,.72),rgba(56,15,27,.84));box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 0 16px rgba(255,55,86,.08)}
+.side-b .inning-switch-icon{color:#ff8296}
+.inning-switch:hover,.inning-switch:focus-visible{outline:2px solid rgba(107,207,255,.45);outline-offset:1px}
+.side-inning-toolbar .inning-step{
+  min-width:44px;
+  min-height:44px;
+  padding:0;
+  border:1px solid rgba(126,199,241,.52);
+  border-radius:10px;
+  background:rgba(17,79,116,.78);
+  color:#fff;
+  font-size:22px;
+  line-height:1;
+}
+.side-b .inning-step{border-color:rgba(255,116,133,.58);background:rgba(108,33,49,.8)}
+
+.dialog.inning-select-dialog{width:min(94vw,680px);max-height:min(90dvh,820px);overflow:auto}
+.inning-select-heading{margin-bottom:10px}
+.inning-select-lead{margin:0 0 12px!important;font-size:13px!important;line-height:1.5!important}
+.inning-select-current{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:8px;margin:0 0 12px;padding:10px 12px;border:1px solid rgba(120,185,226,.28);border-radius:12px;background:rgba(5,19,35,.7);color:#b8cee2;font-size:12px;font-weight:850}
+.inning-select-current>div{display:flex;flex-direction:column;gap:2px;min-width:0}.inning-select-current>div:last-child{align-items:flex-end;text-align:right}.inning-select-arrow{color:#8eb8d4;font-size:20px;font-weight:900}
+.inning-select-current strong{color:#fff;font-size:20px}
+.inning-select-dialog.side-b .inning-select-current{border-color:rgba(255,116,133,.32);background:rgba(46,14,26,.72)}
+.inning-select-dialog.side-b .inning-select-arrow{color:#e6a5af}
+.inning-option-groups{display:grid;gap:14px;max-height:min(52vh,460px);overflow:auto;padding:2px}
+.inning-option-group h3{margin:0 0 6px;color:#a9c4dc;font-size:11px;font-weight:900;letter-spacing:.08em}
+.inning-regular-stepper{display:grid;grid-template-columns:80px minmax(0,1fr) 80px;align-items:center;gap:8px;margin:0 0 8px}
+.inning-regular-step{width:80px;min-width:80px;min-height:64px;padding:0;border:2px solid rgba(26,160,231,.82);border-radius:14px;background:linear-gradient(180deg,#fff 0%,#eef6ff 100%);color:#09213c;font-size:34px;font-weight:900;line-height:1;box-shadow:0 5px 12px rgba(0,104,170,.24),inset 0 1px 0 rgba(255,255,255,.95)}
+.inning-regular-step-label{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:0;color:#9fbad0;font-size:11px;font-weight:850;line-height:1.2;text-align:center}
+.inning-regular-step-label strong{color:#fff;font-size:22px;font-weight:950;line-height:1}
+.inning-regular-step:hover,.inning-regular-step:focus-visible{border-color:#6bcfff;outline:2px solid rgba(107,207,255,.4);outline-offset:1px}
+.inning-regular-step:active{transform:translateY(1px)}
+.inning-regular-step:disabled{cursor:not-allowed;opacity:.72;border-color:rgba(99,135,167,.68);background:linear-gradient(180deg,#f4f7fa 0%,#dfe7ef 100%);color:#65778a;box-shadow:0 3px 8px rgba(0,39,72,.16),inset 0 1px 0 rgba(255,255,255,.9)}
+.inning-select-dialog.side-b .inning-regular-step{border-color:rgba(244,81,116,.84);background:linear-gradient(180deg,#fff 0%,#fff0f3 100%);color:#3e1020;box-shadow:0 5px 12px rgba(166,30,59,.22),inset 0 1px 0 rgba(255,255,255,.95)}
+.inning-select-dialog.side-b .inning-regular-step:disabled{border-color:rgba(168,113,125,.68);background:linear-gradient(180deg,#f7f3f4 0%,#e8dcdf 100%);color:#79636a;box-shadow:0 3px 8px rgba(72,21,31,.15),inset 0 1px 0 rgba(255,255,255,.9)}
+.inning-select-dialog.side-b .inning-regular-step:hover,.inning-select-dialog.side-b .inning-regular-step:focus-visible{border-color:#ff8196;outline-color:rgba(255,129,150,.4)}
+.inning-options{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.inning-option{min-width:0;min-height:44px;padding:5px 4px;border:1px solid rgba(104,174,218,.36);border-radius:9px;background:rgba(8,31,51,.8);color:#c5d9e9;font-size:13px;font-weight:850}
+.inning-option:hover,.inning-option:focus-visible{border-color:#6bcfff;outline:2px solid rgba(107,207,255,.4);outline-offset:1px}
+.inning-option[aria-selected="true"]{border-color:#64d0ff;background:rgba(21,100,147,.78);box-shadow:0 0 0 2px rgba(100,208,255,.22);color:#fff}
+.inning-select-dialog.side-b .inning-option{border-color:rgba(222,95,118,.38);background:rgba(49,17,29,.68)}
+.inning-select-dialog.side-b .inning-option[aria-selected="true"]{border-color:#ff8196;background:rgba(123,35,52,.82);box-shadow:0 0 0 2px rgba(255,129,150,.22)}
+.inning-extra-picker{display:grid;grid-template-columns:56px minmax(0,1fr) 56px;gap:7px;align-items:center}
+.inning-extra-step{min-width:56px;min-height:56px;padding:0;border:2px solid rgba(26,160,231,.72);border-radius:12px;background:linear-gradient(180deg,#fff 0%,#eef6ff 100%);color:#09213c;font-size:28px;font-weight:900;line-height:1;box-shadow:0 4px 10px rgba(0,104,170,.2),inset 0 1px 0 rgba(255,255,255,.95)}
+.inning-extra-picker input{width:100%;min-width:0;min-height:44px;padding:7px 10px;border:1px solid rgba(104,174,218,.42);border-radius:10px;background:rgba(5,24,41,.86);color:#fff;text-align:center;font-size:18px;font-weight:850;line-height:1}
+.inning-extra-picker input::placeholder{color:#7f9ab1;opacity:1}
+.inning-extra-step:hover,.inning-extra-step:focus-visible,.inning-extra-picker input:focus-visible{border-color:#6bcfff;outline:2px solid rgba(107,207,255,.4);outline-offset:1px}
+.inning-extra-step:active{transform:translateY(1px)}
+.inning-extra-step:disabled{cursor:not-allowed;opacity:.72;border-color:rgba(99,135,167,.68);background:linear-gradient(180deg,#f4f7fa 0%,#dfe7ef 100%);color:#65778a;box-shadow:0 3px 8px rgba(0,39,72,.16),inset 0 1px 0 rgba(255,255,255,.9)}
+.inning-extra-hint{margin:6px 0 0!important;color:#8faec8!important;font-size:10px!important;line-height:1.35!important;text-align:center}
+.inning-input-error{margin:5px 0 0!important;color:#ff9aa9!important;font-size:11px!important;font-weight:850;line-height:1.35!important;text-align:center}
+.inning-select-dialog.side-b .inning-extra-step{border-color:rgba(244,81,116,.76);background:linear-gradient(180deg,#fff 0%,#fff0f3 100%);color:#3e1020;box-shadow:0 4px 10px rgba(166,30,59,.18),inset 0 1px 0 rgba(255,255,255,.95)}
+.inning-select-dialog.side-b .inning-extra-step:disabled{border-color:rgba(168,113,125,.68);background:linear-gradient(180deg,#f7f3f4 0%,#e8dcdf 100%);color:#79636a;box-shadow:0 3px 8px rgba(72,21,31,.15),inset 0 1px 0 rgba(255,255,255,.9)}
+.inning-select-dialog.side-b .inning-extra-picker input{border-color:rgba(222,95,118,.44);background:rgba(49,17,29,.78)}
+.inning-select-dialog.side-b .inning-extra-step:hover,.inning-select-dialog.side-b .inning-extra-step:focus-visible,.inning-select-dialog.side-b .inning-extra-picker input:focus-visible{border-color:#ff8196;outline-color:rgba(255,129,150,.4)}
+
+.odometer-caption{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 4px 6px;color:#a9c4dc;font-size:11px;font-weight:850;letter-spacing:.06em}
+.pitcher-status-badge,.current-pitcher-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:23px;padding:3px 8px;border-radius:999px;
+  border:1px solid rgba(109,203,255,.5);background:rgba(14,86,127,.4);
+  color:#d7f2ff;font-size:10px;font-weight:900;letter-spacing:0;
+}
+.side-b .pitcher-status-badge,.side-b .current-pitcher-badge{border-color:rgba(255,117,139,.56);background:rgba(108,29,47,.42);color:#ffe1e5}
+.current-inning-note{margin:8px 0 -4px;color:#8daac2;text-align:center;font-size:10px;font-weight:750;line-height:1.35}
+
 /* odometer */
 .odometer-zone{position:relative;margin:16px 0 18px;padding:0 0 30px}
 .odometer{
@@ -131,7 +223,6 @@ button{cursor:pointer}
 .digit::after{content:"";position:absolute;left:0;right:0;top:50%;height:2px;background:rgba(255,255,255,.07);box-shadow:0 1px 0 rgba(0,0,0,.8)}
 .odometer.pulse{animation:counterPulse .16s ease}
 .count-unit{position:absolute;right:3px;bottom:0;color:#fff;font-size:clamp(28px,4vw,42px);font-weight:950;text-shadow:0 4px 10px rgba(0,0,0,.4)}
-
 /* count button
    主操作は大きく保ちつつ、縦長になりすぎない横長比率にする。 */
 .pitch-button{
@@ -208,29 +299,28 @@ button{cursor:pointer}
   gap:6px;
 }
 .lap-history:empty{display:none}
-.lap-title{
-  margin:0 2px 1px;
-  color:#8fa9c2;
-  font-size:11px;
-  font-weight:850;
-  letter-spacing:.06em;
+.pitcher-section{display:grid;gap:7px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(124,164,199,.2)}
+.pitcher-section:first-child{margin-top:0;border-top:0;padding-top:0}
+.pitcher-section-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:4px 8px;min-width:0}
+summary.pitcher-section-heading{cursor:pointer;list-style:none}
+summary.pitcher-section-heading::-webkit-details-marker{display:none}
+.pitcher-section-heading .lap-player{min-width:0;color:#b8cee2;font-size:13px;font-weight:900;line-height:1.25}
+.pitcher-section-heading .lap-count{grid-column:2;grid-row:1;color:#fff;font-size:16px;font-weight:950;white-space:nowrap}
+.pitcher-history-hint{color:#9cb9d0;font-size:9px;font-weight:800;white-space:nowrap}
+.pitcher-section-heading .current-pitcher-badge,.pitcher-section-heading .pitcher-history-hint{grid-column:2;grid-row:2;justify-self:end}
+.pitcher-history-overflow-note{margin:0;color:#aabed1;font-size:10px;line-height:1.4}
+.inning-chip-list{display:flex;flex-wrap:nowrap;gap:5px;min-width:0;overflow-x:auto;padding:2px 2px 5px;scrollbar-width:thin}
+.inning-chip{
+  flex:0 0 82px;min-height:36px;padding:5px 6px;display:flex;align-items:center;justify-content:space-between;gap:4px;
+  border:1px solid rgba(104,174,218,.36);border-radius:9px;background:rgba(8,31,51,.8);color:#a9c5dc;text-align:left;
 }
-.lap-chip{
-  width:100%;
-  min-height:34px;
-  padding:7px 10px;
-  border:1px solid rgba(124,161,198,.30);
-  border-radius:10px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  background:rgba(7,19,32,.76);
-  color:#d4e5f5;
-  font-size:13px;
-  font-weight:850;
-  line-height:1.2;
-}
+.side-b .inning-chip{border-color:rgba(222,95,118,.38);background:rgba(49,17,29,.68)}
+.inning-chip-current{border-color:#64d0ff;background:rgba(21,100,147,.72);box-shadow:0 0 0 2px rgba(100,208,255,.22),0 0 12px rgba(46,184,255,.18)}
+.side-b .inning-chip-current{border-color:#ff8196;background:rgba(123,35,52,.78);box-shadow:0 0 0 2px rgba(255,129,150,.22),0 0 12px rgba(255,69,98,.18)}
+.inning-chip span{font-size:10px;font-weight:800}.inning-chip strong{color:#fff;font-size:12px;font-weight:950;white-space:nowrap}
+.inning-chip:hover,.inning-chip:focus-visible{border-color:#6bcfff;outline:2px solid rgba(107,207,255,.45);outline-offset:1px}
+.inning-chip-unassigned{border-style:dashed;color:#c0d1df}
+.inning-chip-unassigned strong{color:#fff}
 .lap-player{
   color:#a9c2d9;
   font-size:12px;
@@ -259,6 +349,21 @@ button{cursor:pointer}
   font-size:clamp(17px,2.7vw,24px)
 }
 .reset-icon{font-size:1.55em!important}
+
+.dialog.pitcher-edit-dialog{width:min(94vw,520px)}
+.pitcher-edit-lead{margin:0 0 14px;color:#b4c9dc;font-size:13px;line-height:1.5}
+.pitcher-edit-fields{display:grid;gap:8px;max-height:42vh;overflow:auto;padding:2px}
+.pitcher-edit-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(204px,1fr);align-items:center;gap:12px;min-width:0}
+.pitcher-edit-row label{min-width:0;color:#dbeaf7;font-size:14px;font-weight:800;overflow-wrap:anywhere}
+.pitcher-edit-row input{width:100%;min-width:0;min-height:44px;padding:7px 10px;border:1px solid rgba(132,186,225,.5);border-radius:10px;background:#0b2036;color:#fff;text-align:right;font-size:18px;font-weight:850}
+.pitcher-edit-row input:focus{outline:2px solid #54c8ff;outline-offset:1px}
+.pitcher-edit-controls{display:grid;grid-template-columns:56px minmax(0,1fr) 56px;gap:7px;align-items:center;width:100%;min-width:0}
+.pitcher-edit-step{width:56px;min-width:56px;min-height:56px;padding:0;border:2px solid rgba(26,160,231,.72);border-radius:12px;background:linear-gradient(180deg,#fff 0%,#eef6ff 100%);color:#09213c;font-size:30px;font-weight:950;line-height:1;box-shadow:0 4px 10px rgba(0,104,170,.2),inset 0 1px 0 rgba(255,255,255,.95)}
+.pitcher-edit-step:hover,.pitcher-edit-step:focus-visible{border-color:#6bcfff;outline:2px solid rgba(107,207,255,.4);outline-offset:1px}
+.pitcher-edit-step:active{transform:translateY(1px)}
+.pitcher-edit-dialog.side-b .pitcher-edit-step{border-color:rgba(244,81,116,.76);background:linear-gradient(180deg,#fff 0%,#fff0f3 100%);color:#3e1020;box-shadow:0 4px 10px rgba(166,30,59,.18),inset 0 1px 0 rgba(255,255,255,.95)}
+.pitcher-edit-dialog.side-b .pitcher-edit-step:hover,.pitcher-edit-dialog.side-b .pitcher-edit-step:focus-visible{border-color:#ff89a1;outline-color:rgba(255,137,161,.42)}
+.pitcher-edit-error{margin:11px 0 0;color:#ff9aaa;font-size:12px;font-weight:800;line-height:1.4}
 
 /* footer */
 .saved{margin:18px 0 0;text-align:center;color:rgba(231,241,255,.94);font-size:14px;text-shadow:0 3px 10px rgba(0,0,0,.4)}
@@ -659,6 +764,7 @@ button{cursor:pointer}
 @media(max-width:760px){
 
   .counter-tools{gap:6px;margin-bottom:10px}
+  .inning-step{min-height:44px;border-radius:10px;font-size:24px}
   .counter-bottom-tools{
     grid-template-columns:repeat(2,minmax(0,1fr));
     gap:6px;
@@ -680,7 +786,9 @@ button{cursor:pointer}
     border-radius:9px;
     font-size:17px
   }
-  .utility-dialog{width:min(94vw,520px);padding:18px}
+  .utility-dialog{width:min(94vw,520px);padding:18px}.dialog.pitcher-edit-dialog{width:min(94vw,520px);padding:10px}
+  .dialog.inning-select-dialog{width:min(96vw,620px);padding:18px}
+  .inning-options{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}.inning-option{min-height:44px}
   .knowledge-list{grid-template-columns:1fr;gap:8px}
   .knowledge-list section{padding:12px}
   .share-actions{grid-template-columns:1fr}
@@ -732,7 +840,10 @@ button{cursor:pointer}
   .counter-card{padding:7px 5px 9px;border-radius:21px;border-width:2px}
   .team-header{grid-template-columns:5px 1fr 35px;gap:4px;min-height:78px;padding:6px 4px 6px 0;border-radius:15px}
   .team-accent{width:4px;height:46px;margin-left:1px}.team-name{font-size:clamp(18px,5vw,25px)}.team-sub{margin-top:5px;font-size:7px;letter-spacing:.17em}.base-map{width:34px;height:34px}
-  .odometer-zone{margin:10px 0 12px;padding-bottom:20px}.odometer{gap:3px;padding:6px;border-radius:13px}.digit{height:82px;border-width:3px;border-radius:7px;font-size:clamp(48px,13vw,68px)}.count-unit{right:1px;font-size:18px}
+  .side-inning-toolbar{grid-template-columns:1fr;gap:6px;margin:7px 0 2px;padding:0}
+  .inning-switch{min-height:50px;padding:7px 8px;gap:2px 6px;border-radius:14px}.inning-switch-icon{font-size:19px}.inning-switch-label{font-size:11px}
+  .side-inning-toolbar .inning-step{min-width:44px;min-height:44px;border-radius:8px;font-size:19px}
+  .odometer-zone{margin:8px 0 10px;padding-bottom:18px}.odometer-caption{margin:0 2px 4px;font-size:8px}.pitcher-status-badge{min-height:18px;padding:2px 5px;font-size:8px}.odometer{gap:3px;padding:6px;border-radius:13px}.digit{height:82px;border-width:3px;border-radius:7px;font-size:clamp(48px,13vw,68px)}.count-unit{right:1px;font-size:18px}.current-inning-note{margin-top:6px;font-size:8px}
   .pitch-button{
     min-height:118px;
     padding:7px 4px 9px;
@@ -771,16 +882,9 @@ button{cursor:pointer}
     margin-left:2px;
     font-size:13px
   }
-  .lap-history{margin-top:8px;gap:5px}
-  .lap-title{font-size:9px}
-  .lap-chip{
-    min-height:31px;
-    padding:6px 7px;
-    border-radius:9px;
-    font-size:11px
-  }
-  .lap-player{font-size:10px}
-  .lap-count{font-size:12px}
+  .lap-history{margin-top:8px;gap:5px}.pitcher-section{gap:5px;margin-top:7px;padding-top:7px}.pitcher-section-heading .lap-player{font-size:10px}.pitcher-section-heading .lap-count{font-size:12px}.current-pitcher-badge{min-height:18px;padding:2px 5px;font-size:8px}.pitcher-history-hint{font-size:8px}
+  .inning-chip-list{gap:4px;padding-bottom:4px}.inning-chip{flex-basis:68px;min-height:31px;padding:4px 5px;border-radius:7px}.inning-chip span{font-size:8px}.inning-chip strong{font-size:10px}
+  .pitcher-edit-fields{padding:2px 0}.pitcher-edit-row{grid-template-columns:minmax(48px,1fr) minmax(190px,1fr);gap:4px}.pitcher-edit-row label{font-size:13px}.pitcher-edit-controls{grid-template-columns:56px minmax(0,1fr) 56px;gap:6px}.pitcher-edit-controls input{min-height:50px;padding:7px 2px;font-size:16px}
 
   .reset-button{
     min-height:50px;
@@ -803,6 +907,29 @@ button{cursor:pointer}
   .pitch-button small{font-size:9px}
   .undo-button{min-height:50px;margin-top:16px;font-size:12px}
   .reset-button{min-height:46px;margin-top:10px;font-size:12px}
+  .inning-options{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+
+@media(max-width:319px){
+  .pitcher-edit-row{grid-template-columns:1fr}
+}
+
+@media(max-width:320px){
+  .dialog.inning-select-dialog{padding:12px}
+  .inning-regular-stepper{gap:4px}
+  .inning-regular-step-label{font-size:10px}
+  .inning-regular-step-label strong{font-size:19px}
+  .inning-switch{min-height:50px;padding:6px 7px}
+}
+
+@media(max-width:240px){
+  .dialog.inning-select-dialog{padding:10px}
+  .inning-regular-stepper{gap:2px}
+  .inning-switch{gap:1px 4px}
+}
+
+@media(max-width:280px){
+  .pitcher-edit-row{grid-template-columns:1fr}
 }
 
 
