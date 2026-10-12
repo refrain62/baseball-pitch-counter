@@ -76,7 +76,7 @@
         </div>
         <div id="countA" class="odometer" aria-live="polite" aria-label="1塁側 0球"></div>
         <span class="count-unit">球</span>
-        <p class="current-inning-note" id="inningMetaA">1回の投球数をチップから訂正できます</p>
+        <p class="sr-only current-inning-note" id="inningMetaA">1回の投球数をチップから訂正できます</p>
       </div>
 
       <button class="pitch-button" type="button" data-plus="A" aria-label="1塁側を1球増やす">
@@ -91,14 +91,9 @@
       </button>
 
       <div class="side-inning-toolbar" aria-label="1塁側のイニング選択">
-        <div class="inning-badge">
-          <span>現在の回</span>
-          <strong id="currentInningA" aria-live="polite">1回</strong>
-        </div>
         <button class="inning-switch" type="button" data-inning-select="A" aria-haspopup="dialog" aria-controls="inningSelectDialog">
-          <span>イニング変更</span>
-          <strong>回を選択</strong>
-          <span class="inning-switch-arrow" aria-hidden="true">›</span>
+          <span class="inning-switch-icon" aria-hidden="true">↕</span>
+          <span class="inning-switch-label">イニング変更</span>
         </button>
       </div>
 
@@ -136,7 +131,7 @@
         </div>
         <div id="countB" class="odometer" aria-live="polite" aria-label="3塁側 0球"></div>
         <span class="count-unit">球</span>
-        <p class="current-inning-note" id="inningMetaB">1回の投球数をチップから訂正できます</p>
+        <p class="sr-only current-inning-note" id="inningMetaB">1回の投球数をチップから訂正できます</p>
       </div>
 
       <button class="pitch-button" type="button" data-plus="B" aria-label="3塁側を1球増やす">
@@ -151,14 +146,9 @@
       </button>
 
       <div class="side-inning-toolbar" aria-label="3塁側のイニング選択">
-        <div class="inning-badge">
-          <span>現在の回</span>
-          <strong id="currentInningB" aria-live="polite">1回</strong>
-        </div>
         <button class="inning-switch" type="button" data-inning-select="B" aria-haspopup="dialog" aria-controls="inningSelectDialog">
-          <span>イニング変更</span>
-          <strong>回を選択</strong>
-          <span class="inning-switch-arrow" aria-hidden="true">›</span>
+          <span class="inning-switch-icon" aria-hidden="true">↕</span>
+          <span class="inning-switch-label">イニング変更</span>
         </button>
       </div>
 
@@ -366,11 +356,26 @@
   <div class="inning-option-groups">
     <section class="inning-option-group" aria-labelledby="inningRegularTitle">
       <h3 id="inningRegularTitle">通常</h3>
+      <div class="inning-regular-stepper" aria-label="変更先を1回ずつ変更">
+        <button class="inning-regular-step" type="button" data-inning-step="-1" aria-label="変更先を1回戻す">−</button>
+        <span class="inning-regular-step-label">
+          <span>変更先</span>
+          <strong id="inningRegularDestination" aria-live="polite">1回</strong>
+        </span>
+        <button class="inning-regular-step" type="button" data-inning-step="1" aria-label="変更先を1回進める">＋</button>
+      </div>
       <div id="inningRegularOptions" class="inning-options" role="listbox" aria-label="1回から9回"></div>
     </section>
     <section class="inning-option-group" aria-labelledby="inningExtraTitle">
       <h3 id="inningExtraTitle">延長</h3>
-      <div id="inningExtraOptions" class="inning-options" role="listbox" aria-label="10回から99回"></div>
+      <div class="inning-extra-picker">
+        <button class="inning-extra-step" type="button" data-extension-step="-1" aria-label="延長回を1回戻す">−</button>
+        <label class="sr-only" for="inningExtraInput">延長回</label>
+        <input id="inningExtraInput" type="number" inputmode="numeric" min="10" max="99" step="1" value="" placeholder="10" aria-label="10回から99回の延長回" aria-describedby="inningExtraError">
+        <button class="inning-extra-step" type="button" data-extension-step="1" aria-label="延長回を1回進める">＋</button>
+      </div>
+      <p id="inningExtraError" class="inning-input-error" role="alert" hidden></p>
+      <p class="inning-extra-hint">10〜99回を入力して選択できます</p>
     </section>
   </div>
   <div class="dialog-actions">

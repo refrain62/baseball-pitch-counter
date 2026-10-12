@@ -563,7 +563,7 @@ function renderLapHistory(side) {
     const player = document.createElement("strong");
     player.className = "lap-player";
     player.textContent = isCurrent
-      ? "現在の投手"
+      ? `投手情報（${side === "A" ? "1塁側" : "3塁側"}）`
       : `${index + 1 + archivedCount + discardedCount}人目の投手`;
 
     const pitches = document.createElement("strong");
@@ -576,7 +576,12 @@ function renderLapHistory(side) {
     badge.className = isCurrent
       ? "current-pitcher-badge"
       : "pitcher-history-hint";
-    badge.textContent = isCurrent ? "現役" : "回別を見る";
+    badge.textContent = isCurrent
+      ? `現在 ${getCurrentInning(side)}回`
+      : "回別を見る";
+    if (isCurrent) {
+      badge.setAttribute("aria-live", "polite");
+    }
     heading.appendChild(badge);
     section.appendChild(heading);
 
@@ -1177,9 +1182,38 @@ const inningSelectLead = $("inningSelectLead");
 const inningSelectCurrent = $("inningSelectCurrent");
 const inningSelectDestination = $("inningSelectDestination");
 const inningRegularOptions = $("inningRegularOptions");
-const inningExtraOptions = $("inningExtraOptions");
+const inningRegularDestination = $("inningRegularDestination");
+const inningRegularStepButtons = inningSelectDialog.querySelectorAll(
+  "[data-inning-step]"
+);
+const inningExtraInput = $("inningExtraInput");
+const inningExtraError = $("inningExtraError");
 let inningSelectTarget = null;
 let inningSelectValue = 1;
+let inningExtraInputTouched = false;
+
+function setInningExtraError(message) {
+  inningExtraError.textContent = message;
+  inningExtraError.hidden = !message;
+  if (message) {
+    inningExtraInput.setAttribute("aria-invalid", "true");
+  } else {
+    inningExtraInput.removeAttribute("aria-invalid");
+  }
+}
+
+function updateInningStepControls() {
+  const destination = String(inningSelectValue) + "回";
+  inningSelectDestination.textContent = destination;
+  inningRegularDestination.textContent = destination;
+  inningRegularStepButtons.forEach((button) => {
+    const step = Number(button.dataset.inningStep);
+    const atMinimum = step < 0 && inningSelectValue <= 1;
+    const atMaximum = step > 0 && inningSelectValue >= MAX_INNING;
+    button.disabled = atMinimum || atMaximum;
+    button.setAttribute("aria-disabled", String(button.disabled));
+  });
+}
 
 function updateInningOptionState() {
   inningSelectDialog
@@ -1188,7 +1222,23 @@ function updateInningOptionState() {
       const selected = Number(button.dataset.inningOption) === inningSelectValue;
       button.setAttribute("aria-selected", String(selected));
     });
-  inningSelectDestination.textContent = `${inningSelectValue}回`;
+  inningExtraInput.value = inningSelectValue >= 10
+    ? String(inningSelectValue)
+    : "";
+  inningExtraInput.placeholder = "10";
+  inningExtraInputTouched = false;
+  setInningExtraError("");
+  updateInningStepControls();
+}
+
+function getInningOptionColumns() {
+  const columns = getComputedStyle(inningRegularOptions)
+    .gridTemplateColumns
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .length;
+  return Math.max(1, columns);
 }
 
 function appendInningOptions(mount, start, end) {
@@ -1212,9 +1262,19 @@ function appendInningOptions(mount, start, end) {
       const currentIndex = options.indexOf(event.currentTarget);
       let nextIndex = currentIndex;
 
-      if (event.key === "ArrowDown" || event.key === "ArrowRight") {
+      if (event.key === "ArrowDown") {
+        nextIndex = Math.min(
+          options.length - 1,
+          currentIndex + getInningOptionColumns()
+        );
+      } else if (event.key === "ArrowRight") {
         nextIndex = Math.min(options.length - 1, currentIndex + 1);
-      } else if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
+      } else if (event.key === "ArrowUp") {
+        nextIndex = Math.max(
+          0,
+          currentIndex - getInningOptionColumns()
+        );
+      } else if (event.key === "ArrowLeft") {
         nextIndex = Math.max(0, currentIndex - 1);
       } else if (event.key === "Home") {
         nextIndex = 0;
@@ -1235,7 +1295,88 @@ function appendInningOptions(mount, start, end) {
 }
 
 appendInningOptions(inningRegularOptions, 1, 9);
-appendInningOptions(inningExtraOptions, 10, MAX_INNING);
+
+function stepInningSelection(step) {
+  inningSelectValue = Math.max(
+    1,
+    Math.min(MAX_INNING, inningSelectValue + step)
+  );
+  updateInningOptionState();
+}
+
+inningRegularStepButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    stepInningSelection(Number(button.dataset.inningStep) || 0);
+  });
+});
+
+function setExtensionSelection(value) {
+  const rawValue = String(value ?? "").trim();
+  const nextValue = Number(rawValue);
+
+  if (
+    !rawValue ||
+    !Number.isInteger(nextValue) ||
+    nextValue < 10 ||
+    nextValue > MAX_INNING
+  ) {
+    setInningExtraError("延長回は10〜99回の整数で入力してください。");
+    inningExtraInputTouched = true;
+    return false;
+  }
+
+  setInningExtraError("");
+  inningSelectValue = Math.max(10, Math.min(MAX_INNING, nextValue));
+  updateInningOptionState();
+  return true;
+}
+
+inningExtraInput.addEventListener("input", () => {
+  inningExtraInputTouched = true;
+  const rawValue = inningExtraInput.value.trim();
+  const nextValue = Number(rawValue);
+
+  if (
+    !rawValue ||
+    !Number.isInteger(nextValue) ||
+    nextValue < 10 ||
+    nextValue > MAX_INNING
+  ) {
+    setInningExtraError("延長回は10〜99回の整数で入力してください。");
+    return;
+  }
+
+  setInningExtraError("");
+  inningSelectValue = Math.max(10, Math.min(MAX_INNING, nextValue));
+  inningSelectDialog
+    .querySelectorAll("[data-inning-option]")
+    .forEach((button) => {
+      button.setAttribute(
+        "aria-selected",
+        String(Number(button.dataset.inningOption) === inningSelectValue)
+      );
+    });
+  updateInningStepControls();
+});
+
+inningExtraInput.addEventListener("change", () => {
+  setExtensionSelection(inningExtraInput.value);
+});
+
+inningSelectDialog
+  .querySelectorAll("[data-extension-step]")
+  .forEach((button) => {
+    button.addEventListener("click", () => {
+      const step = Number(button.dataset.extensionStep) || 0;
+      const currentValue = Number(inningExtraInput.value);
+      const baseValue = Number.isInteger(currentValue) && currentValue >= 10
+        ? currentValue
+        : 10;
+      setExtensionSelection(
+        Math.max(10, Math.min(MAX_INNING, baseValue + step))
+      );
+    });
+  });
 
 function closeInningSelectDialog() {
   inningSelectTarget = null;
@@ -1268,9 +1409,10 @@ document
       updateInningOptionState();
       inningSelectDialog.showModal();
 
-      inningSelectDialog
-        .querySelector(`[data-inning-option="${inningSelectValue}"]`)
-        ?.focus();
+      const initialOption = inningSelectDialog.querySelector(
+        `[data-inning-option="${inningSelectValue}"]`
+      );
+      (initialOption || inningExtraInput).focus();
     });
   });
 
@@ -1281,6 +1423,14 @@ $("confirmInningSelect").addEventListener("click", () => {
   if (!inningSelectTarget) {
     closeInningSelectDialog();
     return;
+  }
+
+  // 入力欄からフォーカスを移さず確定しても、最後の値を反映する。
+  if (inningExtraInputTouched) {
+    if (!setExtensionSelection(inningExtraInput.value)) {
+      inningExtraInput.focus();
+      return;
+    }
   }
 
   const side = inningSelectTarget;
