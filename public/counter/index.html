@@ -90,18 +90,16 @@
         <strong>1球戻す</strong>
       </button>
 
-      <div class="side-inning-toolbar" aria-label="1塁側のイニング切り替え">
+      <div class="side-inning-toolbar" aria-label="1塁側のイニング選択">
         <div class="inning-badge">
           <span>現在の回</span>
           <strong id="currentInningA" aria-live="polite">1回</strong>
         </div>
-        <div class="inning-switch">
+        <button class="inning-switch" type="button" data-inning-select="A" aria-haspopup="dialog" aria-controls="inningSelectDialog">
           <span>イニング変更</span>
-          <div class="inning-switch-buttons">
-            <button class="inning-step" type="button" data-inning-side="A" data-inning-step="-1" aria-label="1塁側を前のイニングへ">−</button>
-            <button class="inning-step" type="button" data-inning-side="A" data-inning-step="1" aria-label="1塁側を次のイニングへ">＋</button>
-          </div>
-        </div>
+          <strong>回を選択</strong>
+          <span class="inning-switch-arrow" aria-hidden="true">›</span>
+        </button>
       </div>
 
       <button class="action-button change-player-button" type="button" data-change-player="A">
@@ -152,18 +150,16 @@
         <strong>1球戻す</strong>
       </button>
 
-      <div class="side-inning-toolbar" aria-label="3塁側のイニング切り替え">
+      <div class="side-inning-toolbar" aria-label="3塁側のイニング選択">
         <div class="inning-badge">
           <span>現在の回</span>
           <strong id="currentInningB" aria-live="polite">1回</strong>
         </div>
-        <div class="inning-switch">
+        <button class="inning-switch" type="button" data-inning-select="B" aria-haspopup="dialog" aria-controls="inningSelectDialog">
           <span>イニング変更</span>
-          <div class="inning-switch-buttons">
-            <button class="inning-step" type="button" data-inning-side="B" data-inning-step="-1" aria-label="3塁側を前のイニングへ">−</button>
-            <button class="inning-step" type="button" data-inning-side="B" data-inning-step="1" aria-label="3塁側を次のイニングへ">＋</button>
-          </div>
-        </div>
+          <strong>回を選択</strong>
+          <span class="inning-switch-arrow" aria-hidden="true">›</span>
+        </button>
       </div>
 
       <button class="action-button change-player-button" type="button" data-change-player="B">
@@ -252,17 +248,17 @@
 
     <section>
       <strong>イニング切り替え</strong>
-      <p>各チームの「イニング変更」にある−／＋で、その側の回を切り替えます。投手の合計は維持したまま、その回の球数を別に記録できます。</p>
+      <p>各チームの「イニング変更」から1〜99回を選びます。投手の合計や交代履歴は変えず、確定後の投球を選んだ回へ記録します。</p>
     </section>
 
     <section>
       <strong>左右の個別リセット</strong>
-      <p>各チームの「リセット」は、その側の現在球数だけを0球へ戻します。確認画面が出ます。</p>
+      <p>各チームの「リセット」は、現在の投手の全回別球数とイニング未設定分を0球にします。投手交代の履歴は残ります。</p>
     </section>
 
     <section>
       <strong>すべてリセット</strong>
-      <p>最下部から、両側の球数・チーム名・選手交代履歴をまとめて初期状態へ戻せます。</p>
+      <p>最下部から、両側の球数・チーム名・投手ごとのイニング別記録・選手交代履歴をまとめて初期状態へ戻せます。</p>
     </section>
 
     <section>
@@ -347,6 +343,42 @@
   </div>
 </dialog>
 
+<dialog id="inningSelectDialog" class="dialog inning-select-dialog" aria-labelledby="inningSelectTitle" aria-describedby="inningSelectLead">
+  <div class="dialog-heading inning-select-heading">
+    <div>
+      <p class="dialog-eyebrow">INNING SELECT</p>
+      <h2 id="inningSelectTitle">イニング変更</h2>
+    </div>
+    <button class="dialog-close-icon" id="closeInningSelect" type="button" aria-label="イニング選択を閉じる">×</button>
+  </div>
+  <p id="inningSelectLead" class="inning-select-lead">1塁側の次の投球を記録する回を選択します。</p>
+  <div class="inning-select-current">
+    <div>
+      <span>現在の回</span>
+      <strong id="inningSelectCurrent">1回</strong>
+    </div>
+    <span class="inning-select-arrow" aria-hidden="true">→</span>
+    <div>
+      <span>変更先</span>
+      <strong id="inningSelectDestination">1回</strong>
+    </div>
+  </div>
+  <div class="inning-option-groups">
+    <section class="inning-option-group" aria-labelledby="inningRegularTitle">
+      <h3 id="inningRegularTitle">通常</h3>
+      <div id="inningRegularOptions" class="inning-options" role="listbox" aria-label="1回から9回"></div>
+    </section>
+    <section class="inning-option-group" aria-labelledby="inningExtraTitle">
+      <h3 id="inningExtraTitle">延長</h3>
+      <div id="inningExtraOptions" class="inning-options" role="listbox" aria-label="10回から99回"></div>
+    </section>
+  </div>
+  <div class="dialog-actions">
+    <button id="cancelInningSelect" class="dialog-cancel" type="button">キャンセル</button>
+    <button id="confirmInningSelect" class="dialog-confirm" type="button">この回に変更</button>
+  </div>
+</dialog>
+
 <dialog id="pitcherEditDialog" class="dialog pitcher-edit-dialog" aria-labelledby="pitcherEditTitle" aria-describedby="pitcherEditLead">
   <div class="dialog-heading pitcher-edit-heading">
     <h2 id="pitcherEditTitle" tabindex="-1">投手の球数を訂正</h2>
@@ -363,7 +395,7 @@
 
 <dialog id="resetDialog" class="dialog">
   <h2>リセットしますか？</h2>
-  <p><strong id="resetName"></strong> の投球数を <strong>0</strong> にします。<br>この操作は元に戻せません。</p>
+  <p><strong id="resetName"></strong> の現在の投手について、全回別球数とイニング未設定分を<strong>0球</strong>にします。<br>投手交代の履歴は残ります。この操作は元に戻せません。</p>
   <div class="dialog-actions">
     <button id="cancelReset" class="dialog-cancel" type="button">キャンセル</button>
     <button id="confirmReset" class="dialog-confirm" type="button">リセットする</button>
@@ -375,7 +407,7 @@
   <p>
     1塁側・3塁側の<strong>球数を0</strong>にし、<br>
     チーム名も<strong>「1塁側」「3塁側」</strong>へ戻し、<br>
-    <strong>選手交代の履歴もすべて削除</strong>します。<br>
+    <strong>投手ごとの全回別記録と選手交代履歴もすべて削除</strong>します。<br>
     この操作は元に戻せません。
   </p>
   <div class="dialog-actions">

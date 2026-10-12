@@ -1168,38 +1168,129 @@ $("confirmPlayerChange").addEventListener(
 );
 
 /* ==================================================
-   イニング切り替え
-   進めても既存の球数は消さず、各投手の配列だけを次の回へ広げる。
+   イニング選択
+   確定するまで state を変更せず、次の投球から選択回へ記録する。
 ================================================== */
 
-document
-  .querySelectorAll("[data-inning-step]")
-  .forEach((button) => {
-    button.addEventListener(
-      "click",
-      () => {
-        const step = Number(button.dataset.inningStep) || 0;
-        const side = button.dataset.inningSide;
+const inningSelectDialog = $("inningSelectDialog");
+const inningSelectLead = $("inningSelectLead");
+const inningSelectCurrent = $("inningSelectCurrent");
+const inningSelectDestination = $("inningSelectDestination");
+const inningRegularOptions = $("inningRegularOptions");
+const inningExtraOptions = $("inningExtraOptions");
+let inningSelectTarget = null;
+let inningSelectValue = 1;
 
-        if (side !== "A" && side !== "B") {
-          return;
-        }
+function updateInningOptionState() {
+  inningSelectDialog
+    .querySelectorAll("[data-inning-option]")
+    .forEach((button) => {
+      const selected = Number(button.dataset.inningOption) === inningSelectValue;
+      button.setAttribute("aria-selected", String(selected));
+    });
+  inningSelectDestination.textContent = `${inningSelectValue}回`;
+}
 
-        const nextInning = getCurrentInning(side) + step;
+function appendInningOptions(mount, start, end) {
+  for (let inning = start; inning <= end; inning += 1) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "inning-option";
+    button.dataset.inningOption = String(inning);
+    button.setAttribute("role", "option");
+    button.setAttribute("aria-selected", "false");
+    button.setAttribute("aria-label", `${inning}回を選択`);
+    button.textContent = `${inning}回`;
+    button.addEventListener("click", () => {
+      inningSelectValue = inning;
+      updateInningOptionState();
+    });
+    button.addEventListener("keydown", (event) => {
+      const options = Array.from(
+        inningSelectDialog.querySelectorAll("[data-inning-option]")
+      );
+      const currentIndex = options.indexOf(event.currentTarget);
+      let nextIndex = currentIndex;
 
-        if (nextInning < 1 || nextInning > MAX_INNING) {
-          return;
-        }
-
-        state["inning" + side] = nextInning;
-        renderInningMeta(side);
-        renderLapHistory(side);
-
-        scheduleSave();
-        vibrate(18);
+      if (event.key === "ArrowDown" || event.key === "ArrowRight") {
+        nextIndex = Math.min(options.length - 1, currentIndex + 1);
+      } else if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
+        nextIndex = Math.max(0, currentIndex - 1);
+      } else if (event.key === "Home") {
+        nextIndex = 0;
+      } else if (event.key === "End") {
+        nextIndex = options.length - 1;
+      } else {
+        return;
       }
-    );
+
+      event.preventDefault();
+      const nextOption = options[nextIndex];
+      inningSelectValue = Number(nextOption.dataset.inningOption);
+      updateInningOptionState();
+      nextOption.focus();
+    });
+    mount.appendChild(button);
+  }
+}
+
+appendInningOptions(inningRegularOptions, 1, 9);
+appendInningOptions(inningExtraOptions, 10, MAX_INNING);
+
+function closeInningSelectDialog() {
+  inningSelectTarget = null;
+  inningSelectDialog.classList.remove("side-b");
+  inningSelectDialog.close();
+}
+
+inningSelectDialog.addEventListener("cancel", () => {
+  inningSelectTarget = null;
+  inningSelectDialog.classList.remove("side-b");
+});
+
+document
+  .querySelectorAll("[data-inning-select]")
+  .forEach((button) => {
+    button.addEventListener("click", () => {
+      const side = button.dataset.inningSelect;
+
+      if (side !== "A" && side !== "B") {
+        return;
+      }
+
+      inningSelectTarget = side;
+      const currentInning = getCurrentInning(side);
+      inningSelectValue = currentInning;
+      inningSelectDialog.classList.toggle("side-b", side === "B");
+      inningSelectLead.textContent =
+        `${side === "A" ? state.nameA : state.nameB}の次の投球を記録する回を選択します。`;
+      inningSelectCurrent.textContent = `${currentInning}回`;
+      updateInningOptionState();
+      inningSelectDialog.showModal();
+
+      inningSelectDialog
+        .querySelector(`[data-inning-option="${inningSelectValue}"]`)
+        ?.focus();
+    });
   });
+
+$("cancelInningSelect").addEventListener("click", closeInningSelectDialog);
+$("closeInningSelect").addEventListener("click", closeInningSelectDialog);
+
+$("confirmInningSelect").addEventListener("click", () => {
+  if (!inningSelectTarget) {
+    closeInningSelectDialog();
+    return;
+  }
+
+  const side = inningSelectTarget;
+  state["inning" + side] = inningSelectValue;
+  renderInningMeta(side);
+  renderLapHistory(side);
+  scheduleSave();
+  vibrate(18);
+  closeInningSelectDialog();
+});
 
 /* ==================================================
    交代済み投手のイニング別訂正

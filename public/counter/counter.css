@@ -124,17 +124,14 @@ button{cursor:pointer}
 /* 各側が独立して持つイニング状態 */
 .side-inning-toolbar{
   display:grid;
-  grid-template-columns:minmax(82px,.82fr) 1fr;
+  grid-template-columns:1fr;
   align-items:center;
-  gap:10px;
+  gap:8px;
   margin:12px 0 4px;
-  padding:8px 9px;
-  border:1px solid rgba(130,177,218,.25);
-  border-radius:16px;
-  background:rgba(5,18,33,.74);
+  padding:0;
 }
 .inning-badge{
-  min-height:48px;
+  width:100%;min-height:42px;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -147,9 +144,19 @@ button{cursor:pointer}
 .side-b .inning-badge{background:linear-gradient(180deg,rgba(123,39,57,.9),rgba(62,18,31,.95))}
 .inning-badge span{font-size:10px;font-weight:800;letter-spacing:.08em}
 .inning-badge strong{color:#fff;font-size:23px;line-height:1;font-weight:950}
-.inning-switch{display:flex;align-items:center;justify-content:space-between;gap:7px;min-width:0}
-.inning-switch>span{min-width:0;color:#b7cadc;font-size:11px;font-weight:850;white-space:normal;overflow-wrap:anywhere;line-height:1.25}
-.inning-switch-buttons{display:grid;grid-template-columns:repeat(2,44px);gap:5px;flex:0 0 auto}
+.inning-switch{
+  width:100%;min-width:0;min-height:62px;padding:8px 12px;display:grid;
+  grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"label arrow" "hint arrow";
+  align-items:center;gap:2px 8px;border:1px solid rgba(111,195,255,.55);border-radius:19px;
+  background:linear-gradient(180deg,rgba(20,66,96,.72),rgba(9,34,55,.82));color:#e8f7ff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 0 16px rgba(25,163,245,.08);text-align:left;
+}
+.inning-switch>span:first-child{grid-area:label;min-width:0;color:#b7cadc;font-size:11px;font-weight:850;line-height:1.25;overflow-wrap:anywhere}
+.inning-switch>strong{grid-area:hint;color:#fff;font-size:13px;line-height:1.2}
+.inning-switch-arrow{grid-area:arrow;color:#dff5ff;font-size:28px;font-weight:400;line-height:1}
+.side-b .inning-switch{border-color:rgba(255,117,139,.56);background:linear-gradient(180deg,rgba(108,29,47,.72),rgba(56,15,27,.84));box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 0 16px rgba(255,55,86,.08)}
+.side-b .inning-switch-arrow{color:#ffe3e7}
+.inning-switch:hover,.inning-switch:focus-visible{outline:2px solid rgba(107,207,255,.45);outline-offset:1px}
 .side-inning-toolbar .inning-step{
   min-width:44px;
   min-height:44px;
@@ -162,6 +169,23 @@ button{cursor:pointer}
   line-height:1;
 }
 .side-b .inning-step{border-color:rgba(255,116,133,.58);background:rgba(108,33,49,.8)}
+
+.dialog.inning-select-dialog{width:min(94vw,680px);max-height:min(90dvh,820px);overflow:auto}
+.inning-select-heading{margin-bottom:10px}
+.inning-select-lead{margin:0 0 12px!important;font-size:13px!important;line-height:1.5!important}
+.inning-select-current{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:8px;margin:0 0 12px;padding:10px 12px;border:1px solid rgba(120,185,226,.28);border-radius:12px;background:rgba(5,19,35,.7);color:#b8cee2;font-size:12px;font-weight:850}
+.inning-select-current>div{display:flex;flex-direction:column;gap:2px;min-width:0}.inning-select-current>div:last-child{align-items:flex-end;text-align:right}.inning-select-arrow{color:#8eb8d4;font-size:20px;font-weight:900}
+.inning-select-current strong{color:#fff;font-size:20px}
+.inning-select-dialog.side-b .inning-select-current{border-color:rgba(255,116,133,.32);background:rgba(46,14,26,.72)}
+.inning-select-dialog.side-b .inning-select-arrow{color:#e6a5af}
+.inning-option-groups{display:grid;gap:14px;max-height:min(52vh,460px);overflow:auto;padding:2px}
+.inning-option-group h3{margin:0 0 6px;color:#a9c4dc;font-size:11px;font-weight:900;letter-spacing:.08em}
+.inning-options{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.inning-option{min-width:0;min-height:42px;padding:5px 4px;border:1px solid rgba(104,174,218,.36);border-radius:9px;background:rgba(8,31,51,.8);color:#c5d9e9;font-size:13px;font-weight:850}
+.inning-option:hover,.inning-option:focus-visible{border-color:#6bcfff;outline:2px solid rgba(107,207,255,.4);outline-offset:1px}
+.inning-option[aria-selected="true"]{border-color:#64d0ff;background:rgba(21,100,147,.78);box-shadow:0 0 0 2px rgba(100,208,255,.22);color:#fff}
+.inning-select-dialog.side-b .inning-option{border-color:rgba(222,95,118,.38);background:rgba(49,17,29,.68)}
+.inning-select-dialog.side-b .inning-option[aria-selected="true"]{border-color:#ff8196;background:rgba(123,35,52,.82);box-shadow:0 0 0 2px rgba(255,129,150,.22)}
 
 .odometer-caption{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 4px 6px;color:#a9c4dc;font-size:11px;font-weight:850;letter-spacing:.06em}
 .pitcher-status-badge,.current-pitcher-badge{
@@ -750,6 +774,8 @@ summary.pitcher-section-heading::-webkit-details-marker{display:none}
     font-size:17px
   }
   .utility-dialog{width:min(94vw,520px);padding:18px}
+  .dialog.inning-select-dialog{width:min(96vw,620px);padding:18px}
+  .inning-options{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}.inning-option{min-height:44px}
   .knowledge-list{grid-template-columns:1fr;gap:8px}
   .knowledge-list section{padding:12px}
   .share-actions{grid-template-columns:1fr}
@@ -801,10 +827,10 @@ summary.pitcher-section-heading::-webkit-details-marker{display:none}
   .counter-card{padding:7px 5px 9px;border-radius:21px;border-width:2px}
   .team-header{grid-template-columns:5px 1fr 35px;gap:4px;min-height:78px;padding:6px 4px 6px 0;border-radius:15px}
   .team-accent{width:4px;height:46px;margin-left:1px}.team-name{font-size:clamp(18px,5vw,25px)}.team-sub{margin-top:5px;font-size:7px;letter-spacing:.17em}.base-map{width:34px;height:34px}
-  .side-inning-toolbar{grid-template-columns:1fr;gap:5px;margin:7px 0 2px;padding:5px;border-radius:12px}
+  .side-inning-toolbar{grid-template-columns:1fr;gap:6px;margin:7px 0 2px;padding:0}
   .inning-badge{min-height:37px;flex-direction:row;gap:5px;border-radius:9px}
   .inning-badge span{font-size:8px}.inning-badge strong{font-size:18px}
-  .inning-switch{gap:5px;padding:0 2px}.inning-switch>span{font-size:9px}.inning-switch-buttons{grid-template-columns:repeat(2,minmax(44px,1fr));gap:4px}
+  .inning-switch{min-height:50px;padding:7px 8px;gap:2px 6px;border-radius:14px}.inning-switch>span:first-child{font-size:9px}.inning-switch>strong{font-size:11px}.inning-switch-arrow{font-size:24px}
   .side-inning-toolbar .inning-step{min-width:44px;min-height:44px;border-radius:8px;font-size:19px}
   .odometer-zone{margin:8px 0 10px;padding-bottom:18px}.odometer-caption{margin:0 2px 4px;font-size:8px}.pitcher-status-badge{min-height:18px;padding:2px 5px;font-size:8px}.odometer{gap:3px;padding:6px;border-radius:13px}.digit{height:82px;border-width:3px;border-radius:7px;font-size:clamp(48px,13vw,68px)}.count-unit{right:1px;font-size:18px}.current-inning-note{margin-top:6px;font-size:8px}
   .pitch-button{
@@ -870,14 +896,15 @@ summary.pitcher-section-heading::-webkit-details-marker{display:none}
   .pitch-button small{font-size:9px}
   .undo-button{min-height:50px;margin-top:16px;font-size:12px}
   .reset-button{min-height:46px;margin-top:10px;font-size:12px}
+  .inning-options{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 
 @media(max-width:320px){
-  .inning-switch{display:grid;grid-template-columns:1fr;gap:5px;padding:0 2px}.inning-switch>span{text-align:center}.inning-switch-buttons{grid-template-columns:repeat(2,minmax(44px,1fr));width:100%;min-width:0}
+  .inning-switch{min-height:50px;padding:6px 7px}
 }
 
 @media(max-width:240px){
-  .inning-switch-buttons{grid-template-columns:1fr}
+  .inning-switch{grid-template-columns:1fr auto;gap:1px 4px}
 }
 
 @media(max-width:280px){
