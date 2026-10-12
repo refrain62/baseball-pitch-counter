@@ -570,9 +570,8 @@ function renderLapHistory(side) {
 
     const player = document.createElement("strong");
     player.className = "lap-player";
-    player.textContent = isCurrent
-      ? `投手情報（${side === "A" ? "1塁側" : "3塁側"}）`
-      : `${index + 1 + archivedCount + discardedCount}人目の投手`;
+    player.textContent =
+      `${index + 1 + archivedCount + discardedCount}人目の投手`;
 
     const pitches = document.createElement("strong");
     pitches.className = "lap-count";
