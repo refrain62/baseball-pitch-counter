@@ -132,14 +132,14 @@ button{cursor:pointer}
 }
 .inning-switch{
   width:100%;min-width:0;min-height:62px;padding:8px 12px;display:grid;
-  grid-template-columns:auto minmax(0,1fr);grid-template-areas:"icon label";
-  align-items:center;gap:2px 8px;border:1px solid rgba(111,195,255,.55);border-radius:19px;
+  grid-template-columns:24px minmax(0,1fr) 24px;
+  align-items:center;gap:0;border:1px solid rgba(111,195,255,.55);border-radius:19px;
   background:linear-gradient(180deg,rgba(20,66,96,.72),rgba(9,34,55,.82));color:#e8f7ff;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 0 16px rgba(25,163,245,.08);text-align:center;
-  justify-content:center;
+  font-size:clamp(18px,2.9vw,26px);font-weight:950;
 }
-.inning-switch-icon{grid-area:icon;color:#67caff;font-size:22px;font-weight:900;line-height:1}
-.inning-switch-label{grid-area:label;min-width:0;color:#e8f7ff;font-size:13px;font-weight:900;line-height:1.25;overflow-wrap:anywhere}
+.inning-switch-icon{grid-column:1;grid-row:1;justify-self:center;color:#67caff;font-size:1.35em;font-weight:950;line-height:1}
+.inning-switch-label{grid-column:2;grid-row:1;justify-self:stretch;min-width:0;color:#e8f7ff;font-size:inherit;font-weight:950;line-height:1.25;overflow-wrap:anywhere}
 .side-b .inning-switch{border-color:rgba(255,117,139,.56);background:linear-gradient(180deg,rgba(108,29,47,.72),rgba(56,15,27,.84));box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 0 16px rgba(255,55,86,.08)}
 .side-b .inning-switch-icon{color:#ff8296}
 .inning-switch:hover,.inning-switch:focus-visible{outline:2px solid rgba(107,207,255,.45);outline-offset:1px}
@@ -260,8 +260,13 @@ button{cursor:pointer}
 
 /* secondary buttons
    1球カウントから明確に離し、修正操作として別グループに見せる。 */
-.action-button{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;border-radius:19px;font-weight:950}
-.action-button>span:first-child{font-size:1.35em;line-height:1}
+.action-button{
+  width:100%;display:grid;grid-template-columns:24px minmax(0,1fr) 24px;
+  align-items:center;justify-items:center;gap:0;padding:8px 12px;border-radius:19px;
+  font-size:clamp(18px,2.9vw,26px);font-weight:950;text-align:center;
+}
+.action-button>span:first-child{grid-column:1;grid-row:1;justify-self:center;font-size:1.35em;line-height:1}
+.action-button>strong,.action-copy{grid-column:2;grid-row:1;justify-self:stretch;text-align:center}
 .action-copy{display:block;text-align:center}
 .action-copy strong{display:block}
 .change-player-meta{
@@ -288,7 +293,7 @@ button{cursor:pointer}
   background:linear-gradient(180deg,rgba(20,66,96,.72),rgba(9,34,55,.82));
   color:#e8f7ff;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 0 16px rgba(25,163,245,.08);
-  font-size:clamp(17px,2.7vw,24px);
+  font-size:inherit;
 }
 .change-player-button .change-player-icon{color:#67caff}
 .player-change-confirm{background:#1979ad}
@@ -738,10 +743,13 @@ summary.pitcher-section-heading::-webkit-details-marker{display:none}
     font-size:13px;
   }
 
+  .action-button,.inning-switch{
+    font-size:18px;
+  }
+
   .undo-button{
     min-height:56px;
     margin-top:20px;
-    font-size:18px;
   }
 
   .reset-button{
@@ -841,7 +849,8 @@ summary.pitcher-section-heading::-webkit-details-marker{display:none}
   .team-header{grid-template-columns:5px 1fr 35px;gap:4px;min-height:78px;padding:6px 4px 6px 0;border-radius:15px}
   .team-accent{width:4px;height:46px;margin-left:1px}.team-name{font-size:clamp(18px,5vw,25px)}.team-sub{margin-top:5px;font-size:7px;letter-spacing:.17em}.base-map{width:34px;height:34px}
   .side-inning-toolbar{grid-template-columns:1fr;gap:6px;margin:7px 0 2px;padding:0}
-  .inning-switch{min-height:50px;padding:7px 8px;gap:2px 6px;border-radius:14px}.inning-switch-icon{font-size:19px}.inning-switch-label{font-size:11px}
+  .action-button,.inning-switch{font-size:13px;padding:7px 8px;column-gap:0;row-gap:0}
+  .inning-switch{min-height:50px;border-radius:14px}
   .side-inning-toolbar .inning-step{min-width:44px;min-height:44px;border-radius:8px;font-size:19px}
   .odometer-zone{margin:8px 0 10px;padding-bottom:18px}.odometer-caption{margin:0 2px 4px;font-size:10px}.pitcher-status-badge{min-height:20px;padding:2px 6px;font-size:10px}.odometer{gap:3px;padding:6px;border-radius:13px}.digit{height:82px;border-width:3px;border-radius:7px;font-size:clamp(48px,13vw,68px)}.count-unit{right:1px;font-size:18px}.current-inning-note{margin-top:6px;font-size:8px}
   .pitch-button{
@@ -863,16 +872,12 @@ summary.pitcher-section-heading::-webkit-details-marker{display:none}
   .undo-button{
     min-height:54px;
     margin-top:18px;
-    border-radius:14px;
-    gap:7px;
-    font-size:14px
+    border-radius:14px
   }
   .change-player-button{
     min-height:50px;
     margin-top:10px;
-    border-radius:14px;
-    gap:6px;
-    font-size:13px
+    border-radius:14px
   }
   .change-player-meta{
     margin-top:3px;
@@ -905,7 +910,8 @@ summary.pitcher-section-heading::-webkit-details-marker{display:none}
   .count-ball-image{width:auto;height:56px;max-width:48%}
   .pitch-button strong{font-size:15px}
   .pitch-button small{font-size:9px}
-  .undo-button{min-height:50px;margin-top:16px;font-size:12px}
+  .action-button,.inning-switch{font-size:12px;padding:6px 7px}
+  .undo-button{min-height:50px;margin-top:16px}
   .reset-button{min-height:46px;margin-top:10px;font-size:12px}
   .inning-options{grid-template-columns:repeat(3,minmax(0,1fr))}
   .counter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -924,13 +930,13 @@ summary.pitcher-section-heading::-webkit-details-marker{display:none}
   .inning-regular-stepper{gap:4px}
   .inning-regular-step-label{font-size:10px}
   .inning-regular-step-label strong{font-size:19px}
-  .inning-switch{min-height:50px;padding:6px 7px}
+  .inning-switch{min-height:50px}
 }
 
 @media(max-width:240px){
   .dialog.inning-select-dialog{padding:10px}
   .inning-regular-stepper{gap:2px}
-  .inning-switch{gap:1px 4px}
+  .inning-switch{gap:0}
 }
 
 @media(max-width:280px){
