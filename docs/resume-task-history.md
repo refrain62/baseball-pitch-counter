@@ -49,3 +49,4 @@
 - 最新developを取り込んだ後に `pnpm test`、`pnpm build`、`git diff --check` が成功。
 - 実装PR: [#13](https://github.com/refrain62/baseball-pitch-counter/pull/13)（`develop` へ統合、マージコミット `e8ccc32919fd`）。実装コミット: `5d746f4`。
 - 本番デプロイ済み（Worker version `39b7d047-31c2-43fa-9b4a-07bb752d5f9c`）。
+- 作業記録PR: [#14](https://github.com/refrain62/baseball-pitch-counter/pull/14)（`develop` へ統合、マージコミット `cf5a5d589f9f`）。
