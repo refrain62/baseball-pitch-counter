@@ -32,3 +32,10 @@
 - CSSの参照をv51、Service Workerキャッシュをv56へ更新。
 - 実装PR: [#7](https://github.com/refrain62/baseball-pitch-counter/pull/7)（`develop` へ統合、マージコミット `719690ed344d`）
 - 実装コミット: `6532a52`（`feature/pitcher-info-readability`）
+
+### 操作ボタンの文字サイズ・アイコン位置調整
+
+- 「1球戻す」「イニング変更」「選手交代」の主ラベルを同じサイズに揃え、ラベルはボタン中央、アイコンは左側の共通位置に配置した。狭い画面では3ボタンとも同じ文字サイズへ切り替わる。
+- CSS参照をv53、Service Workerキャッシュをv58へ更新。
+- `pnpm test`、`pnpm build`、`git diff --check` が成功。
+- 実装PR: [#13](https://github.com/refrain62/baseball-pitch-counter/pull/13)（Draft、`develop` 宛て）。実装コミット: `5d746f4`。この修正を含む状態を本番へ先行デプロイ済み（Worker version `da41815c-2ae2-4908-8e21-133c212f2848`）。
