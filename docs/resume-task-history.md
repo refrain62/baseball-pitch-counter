@@ -33,9 +33,19 @@
 - 実装PR: [#7](https://github.com/refrain62/baseball-pitch-counter/pull/7)（`develop` へ統合、マージコミット `719690ed344d`）
 - 実装コミット: `6532a52`（`feature/pitcher-info-readability`）
 
+### 投手履歴の狭幅表示修正
+
+- 投手履歴を展開したとき、投手名や3桁の累計球数がスマートフォンのカードからはみ出す問題を修正。2列表示を維持しつつ列を縮小できるようにし、390px以下では投手名・累計・状態を縦に配置して折り返す。
+- 249px・320px・360px幅で、複数の投手履歴と3桁球数を使って実画面を確認。320pxではページ幅305px・カード幅138px、360pxではページ幅345px・カード幅158pxとなり、投手見出しを含む横はみ出しなし。249pxでもページ幅234px、投手見出しは92px内に収まることを確認。
+- `pnpm test`、`pnpm build`、`git diff --check` が成功。独立レビューでCritical／Highの指摘なし。
+- CSS参照をv52、Service Workerキャッシュをv57へ更新。
+- 実装PR: [#10](https://github.com/refrain62/baseball-pitch-counter/pull/10)（`develop` へ統合、マージコミット `e200a8f417a0`）
+- 実装コミット: `90d0387`（`feature/pitcher-details-overflow`）
+
 ### 操作ボタンの文字サイズ・アイコン位置調整
 
 - 「1球戻す」「イニング変更」「選手交代」の主ラベルを同じサイズに揃え、ラベルはボタン中央、アイコンは左側の共通位置に配置した。狭い画面では3ボタンとも同じ文字サイズへ切り替わる。
 - CSS参照をv53、Service Workerキャッシュをv58へ更新。
-- `pnpm test`、`pnpm build`、`git diff --check` が成功。
-- 実装PR: [#13](https://github.com/refrain62/baseball-pitch-counter/pull/13)（Draft、`develop` 宛て）。実装コミット: `5d746f4`。この修正を含む状態を本番へ先行デプロイ済み（Worker version `da41815c-2ae2-4908-8e21-133c212f2848`）。
+- 最新developを取り込んだ後に `pnpm test`、`pnpm build`、`git diff --check` が成功。
+- 実装PR: [#13](https://github.com/refrain62/baseball-pitch-counter/pull/13)（`develop` へ統合、マージコミット `e8ccc32919fd`）。実装コミット: `5d746f4`。
+- 本番デプロイ済み（Worker version `39b7d047-31c2-43fa-9b4a-07bb752d5f9c`）。
