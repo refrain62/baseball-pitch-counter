@@ -32,3 +32,12 @@
 - CSSの参照をv51、Service Workerキャッシュをv56へ更新。
 - 実装PR: [#7](https://github.com/refrain62/baseball-pitch-counter/pull/7)（`develop` へ統合、マージコミット `719690ed344d`）
 - 実装コミット: `6532a52`（`feature/pitcher-info-readability`）
+
+### 投手履歴の狭幅表示修正
+
+- 投手履歴を展開したとき、投手名や3桁の累計球数がスマートフォンのカードからはみ出す問題を修正。2列表示を維持しつつ列を縮小できるようにし、390px以下では投手名・累計・状態を縦に配置して折り返す。
+- 249px・320px・360px幅で、複数の投手履歴と3桁球数を使って実画面を確認。320pxではページ幅305px・カード幅138px、360pxではページ幅345px・カード幅158pxとなり、投手見出しを含む横はみ出しなし。249pxでもページ幅234px、投手見出しは92px内に収まることを確認。
+- `pnpm test`、`pnpm build`、`git diff --check` が成功。独立レビューでCritical／Highの指摘なし。
+- CSS参照をv52、Service Workerキャッシュをv57へ更新。
+- 実装PR: [#10](https://github.com/refrain62/baseball-pitch-counter/pull/10)（`develop` へ統合、マージコミット `e200a8f417a0`）
+- 実装コミット: `90d0387`（`feature/pitcher-details-overflow`）
