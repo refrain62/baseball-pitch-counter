@@ -62,3 +62,4 @@
 - 残る確認: 実HTTPヘッダーとService Workerのブラウザ実環境E2Eは、本番反映後に確認する。
 - 実装コミット: `37fff6b`（`feature/security-hardening`）
 - 実装PR: [#17](https://github.com/refrain62/baseball-pitch-counter/pull/17)（Draft、`develop` 向け）
+- 作業記録PR: [#18](https://github.com/refrain62/baseball-pitch-counter/pull/18)（`develop` 向け）
