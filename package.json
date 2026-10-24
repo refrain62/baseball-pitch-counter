@@ -2,13 +2,19 @@
   "name": "baseball-pitch-counter",
   "private": true,
   "version": "1.0.0",
+  "packageManager": "pnpm@10.26.0",
   "scripts": {
-    "test": "node --check public/assets/site.js && node --check public/counter/counter.js && node --check public/counter/sw.js",
+    "test": "node --check public/assets/site.js && node --check public/counter/counter.js && node --check public/counter/sw.js && node --test test/security-hardening.test.js",
     "build": "wrangler deploy --dry-run",
     "dev": "wrangler dev",
     "deploy": "wrangler deploy"
   },
   "devDependencies": {
-    "wrangler": "4.135.0"
+    "wrangler": "4.152.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "undici": "7.30.1"
+    }
   }
 }

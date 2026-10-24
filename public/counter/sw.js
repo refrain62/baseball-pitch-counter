@@ -1,7 +1,7 @@
 "use strict";
 
 const CACHE_NAME =
-  "pitch-counter-shell-v58";
+  "pitch-counter-shell-v59";
 
 const APP_SHELL = [
   "/counter/",
@@ -30,6 +30,65 @@ const APP_SHELL = [
   "/counter/audio/counter-click.ogg",
   "/counter/audio/counter-click.wav"
 ];
+
+const APP_SHELL_URLS = new Set(
+  APP_SHELL.map((path) =>
+    new URL(path, self.location.origin).href
+  )
+);
+const NAVIGATION_URLS = new Set([
+  "/counter/",
+  "/counter/?install=1"
+].map((path) =>
+  new URL(path, self.location.origin).href
+));
+
+function isAllowedRequest(url) {
+  return url.origin === self.location.origin &&
+    (APP_SHELL_URLS.has(url.href) || NAVIGATION_URLS.has(url.href));
+}
+
+function isSafeResponse(response) {
+  if (
+    !response ||
+    !response.ok ||
+    response.type === "opaque" ||
+    response.type === "opaqueredirect"
+  ) {
+    return false;
+  }
+
+  try {
+    const responseUrl = new URL(response.url);
+    return responseUrl.origin === self.location.origin &&
+      isAllowedRequest(responseUrl);
+  } catch {
+    return false;
+  }
+}
+
+async function cacheResponse(request, response) {
+  if (!isSafeResponse(response)) {
+    return;
+  }
+
+  try {
+    const requestUrl = new URL(
+      typeof request === "string" ? request : request.url,
+      self.location.origin
+    );
+    const responseUrl = new URL(response.url);
+
+    if (requestUrl.pathname !== responseUrl.pathname) {
+      return;
+    }
+
+    const cache = await caches.open(CACHE_NAME);
+    await cache.put(request, response.clone());
+  } catch (error) {
+    console.warn("SW cache update failed", error);
+  }
+}
 
 /* ==================================================
    INSTALL
@@ -66,6 +125,7 @@ self.addEventListener(
             keys
               .filter(
                 (key) =>
+                  key.startsWith("pitch-counter-shell-") &&
                   key !== CACHE_NAME
               )
               .map(
@@ -102,11 +162,7 @@ self.addEventListener(
       同一オリジンのアプリ本体と共有アセットだけを制御。
       インストール手順画像は LP と共有するため /assets/ に置く。
     */
-    if (
-      url.origin !== self.location.origin ||
-      (!url.pathname.startsWith("/counter/") &&
-        !url.pathname.startsWith("/assets/"))
-    ) {
+    if (!isAllowedRequest(url)) {
       return;
     }
 
@@ -115,22 +171,16 @@ self.addEventListener(
       最新版を優先し、通信不能時だけ /counter/ のキャッシュを返す。
     */
     if (request.mode === "navigate") {
+      if (url.pathname !== "/counter/") {
+        return;
+      }
+
       event.respondWith(
         fetch(request)
           .then((response) => {
-            if (response.ok) {
-              const copy =
-                response.clone();
-
+            if (isSafeResponse(response)) {
               event.waitUntil(
-                caches
-                  .open(CACHE_NAME)
-                  .then((cache) =>
-                    cache.put(
-                      "/counter/",
-                      copy
-                    )
-                  )
+                cacheResponse("/counter/", response)
               );
             }
 
@@ -180,19 +230,9 @@ self.addEventListener(
               const response =
                 await fetch(request);
 
-              if (response.ok) {
-                const copy =
-                  response.clone();
-
+              if (isSafeResponse(response)) {
                 event.waitUntil(
-                  caches
-                    .open(CACHE_NAME)
-                    .then((cache) =>
-                      cache.put(
-                        request,
-                        copy
-                      )
-                    )
+                  cacheResponse(request, response)
                 );
               }
 

@@ -7,6 +7,9 @@ const MAX_PITCHERS = 100;
 // 通常の履歴上限とは分け、破損した保存データによる巨大ループを防ぐ。
 const MAX_SAVED_PITCHERS = 1000;
 const MAX_ARCHIVED_PITCHERS = MAX_SAVED_PITCHERS - MAX_PITCHERS;
+const MAX_NAME_LENGTH = 12;
+// localStorage の破損データを JSON.parse する前に入力サイズを制限する。
+const MAX_SAVED_STATE_LENGTH = 2_000_000;
 const $ = (id) => document.getElementById(id);
 
 let state = {
@@ -28,12 +31,40 @@ let state = {
 };
 let stateNeedsMigration = false;
 
-try {
-  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+function normalizeName(value, fallback) {
+  if (typeof value !== "string") {
+    return fallback;
+  }
 
-  if (saved && typeof saved === "object") {
-    const savedInning = Number(saved.inning);
-    stateNeedsMigration =
+  return value.trim().slice(0, MAX_NAME_LENGTH) || fallback;
+}
+
+// 保存データのオブジェクトを暗黙変換せず、数値または数値文字列だけを受け入れる。
+function toNumber(value) {
+  if (typeof value === "number") {
+    return value;
+  }
+
+  if (typeof value === "string" && value.trim()) {
+    return Number(value);
+  }
+
+  return NaN;
+}
+
+try {
+  const savedText = localStorage.getItem(STORAGE_KEY);
+  const saved = savedText && savedText.length <= MAX_SAVED_STATE_LENGTH
+    ? JSON.parse(savedText)
+    : null;
+
+  if (savedText && savedText.length > MAX_SAVED_STATE_LENGTH) {
+    stateNeedsMigration = true;
+  }
+
+  if (saved && typeof saved === "object" && !Array.isArray(saved)) {
+    const savedInning = toNumber(saved.inning);
+    stateNeedsMigration = stateNeedsMigration ||
       !Array.isArray(saved.unassignedA) ||
       !Array.isArray(saved.unassignedB) ||
       !Number.isInteger(savedInning) ||
@@ -41,12 +72,12 @@ try {
       savedInning > MAX_INNING ||
       saved.inningA === undefined ||
       saved.inningB === undefined ||
-      !Number.isInteger(Number(saved.inningA)) ||
-      Number(saved.inningA) < 1 ||
-      Number(saved.inningA) > MAX_INNING ||
-      !Number.isInteger(Number(saved.inningB)) ||
-      Number(saved.inningB) < 1 ||
-      Number(saved.inningB) > MAX_INNING ||
+      !Number.isInteger(toNumber(saved.inningA)) ||
+      toNumber(saved.inningA) < 1 ||
+      toNumber(saved.inningA) > MAX_INNING ||
+      !Number.isInteger(toNumber(saved.inningB)) ||
+      toNumber(saved.inningB) < 1 ||
+      toNumber(saved.inningB) > MAX_INNING ||
       (Array.isArray(saved.lapsA) && saved.lapsA.length > MAX_PITCHERS - 1) ||
       (Array.isArray(saved.lapsB) && saved.lapsB.length > MAX_PITCHERS - 1) ||
       (Array.isArray(saved.inningsA) && saved.inningsA.length > MAX_PITCHERS) ||
@@ -57,7 +88,22 @@ try {
       (Array.isArray(saved.unassignedB) && saved.unassignedB.length > MAX_SAVED_PITCHERS) ||
       (Array.isArray(saved.inningsA) && saved.inningsA.length > MAX_SAVED_PITCHERS) ||
       (Array.isArray(saved.inningsB) && saved.inningsB.length > MAX_SAVED_PITCHERS);
-    state = { ...state, ...saved };
+    const initialState = state;
+    state = Object.keys(initialState).reduce((next, key) => {
+      next[key] = Object.prototype.hasOwnProperty.call(saved, key)
+        ? saved[key]
+        : initialState[key];
+      return next;
+    }, {});
+
+    const normalizedNameA = normalizeName(state.nameA, "1塁側");
+    const normalizedNameB = normalizeName(state.nameB, "3塁側");
+    stateNeedsMigration = stateNeedsMigration ||
+      normalizedNameA !== state.nameA ||
+      normalizedNameB !== state.nameB;
+    state.nameA = normalizedNameA;
+    state.nameB = normalizedNameB;
+
     // 旧形式は両側で共有していた回を、初期値として引き継ぐ。
     if (saved.inningA === undefined) {
       state.inningA = savedInning;
@@ -71,7 +117,7 @@ try {
 }
 
 function normalizeCount(value) {
-  const count = Number(value);
+  const count = toNumber(value);
 
   if (!Number.isFinite(count)) {
     return 0;
@@ -82,13 +128,13 @@ function normalizeCount(value) {
 
 state.inning = Math.max(
   1,
-  Math.min(MAX_INNING, Math.floor(Number(state.inning) || 1))
+  Math.min(MAX_INNING, Math.floor(toNumber(state.inning) || 1))
 );
 
 // 旧形式は回を共有していたため、初回だけ同じ回を両側へ引き継ぐ。
 ["A", "B"].forEach((side) => {
   const key = "inning" + side;
-  const savedInning = Number(state[key]);
+  const savedInning = toNumber(state[key]);
 
   state[key] = Number.isInteger(savedInning)
     ? Math.max(1, Math.min(MAX_INNING, savedInning))
@@ -163,7 +209,7 @@ function normalizeSide(side) {
     const previousInnings = Array.isArray(previousOverflow.innings)
       ? previousOverflow.innings
       : [];
-    const previousCount = Number(previousOverflow.count);
+    const previousCount = toNumber(previousOverflow.count);
     const safePreviousCount = Number.isSafeInteger(previousCount) && previousCount > 0
       ? previousCount
       : 0;
@@ -181,8 +227,8 @@ function normalizeSide(side) {
 
     state[overflowKey] = {
       count: Math.min(MAX_ARCHIVED_PITCHERS, previousSize),
-      discarded: (Number.isSafeInteger(Number(previousOverflow.discarded))
-        ? Math.max(0, Number(previousOverflow.discarded))
+      discarded: (Number.isSafeInteger(toNumber(previousOverflow.discarded))
+        ? Math.max(0, toNumber(previousOverflow.discarded))
         : 0) + discardedOverflow,
       laps: previousLaps.slice(previousStart),
       unassigned: previousUnassigned.slice(previousStart),
@@ -322,7 +368,7 @@ function updateDigits(side) {
 
   const value = Math.max(
     0,
-    Math.min(MAX_COUNT, Number(state[side]) || 0)
+    Math.min(MAX_COUNT, normalizeCount(state[side]))
   );
 
   const text = String(value).padStart(3, "0");
@@ -381,11 +427,8 @@ function getPitcherUnassigned(side, index) {
     state[key] = [];
   }
 
-  if (!Number.isFinite(Number(state[key][index]))) {
-    state[key][index] = 0;
-  }
-
-  return normalizeCount(state[key][index]);
+  state[key][index] = normalizeCount(state[key][index]);
+  return state[key][index];
 }
 
 function getPitcherTotal(side, index) {
@@ -445,8 +488,8 @@ function getLaps(side) {
 
 function getOverflowCounts(side) {
   const overflow = state["overflow" + side];
-  const archivedValue = Number(overflow?.count);
-  const discardedValue = Number(overflow?.discarded);
+  const archivedValue = toNumber(overflow?.count);
+  const discardedValue = toNumber(overflow?.discarded);
 
   return {
     archived: Number.isFinite(archivedValue)
