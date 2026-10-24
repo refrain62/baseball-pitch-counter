@@ -50,3 +50,16 @@
 - 実装PR: [#13](https://github.com/refrain62/baseball-pitch-counter/pull/13)（`develop` へ統合、マージコミット `e8ccc32919fd`）。実装コミット: `5d746f4`。
 - 本番デプロイ済み（Worker version `39b7d047-31c2-43fa-9b4a-07bb752d5f9c`）。
 - 作業記録PR: [#14](https://github.com/refrain62/baseball-pitch-counter/pull/14)（`develop` へ統合、マージコミット `cf5a5d589f9f`）。
+
+## SEC-001 依存関係とブラウザ保存境界の強化
+
+- 状態: 実装完了。実装PR #17はDraftでレビュー待ち。
+- 対応範囲: Wranglerと推移依存の既知High脆弱性、パッケージ管理の再現性、破損・改変された `localStorage` による初期化停止、Service Workerの不要な応答キャッシュ、CSPとHTTPS強制。
+- 依存関係: Wranglerを `4.152.0` へ更新し、上流の完全一致依存に残る `undici` をpnpm overrideで修正版 `7.30.1` へ固定。`pnpm@10.26.0` と `pnpm-lock.yaml` に統一。
+- ブラウザ境界: 保存データをサイズ・既知フィールド・文字列長・数値型で検証し、Service Workerの対象を列挙済みURLへ限定。HSTSと `script-src-attr 'none'` を追加。
+- 敵対的レビュー: 独立レビューで依存解決、悪性保存値、任意queryキャッシュ、ヘッダー互換性を再確認し、Critical / High / Mediumの未解消指摘なし。
+- 検証: `pnpm audit --audit-level high` は既知脆弱性なし、`pnpm test` は7件成功、`pnpm build` と `git diff --check` は成功。実インストールが `wrangler 4.152.0` → `miniflare` → `undici 7.30.1` となることを確認。
+- 残る確認: 実HTTPヘッダーとService Workerのブラウザ実環境E2Eは、本番反映後に確認する。
+- 実装コミット: `37fff6b`（`feature/security-hardening`）
+- 実装PR: [#17](https://github.com/refrain62/baseball-pitch-counter/pull/17)（Draft、`develop` 向け）
+- 作業記録PR: [#18](https://github.com/refrain62/baseball-pitch-counter/pull/18)（`develop` 向け）
