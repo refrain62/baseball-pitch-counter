@@ -59,7 +59,9 @@
 - ブラウザ境界: 保存データをサイズ・既知フィールド・文字列長・数値型で検証し、Service Workerの対象を列挙済みURLへ限定。HSTSと `script-src-attr 'none'` を追加。
 - 敵対的レビュー: 独立レビューで依存解決、悪性保存値、任意queryキャッシュ、ヘッダー互換性を再確認し、Critical / High / Mediumの未解消指摘なし。
 - 検証: `pnpm audit --audit-level high` は既知脆弱性なし、`pnpm test` は7件成功、`pnpm build` と `git diff --check` は成功。実インストールが `wrangler 4.152.0` → `miniflare` → `undici 7.30.1` となることを確認。
-- 残る確認: 実HTTPヘッダーとService Workerのブラウザ実環境E2Eは、本番反映後に確認する。
+- ブラウザ確認: Wranglerローカル配信で球数、イニング、投球数訂正、投手交代、名称のキーボード入力、履歴、共有QR、インストール導線、再読込後の保存を確認。コンソールのerror / warnなし。サーバー停止後もService Workerから通常画面を表示でき、左右の加算と再読込後の保存を確認。
+- HTTPヘッダー確認: ローカル配信の実応答でHSTS、CSP、COOP、CORP、Permissions-Policy、nosniff、X-Frame-Options、Referrer-Policyを確認。
+- 制約: 悪性 `localStorage` のブラウザ直接注入はIABの書込み制約により未実施。Node VMを使った回帰テストで、オブジェクトの暗黙数値変換を拒否して初期化が継続することを確認。
 - 実装コミット: `37fff6b`（`feature/security-hardening`）
 - 実装PR: [#17](https://github.com/refrain62/baseball-pitch-counter/pull/17)（Draft、`develop` 向け）
 - 作業記録PR: [#18](https://github.com/refrain62/baseball-pitch-counter/pull/18)（`develop` 向け）
