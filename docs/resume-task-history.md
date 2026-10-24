@@ -53,7 +53,7 @@
 
 ## SEC-001 依存関係とブラウザ保存境界の強化
 
-- 状態: 実装完了。実装PR #17はDraftでレビュー待ち。
+- 状態: 完了。実装PR #17とリリースPR #20は統合済みで、本番反映を確認。
 - 対応範囲: Wranglerと推移依存の既知High脆弱性、パッケージ管理の再現性、破損・改変された `localStorage` による初期化停止、Service Workerの不要な応答キャッシュ、CSPとHTTPS強制。
 - 依存関係: Wranglerを `4.152.0` へ更新し、上流の完全一致依存に残る `undici` をpnpm overrideで修正版 `7.30.1` へ固定。`pnpm@10.26.0` と `pnpm-lock.yaml` に統一。
 - ブラウザ境界: 保存データをサイズ・既知フィールド・文字列長・数値型で検証し、Service Workerの対象を列挙済みURLへ限定。HSTSと `script-src-attr 'none'` を追加。
@@ -63,5 +63,7 @@
 - HTTPヘッダー確認: ローカル配信の実応答でHSTS、CSP、COOP、CORP、Permissions-Policy、nosniff、X-Frame-Options、Referrer-Policyを確認。
 - 制約: 悪性 `localStorage` のブラウザ直接注入はIABの書込み制約により未実施。Node VMを使った回帰テストで、オブジェクトの暗黙数値変換を拒否して初期化が継続することを確認。
 - 実装コミット: `37fff6b`（`feature/security-hardening`）
-- 実装PR: [#17](https://github.com/refrain62/baseball-pitch-counter/pull/17)（Draft、`develop` 向け）
-- 作業記録PR: [#18](https://github.com/refrain62/baseball-pitch-counter/pull/18)（`develop` 向け）
+- 実装PR: [#17](https://github.com/refrain62/baseball-pitch-counter/pull/17)（`develop` へ統合、マージコミット `d47cfcaf9c6d`）
+- 作業記録PR: [#18](https://github.com/refrain62/baseball-pitch-counter/pull/18)、ブラウザ検証記録PR: [#19](https://github.com/refrain62/baseball-pitch-counter/pull/19)（ともに `develop` へ統合）
+- リリースPR: [#20](https://github.com/refrain62/baseball-pitch-counter/pull/20)（`main` へ統合、マージコミット `1be71ed8edd9`）
+- 本番確認: `https://baseball-pitch-counter.refrain62.workers.dev/counter/` が200を返し、更新済みJavaScriptとHSTS、CSP、nosniff、X-Frame-Optionsを配信していることを確認。
