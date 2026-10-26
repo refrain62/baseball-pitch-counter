@@ -67,3 +67,14 @@
 - 作業記録PR: [#18](https://github.com/refrain62/baseball-pitch-counter/pull/18)、ブラウザ検証記録PR: [#19](https://github.com/refrain62/baseball-pitch-counter/pull/19)（ともに `develop` へ統合）
 - リリースPR: [#20](https://github.com/refrain62/baseball-pitch-counter/pull/20)（`main` へ統合、マージコミット `1be71ed8edd9`）
 - 本番確認: `https://baseball-pitch-counter.refrain62.workers.dev/counter/` が200を返し、更新済みJavaScriptとHSTS、CSP、nosniff、X-Frame-Optionsを配信していることを確認。
+
+## 2026-10-26 週次セキュリティ点検
+
+- 結果: Critical / High / Mediumの指摘なし。依存関係、入力、DOM、保存データ、Service Worker、キャッシュ、HTTPヘッダー、外部通信を確認。
+- 依存・自動検証: `pnpm audit --audit-level high` は既知脆弱性なし。`pnpm test` は7件成功、`pnpm build` と `git diff --check` は成功。
+- 発見事項: Service Workerがoffline応答をCacheStorage全体から検索し、別名キャッシュの同一URL応答を採用する余地があるLow問題を確認。参照を現行 `CACHE_NAME` へ限定し、別名cache poisonの拒否と同名cache hitを実行テストへ追加。
+- 敵対的レビュー: 修正後にCritical / High / Mediumの未解消指摘なし。既存キャッシュ内容を変えないためcache version v59の維持は妥当と確認。
+- ブラウザ確認: online/offlineで加算、戻す、回変更、訂正、投手交代・履歴、名称、再読込復元、共有QR、インストール導線を確認。修正後もoffline表示・加算・再読込復元に成功し、consoleのerror / warnなし。
+- 実装コミット: `ddf9942`（`feature/sw-cache-namespace`）
+- 実装PR: [#22](https://github.com/refrain62/baseball-pitch-counter/pull/22)（Draft、`develop` 向け。週次点検ではマージ・本番反映しない）
+- 継続改善: リポジトリ内CI workflowの追加と、LPのinline JSON-LDと厳格CSPの整合確認は別タスク候補。今回の再現脆弱性には含めない。
