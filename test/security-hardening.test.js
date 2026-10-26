@@ -105,24 +105,54 @@ test("service worker caches only the declared shell and same path responses", ()
   assert.match(serviceWorker, /requestUrl\.pathname !== responseUrl\.pathname/);
   assert.match(serviceWorker, /url\.pathname !== "\/counter\/"/);
   assert.match(serviceWorker, /key\.startsWith\("pitch-counter-shell-"\)/);
+  assert.match(serviceWorker, /caches\.open\(CACHE_NAME\)/);
+  assert.doesNotMatch(serviceWorker, /caches\.match\(/);
 });
 
 test("service worker does not let an asset navigation replace the app shell", async () => {
   const serviceWorker = read("public/counter/sw.js");
   const handlers = {};
   const cachedRequests = [];
+  const cacheEntries = new Map([
+    ["pitch-counter-shell-v59", new Map()],
+    [
+      "other-cache",
+      new Map([
+        ["/counter/", new Response("poison")],
+        [
+          "https://example.test/counter/counter.js?v=49",
+          new Response("poison")
+        ]
+      ])
+    ]
+  ]);
+  const cacheKey = (request) =>
+    typeof request === "string" ? request : request.url;
+  const namedCache = {
+    match: async (request) =>
+      cacheEntries.get("pitch-counter-shell-v59").get(cacheKey(request)) || null,
+    put: async (request, response) => {
+      const key = cacheKey(request);
+      cachedRequests.push(key);
+      cacheEntries.get("pitch-counter-shell-v59").set(key, response);
+    }
+  };
+  const otherCache = {
+    match: async (request) =>
+      cacheEntries.get("other-cache").get(cacheKey(request)) || null
+  };
   const cache = {
-    match: async () => null,
-    open: async () => ({
-      put: async (request) => {
-        cachedRequests.push(String(request));
-      }
-    }),
+    match: async () => {
+      throw new Error("global CacheStorage.match must not be used");
+    },
+    open: async (name) =>
+      name === "pitch-counter-shell-v59" ? namedCache : otherCache,
     keys: async () => [],
     delete: async () => true
   };
-  const responseFor = (path) => {
-    const response = new Response("ok", { status: 200 });
+  let failFetch = false;
+  const responseFor = (path, body = "network") => {
+    const response = new Response(body, { status: 200 });
     Object.defineProperty(response, "url", {
       value: `https://example.test${path}`
     });
@@ -133,8 +163,13 @@ test("service worker does not let an asset navigation replace the app shell", as
     Request,
     URL,
     console,
-    fetch: async (request) =>
-      responseFor(new URL(request.url).pathname),
+    fetch: async (request) => {
+      if (failFetch) {
+        throw new Error("offline");
+      }
+
+      return responseFor(new URL(request.url).pathname);
+    },
     caches: cache,
     self: {
       location: { origin: "https://example.test" },
@@ -197,6 +232,30 @@ test("service worker does not let an asset navigation replace the app shell", as
   await shellResponse;
   await Promise.all(pendingWrites);
   assert.deepEqual(cachedRequests, ["/counter/"]);
+
+  cacheEntries
+    .get("pitch-counter-shell-v59")
+    .set(
+      "https://example.test/counter/counter.js?v=49",
+      new Response("trusted-cache")
+    );
+  failFetch = true;
+  let offlineAssetResponse;
+  handlers.fetch({
+    request: {
+      url: "https://example.test/counter/counter.js?v=49",
+      method: "GET",
+      mode: "same-origin"
+    },
+    respondWith: (response) => {
+      offlineAssetResponse = response;
+    },
+    waitUntil: () => undefined
+  });
+
+  const offlineAsset = await offlineAssetResponse;
+  assert.equal(offlineAsset.status, 200);
+  assert.equal(await offlineAsset.text(), "trusted-cache");
 });
 
 test("dependency metadata uses one pinned pnpm lockfile", () => {
