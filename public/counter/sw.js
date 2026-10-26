@@ -90,6 +90,11 @@ async function cacheResponse(request, response) {
   }
 }
 
+async function matchCached(request) {
+  const cache = await caches.open(CACHE_NAME);
+  return cache.match(request);
+}
+
 /* ==================================================
    INSTALL
 ================================================== */
@@ -188,7 +193,7 @@ self.addEventListener(
           })
           .catch(async () => {
             const cached =
-              await caches.match(
+              await matchCached(
                 "/counter/"
               );
 
@@ -218,8 +223,7 @@ self.addEventListener(
       fetch 失敗を未処理の Promise reject にしない。
     */
     event.respondWith(
-      caches
-        .match(request)
+      matchCached(request)
         .then(
           async (cached) => {
             if (cached) {
