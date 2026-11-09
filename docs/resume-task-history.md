@@ -78,3 +78,12 @@
 - 実装コミット: `ddf9942`（`feature/sw-cache-namespace`）
 - 実装PR: [#22](https://github.com/refrain62/baseball-pitch-counter/pull/22)（Draft、`develop` 向け。週次点検ではマージ・本番反映しない）
 - 継続改善: リポジトリ内CI workflowの追加と、LPのinline JSON-LDと厳格CSPの整合確認は別タスク候補。今回の再現脆弱性には含めない。
+
+## 2026-11-09 週次セキュリティ点検
+
+- 状態: 自動検証は完了。指定レビューモデルとブラウザ実行環境が利用できず、独立ペアレビューとブラウザE2Eは未実施。
+- 重複確認: 未マージはService Workerのキャッシュ参照範囲を限定するDraft PR #22のみ。前回レビュー後から実装差分はなく、`develop` 側の変更は点検記録だけ。
+- 依存・自動検証: `pnpm audit --audit-level high` は既知脆弱性なし。`pnpm test` は7件成功、`pnpm build` は成功。Wrangler `4.158.0` の更新通知はあるが、現行 `4.152.0` に既知High脆弱性は検出されていない。
+- PR状態: Draft PR [#22](https://github.com/refrain62/baseball-pitch-counter/pull/22) はCLEAN / MERGEABLE、Workers Builds成功。週次点検ではマージ・本番反映しない。
+- HTTP確認: Wranglerローカル配信の `/counter/` が200を返し、HSTS、CSP、COOP、CORP、Permissions-Policy、nosniff、X-Frame-Options、Referrer-Policyを確認。
+- 未実施理由: 実装・テスト担当に指定された `gpt-5.6-luna` が利用可能モデル一覧になく、代替モデルを選択しなかった。IABブラウザも利用できなかった。
